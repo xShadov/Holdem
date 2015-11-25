@@ -81,16 +81,16 @@ public class Card {
 			this.xCordination=2+(12*73);
 		}
 		
-		if(this.getColor()=="Club"){
+		if(this.getSuit()=="Club"){
 			this.yCordination=3;
 		}
-		else if(this.getColor()=="Heart"){
+		else if(this.getSuit()=="Heart"){
 			this.yCordination=101;
 		}
-		else if(this.getColor()=="Spade"){
+		else if(this.getSuit()=="Spade"){
 			this.yCordination=199;
 		}
-		else if(this.getColor()=="Diamond"){
+		else if(this.getSuit()=="Diamond"){
 			this.yCordination=297;
 		}
 	}
