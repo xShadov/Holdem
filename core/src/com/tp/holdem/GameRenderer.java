@@ -70,6 +70,8 @@ public class GameRenderer {
 	        	}
 	        }
         }
+
+        
         batcher.end();
     }
     
