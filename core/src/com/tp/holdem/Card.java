@@ -10,31 +10,17 @@ public class Card {
   	private String honour;
   	private int xCordination;
   	private int yCordination;
-  	
-  	public int getxCordination() {
-		return xCordination;
-	}
-	public void setxCordination(int xCordination) {
-		this.xCordination = xCordination;
-	}
-	public int getyCordination() {
-		return yCordination;
-	}
-	public void setyCordination(int yCordination) {
-		this.yCordination = yCordination;
-	}
+  	private int value;
+	private String color;
+	
 	public Card(){
   		
   	}
-  	public String getColor() {
-		return color;
-	}
 
-	private String color;
-  	
-  	public Card(final String honour, final String suit){
+  	public Card(final String honour, final String suit, final int value){
     		this.suit = suit;
     		this.honour = honour;
+    		this.value = value;
     		if(suit=="Spade" || suit=="Club") this.color="black";
     		else this.color="red";
     		findCordination();
@@ -109,5 +95,28 @@ public class Card {
   	public void setHonour(final String honour) {
   		  this.honour = honour;
   	}
+  	
+  	public String getColor() {
+		return color;
+	}
+  	
+  	public int getValue() {
+		return value;
+	}
+	public void setValue(int value) {
+		this.value = value;
+	}
+	public int getxCordination() {
+		return xCordination;
+	}
+	public void setxCordination(int xCordination) {
+		this.xCordination = xCordination;
+	}
+	public int getyCordination() {
+		return yCordination;
+	}
+	public void setyCordination(int yCordination) {
+		this.yCordination = yCordination;
+	}
 	
 }
