@@ -6,7 +6,7 @@ import java.util.List;
 public class Player {
 
   	private int number;
-  	private List<Card> cardsInPosession = new ArrayList<Card>();
+  	private List<Card> hand = new ArrayList<Card>();
   	private String name;
   	private boolean hisTurn = false;
   	private boolean hasDealerButton = false;
@@ -19,6 +19,37 @@ public class Player {
   	public Player(){
   		
   	}
+  	
+	public Player(final int number){
+    		this.number=number;
+    		this.name="Player"+number;
+  	}
+  	
+  	public Player(final int number, final String name){
+    		this.number=number;
+    		this.name=name;
+  	}
+  	
+  	public void addCard(final Card card){
+  		  hand.add(card);
+  	}
+  
+  	public List<Card> getHand() {
+  		  return hand;
+  	}
+  
+  	public String getName() {
+  		  return name;
+  	}
+  
+  	public void setName(final String name) {
+  		  this.name = name;
+  	}
+  
+  	public int getNumber() {
+  		  return number;
+  	}	
+  	
   	public boolean isFolded() {
 		return isFolded;
 	}
@@ -75,35 +106,6 @@ public class Player {
 		this.chipsAmount = chipsAmount;
 	}
 
-	public Player(final int number){
-    		this.number=number;
-    		this.name="Player"+number;
-  	}
-  	
-  	public Player(final int number, final String name){
-    		this.number=number;
-    		this.name=name;
-  	}
-  	
-  	public void addCard(final Card card){
-  		  cardsInPosession.add(card);
-  	}
-  
-  	public List<Card> getCardsInPosession() {
-  		  return cardsInPosession;
-  	}
-  
-  	public String getName() {
-  		  return name;
-  	}
-  
-  	public void setName(final String name) {
-  		  this.name = name;
-  	}
-  
-  	public int getNumber() {
-  		  return number;
-  	}	
 	
 }
 

@@ -17,16 +17,58 @@ public class Card {
   		
   	}
 
-  	public Card(final String honour, final String suit, final int value){
+  	public Card(final String honour, final String suit){
     		this.suit = suit;
     		this.honour = honour;
-    		this.value = value;
     		if(suit=="Spade" || suit=="Club") this.color="black";
     		else this.color="red";
     		findCordination();
+    		findValue();
   	}
   
-  	private void findCordination() {
+  	private void findValue() {
+		if(this.honour=="2"){
+			this.value = 2;
+		}
+		else if(this.honour=="3"){
+			this.value = 3;
+		}
+		else if(this.honour=="4"){
+			this.value = 4;
+		}
+		else if(this.honour=="5"){
+			this.value = 5;
+		}
+		else if(this.honour=="6"){
+			this.value = 6;
+		}
+		else if(this.honour=="7"){
+			this.value = 7;
+		}
+		else if(this.honour=="8"){
+			this.value = 8;
+		}
+		else if(this.honour=="9"){
+			this.value = 9;
+		}
+		else if(this.honour=="10"){
+			this.value = 10;
+		}
+		else if(this.honour=="Jack"){
+			this.value = 11;
+		}
+		else if(this.honour=="Queen"){
+			this.value = 12;
+		}
+		else if(this.honour=="King"){
+			this.value = 13;
+		}
+		else if(this.honour=="Ace"){
+			this.value = 14;
+		}
+	}
+
+	private void findCordination() {
 		if(this.getHonour()=="Ace"){
 			this.xCordination=2;
 		}

@@ -59,9 +59,9 @@ public class GameRenderer {
         if(players!=null){
 	        for(int i=0; i<players.size();i++){
 	        	if(players.get(i).getNumber()==Info.yourNumber){
-		        	findCurrentCardTexture(players.get(i).getCardsInPosession().get(0));
+		        	findCurrentCardTexture(players.get(i).getHand().get(0));
 		        	batcher.draw(currentCardTexture, positionX[i]+15, positionY[i]+2);
-		        	findCurrentCardTexture(players.get(i).getCardsInPosession().get(1));
+		        	findCurrentCardTexture(players.get(i).getHand().get(1));
 		        	batcher.draw(currentCardTexture, positionX[i]+82+15, positionY[i]+2);
 	        	}
 	        	else{
