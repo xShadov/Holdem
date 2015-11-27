@@ -33,49 +33,79 @@ public class HandOperations {
 	    } else if (isPair(cards)) {
 	        return new HandRank(HandRankingEnum.PAIR, cardsThatMakeDeck);
 	    } else {
-	        return new HandRank(HandRankingEnum.HIGH_CARD, cardsThatMakeDeck);
+	        return new HandRank(HandRankingEnum.HIGH_CARD, getFiveMaxCards(cards));
 	    }
 	}
 	
 	public static boolean isAFullHouse(List<Card> cards) {
-		cardsThatMakeDeck = new ArrayList<Card>(cards);
-		boolean isTwo = false;
-		boolean isThree = false;
-		for(int i=0; i<cards.size()-1;i++){
-			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()){
-				isTwo = true;
-				i=i+1;
-				if(i<5){
-					if(cards.get(i).getHonour()==cards.get(i+1).getHonour()){
-						isTwo = false;
-						isThree = true;
-						i=i+1;
-					}
+		List<Card> three = new ArrayList<Card>();
+		List<Card> two = new ArrayList<Card>();
+		for(int i=0; i<cards.size()-2; i++){
+			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()
+					&& cards.get(i).getHonour()==cards.get(i+2).getHonour()){
+				if(three.size()==0){
+					three.add(cards.get(i));
+					three.add(cards.get(i+1));
+					three.add(cards.get(i+2));
+				} else {
+					three.removeAll(three);
+					three.add(cards.get(i));
+					three.add(cards.get(i+1));
+					three.add(cards.get(i+2));
 				}
 			}
-			else{
-				cardsThatMakeDeck.set(i, null);
+		}
+		List<Card> cardsLeft = new ArrayList<Card>(cards);
+		cardsLeft.removeAll(three);
+		for(int i=0; i<cardsLeft.size()-1;i++){
+			if(cardsLeft.get(i).getHonour()==cardsLeft.get(i+1).getHonour()){
+				if(two.size()==0){
+					two.add(cardsLeft.get(i));
+					two.add(cardsLeft.get(i+1));
+				} else {
+					two.removeAll(two);
+					two.add(cardsLeft.get(i));
+					two.add(cardsLeft.get(i+1));
+				}
 			}
 		}
+		cardsThatMakeDeck = new ArrayList<Card>(two);
+		cardsThatMakeDeck.addAll(three);
 	    cleanDeck();
-		return isTwo&&isThree;
+	    Collections.sort(cardsThatMakeDeck, new CardComparator());
+		return cardsThatMakeDeck.size()==5;
 	}
 
 	private static boolean isTwoPair(List<Card> cards) {
-		cardsThatMakeDeck = new ArrayList<Card>(cards);
+		List<Card> helperList = new ArrayList<Card>();
+		List<Card> cardsLeft = new ArrayList<Card>(cards);
 		int pairsFound = 0;
 		for(int i=0; i<cards.size()-1;i++){
 			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()){
-				pairsFound++;
-				i=i+1;
-			}
-			else{
-				if(i<=1 && pairsFound==0) cardsThatMakeDeck.set(i, null);
-				else if(pairsFound==1 && i<4) cardsThatMakeDeck.set(i, null);
+				if(pairsFound<=1){
+					pairsFound++;
+					helperList.add(cards.get(i));
+					helperList.add(cards.get(i+1));
+					i++;
+				}
+				else{
+					helperList.remove(0);
+					helperList.remove(0);
+					helperList.add(cards.get(i));
+					helperList.add(cards.get(i+1));
+					i++;
+					pairsFound++;
+				}
 			}
 		}
-	    cleanDeck();
-		return pairsFound==2;
+		if(pairsFound>=2){
+			cardsLeft.removeAll(helperList);
+			helperList.add(findMaxCard(cardsLeft));
+			cardsThatMakeDeck = new ArrayList<Card>(helperList);
+		    cleanDeck();
+		    Collections.sort(cardsThatMakeDeck, new CardComparator());
+		}
+		return pairsFound>=2;
 	}
 
 	private static boolean isPair(List<Card> cards) {
@@ -114,21 +144,28 @@ public class HandOperations {
 	}
 
 	private static boolean isAFourOfAKind(List<Card> cards) {
-		cardsThatMakeDeck = new ArrayList<Card>(cards);
+		List<Card> cardsLeft = new ArrayList<Card>(cards);
+		List<Card> helperList = new ArrayList<Card>();
 		boolean isFourOfKind = false;
 		for(int i=0; i<cards.size()-3;i++){
 			if(cards.get(i).getHonour()==cards.get(i+1).getHonour() 
 					&& cards.get(i).getHonour()==cards.get(i+2).getHonour()
 					&& cards.get(i).getHonour()==cards.get(i+3).getHonour()){
 				isFourOfKind = true;
+				helperList.add(cards.get(i));
+				helperList.add(cards.get(i+1));
+				helperList.add(cards.get(i+2));
+				helperList.add(cards.get(i+3));
 				i=i+3;
 			}
-			else{
-				if(i<=1 && !isFourOfKind) cardsThatMakeDeck.set(i, null);
-				else if(isFourOfKind && i<6) cardsThatMakeDeck.set(i, null);
-			}
 		}
-	    cleanDeck();
+		if(isFourOfKind){
+			cardsLeft.removeAll(helperList);
+			helperList.add(findMaxCard(cardsLeft));
+			cardsThatMakeDeck = new ArrayList<Card>(helperList);
+		    cleanDeck();
+		    Collections.sort(cardsThatMakeDeck, new CardComparator());
+		}
 		return isFourOfKind;
 	}
 
@@ -174,7 +211,6 @@ public class HandOperations {
 	    	}
 	    	else if(cards.get(i).getValue()==cards.get(i+1).getValue()){
 	    		mistakes++;
-	    		cardsThatMakeDeck.set(i, null);
 	    	}
 	    	else{
 	    		mistakes++;
@@ -188,8 +224,7 @@ public class HandOperations {
 	    			break;
 	    		}
 	    	}
-	    }
-	    
+	    } 
 	    cleanDeck();
 	    if(cardsInARow==6 || cardsInARow==7) trimDeckDown(cardsInARow-6);
 	    return isStraight;
@@ -252,18 +287,13 @@ public class HandOperations {
 	
 	private static void trimDeckUp(int i) {
 		for(int a=i+1; a<cardsThatMakeDeck.size(); a++){
-			if(cardsThatMakeDeck.get(a)!=null){
-				cardsThatMakeDeck.remove(a);
-				a--;
-			}
+			cardsThatMakeDeck.set(a, null);
 		}
 	}
 	
 	private static void trimDeckDown(int i) {
 		for(int a=i; a>=0;a--){
-			if(cardsThatMakeDeck.get(a)!=null){
-				cardsThatMakeDeck.remove(a);
-			}
+			cardsThatMakeDeck.set(a, null);
 		}
 	}
 	
@@ -276,6 +306,16 @@ public class HandOperations {
 			}
 		}
 	}
+	
+	private static Card findMaxCard(List<Card> cardsLeft) {
+		Collections.sort(cardsLeft, new CardComparator());
+		return cardsLeft.get((cardsLeft.size()-1));
+	}
 
-
+	private static List<Card> getFiveMaxCards(List<Card> cards){
+		List<Card> fiveTop = new ArrayList<Card>(cards);
+		fiveTop.remove(0);
+		fiveTop.remove(0);
+		return fiveTop;
+	}
 }

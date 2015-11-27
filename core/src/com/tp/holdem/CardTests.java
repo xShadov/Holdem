@@ -17,25 +17,81 @@ public class CardTests {
 		cards.add(new Card("Jack", "Heart"));
 		cards.add(new Card("Jack", "Diamond"));
 		cards.add(new Card("Queen", "Spade"));
-		cards.add(new Card("Queen", "Heart"));
+		cards.add(new Card("5", "Heart"));
+		cards.add(new Card("Queen", "Diamond"));
 		cards.add(new Card("4", "Spade"));
 		cards.add(new Card("8", "Spade"));
 		Collections.sort(cards, new CardComparator());
-
+		//for(Card card : cards){
+	//		System.out.println(card.getHonour());
+	//	}
     } 
 	
 	@Test                                        
     public final void testHand() {          
 		List<Card> cards = new ArrayList<Card>();
-		cards.add(new Card("2", "Spade"));
-		cards.add(new Card("3", "Spade"));
+		cards.add(new Card("4", "Heart"));
+		cards.add(new Card("Jack", "Spade"));
 		List<Card> tableCards = new ArrayList<Card>();
-		tableCards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("5", "Spade"));
-		tableCards.add(new Card("6", "Spade"));
-		tableCards.add(new Card("Ace", "Diamond"));
-		tableCards.add(new Card("8", "Spade"));
+		tableCards.add(new Card("6", "Club"));
+		tableCards.add(new Card("8", "Heart"));
+		tableCards.add(new Card("9", "Spade"));
+		tableCards.add(new Card("3", "Club"));
+		tableCards.add(new Card("King", "Spade"));
 		System.out.println(HandOperations.findHandRank(cards, tableCards));
+    } 
+	
+	@Test                                        
+    public final void handCompare() {          
+		List<Card> cards = new ArrayList<Card>();
+		cards.add(new Card("4", "Heart"));
+		cards.add(new Card("Jack", "Spade"));
+		List<Card> tableCards = new ArrayList<Card>();
+		tableCards.add(new Card("6", "Club"));
+		tableCards.add(new Card("8", "Heart"));
+		tableCards.add(new Card("9", "Spade"));
+		tableCards.add(new Card("3", "Club"));
+		tableCards.add(new Card("King", "Spade"));
+		List<HandRank> hands = new ArrayList<HandRank>();
+		
+		hands.add(HandOperations.findHandRank(cards, tableCards));
+		cards = new ArrayList<Card>();
+		cards.add(new Card("10", "Heart"));
+		cards.add(new Card("Jack", "Heart"));
+		tableCards = new ArrayList<Card>();
+		tableCards.add(new Card("2", "Heart"));
+		tableCards.add(new Card("4", "Heart"));
+		tableCards.add(new Card("Ace", "Heart"));
+		tableCards.add(new Card("3", "Club"));
+		tableCards.add(new Card("King", "Spade"));
+		hands.add(HandOperations.findHandRank(cards, tableCards));
+
+		cards = new ArrayList<Card>();
+		cards.add(new Card("10", "Heart"));
+		cards.add(new Card("Jack", "Heart"));
+		tableCards = new ArrayList<Card>();
+		tableCards.add(new Card("2", "Heart"));
+		tableCards.add(new Card("4", "Heart"));
+		tableCards.add(new Card("8", "Heart"));
+		tableCards.add(new Card("3", "Club"));
+		tableCards.add(new Card("9", "Spade"));
+		hands.add(HandOperations.findHandRank(cards, tableCards));
+		
+		cards = new ArrayList<Card>();
+		cards.add(new Card("10", "Heart"));
+		cards.add(new Card("Jack", "Heart"));
+		tableCards = new ArrayList<Card>();
+		tableCards.add(new Card("2", "Heart"));
+		tableCards.add(new Card("4", "Heart"));
+		tableCards.add(new Card("8", "Heart"));
+		tableCards.add(new Card("3", "Club"));
+		tableCards.add(new Card("9", "Spade"));
+		hands.add(HandOperations.findHandRank(cards, tableCards));
+		
+		Collections.sort(hands, new HandRankComparator());
+		for(HandRank hand : hands){
+			System.out.println(hand);
+		}
     } 
 
 }
