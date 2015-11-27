@@ -36,23 +36,102 @@ public class HandOperations {
 	    }
 	}
 	
+	private static boolean isAFullHouse(List<Card> cards) {
+		Collections.sort(cards, new CardComparator());
+		cardsThatMakeDeck = cards;
+		boolean isFullHouse = false;
+		boolean isTwo = false;
+		boolean isThree = false;
+		for(int i=0; i<cards.size()-1;i++){
+			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()){
+				isTwo = true;
+				i=i+1;
+			}
+			else if(cards.get(i).getHonour()==cards.get(i+1).getHonour() 
+					&& cards.get(i).getHonour()==cards.get(i+2).getHonour()){
+				isThree = true;
+				i=i+2;
+			}
+			else{
+				cardsThatMakeDeck.remove(i);
+			}
+		}
+		return isFullHouse;
+	}
+
+	private static boolean isTwoPair(List<Card> cards) {
+		Collections.sort(cards, new CardComparator());
+		cardsThatMakeDeck = cards;
+		int pairsFound = 0;
+		for(int i=0; i<cards.size()-1;i++){
+			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()){
+				pairsFound++;
+				i=i+1;
+			}
+			else{
+				if(i<=1 && pairsFound==0) cardsThatMakeDeck.remove(i);
+				else if(pairsFound==1 && i<4) cardsThatMakeDeck.remove(i);
+			}
+		}
+		return pairsFound==2;
+	}
+
+	private static boolean isPair(List<Card> cards) {
+		Collections.sort(cards, new CardComparator());
+		cardsThatMakeDeck = cards;
+		boolean isPair = false;
+		for(int i=0; i<cards.size()-1;i++){
+			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()){
+				isPair = true;
+				i=i+1;
+			}
+			else{
+				if(i<=1 && !isPair) cardsThatMakeDeck.remove(i);
+				else if(isPair && i<4) cardsThatMakeDeck.remove(i);
+			}
+		}
+		return isPair;
+	}
+
+	private static boolean isThreeOfAKind(List<Card> cards) {
+		Collections.sort(cards, new CardComparator());
+		cardsThatMakeDeck = cards;
+		boolean isThreeOfKind = false;
+		for(int i=0; i<cards.size()-2;i++){
+			if(cards.get(i).getHonour()==cards.get(i+1).getHonour() 
+					&& cards.get(i).getHonour()==cards.get(i+2).getHonour()){
+				isThreeOfKind = true;
+				i=i+2;
+			}
+			else{
+				if(i<=1 && !isThreeOfKind) cardsThatMakeDeck.remove(i);
+				else if(isThreeOfKind && i<5) cardsThatMakeDeck.remove(i);
+			}
+		}
+		return isThreeOfKind;
+	}
+
 	private static boolean isAFourOfAKind(List<Card> cards) {
+		Collections.sort(cards, new CardComparator());
 		cardsThatMakeDeck = cards;
 		boolean isFourOfKind = false;
-		String honour = "";
-		for(int i=0; i<cards.size();i++){
+		for(int i=0; i<cards.size()-3;i++){
 			if(cards.get(i).getHonour()==cards.get(i+1).getHonour() 
 					&& cards.get(i).getHonour()==cards.get(i+2).getHonour()
 					&& cards.get(i).getHonour()==cards.get(i+3).getHonour()){
 				isFourOfKind = true;
-				honour = cards.get(i).getHonour();
+				i=i+3;
+			}
+			else{
+				if(i<=1 && !isFourOfKind) cardsThatMakeDeck.remove(i);
+				else if(isFourOfKind && i<6) cardsThatMakeDeck.remove(i);
 			}
 		}
-		
-		return false;
+		return isFourOfKind;
 	}
 
 	private static boolean isAStraightFlush(List<Card> cards) {
+		Collections.sort(cards, new CardComparator());
 		cardsThatMakeDeck = cards;
 		if(isAStraight(cards)){
 			if(isAFlush(cardsThatMakeDeck)){
@@ -63,6 +142,7 @@ public class HandOperations {
 	}
 
 	private static boolean isARoyalFlush(List<Card> cards) {
+		Collections.sort(cards, new CardComparator());
 		cardsThatMakeDeck = cards;
 		if(isAStraight(cards)){
 			if(isAFlush(cardsThatMakeDeck)){
@@ -75,8 +155,8 @@ public class HandOperations {
 	}
 
 	public static boolean isAStraight(List<Card> cards) {
-		cardsThatMakeDeck = cards;
 		Collections.sort(cards, new CardComparator());
+		cardsThatMakeDeck = cards;
 	    int cardsInARow = 1;
 	    int mistakes = 0;
 	    boolean isStraight = false;
@@ -112,8 +192,8 @@ public class HandOperations {
 	}
 
 	public static boolean isAFlush(List<Card> cards) {
-		cardsThatMakeDeck = cards;
 		Collections.sort(cards, new CardComparator());
+		cardsThatMakeDeck = cards;
 	    int noOfClubs = 0;
 	    int noOfSpades = 0;
 	    int noOfHearts = 0;
