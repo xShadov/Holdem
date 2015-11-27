@@ -27,6 +27,7 @@ public class KryoClient {
            kryo.register(Player.class);
            kryo.register(Card.class);
            kryo.register(Deck.class);
+           kryo.register(Table.class);
            
            simulationClient.addListener(new Listener() {
               public synchronized void received(Connection connection, Object object) {
@@ -38,6 +39,11 @@ public class KryoClient {
             		  }
             		  if(response.getTAG().equals("N")){
             			  Info.yourNumber=response.getNumber();
+            		  }
+            		  if(response.getTAG().equals("C"))
+            		  {
+            			  TableInfo.cardsOnTable=response.getCards();
+            			  TableInfo.changesInTable=true;
             		  }
             	  }
               }

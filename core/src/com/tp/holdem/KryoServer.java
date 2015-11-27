@@ -20,6 +20,7 @@ public class KryoServer implements Runnable {
 	private int numPlayers = 0;
 	private int turnPlayer = 0;
 	private Deck deck = null;
+	private Table table = null;
 	private int smallBlindAmount = 20;
 	private int bigBlindAmount = 50;
 	private boolean newHand = false;
@@ -39,6 +40,7 @@ public class KryoServer implements Runnable {
       kryo.register(Player.class);
       kryo.register(Card.class);
       kryo.register(Deck.class);
+      kryo.register(Table.class);
       server.addListener(new Listener() { 
           public synchronized void received (Connection connection, Object object) { 
         	  if(object instanceof SampleRequest){
@@ -85,9 +87,10 @@ public class KryoServer implements Runnable {
 			if(gameStarted){
 				if(newHand){
 					if(deck==null) deck=new Deck();
+					if(table==null)table=new Table();
 					deck.dealCards(2, players);
 					newHand=false;
-					players.get(turnPlayer).setHasDealerButton(true);
+					players.get(turnPlayer).setHasDealerButton(true);	
 					players.get(turnPlayer+1).setHasSmallBlind(true);
 					players.get(turnPlayer+1).setChipsAmount(players.get(turnPlayer+1).getChipsAmount()-smallBlindAmount);
 					players.get(turnPlayer+1).setBetAmount(smallBlindAmount);
@@ -100,9 +103,25 @@ public class KryoServer implements Runnable {
 						players.get(turnPlayer+2).setBetAmount(bigBlindAmount);
 						players.get(turnPlayer+2).setChipsAmount(players.get(turnPlayer+2).getChipsAmount()-bigBlindAmount);
 					}
+
 					response = new SampleResponse("R", players);
 					server.sendToAllTCP(response);
+					//flop - 3 karty na stol
+					table.addCard(deck.drawCard());
+					table.addCard(deck.drawCard());
+					table.addCard(deck.drawCard());
+					//turn
+					table.addCard(deck.drawCard());
+					//river
+					table.addCard(deck.drawCard());
+					//TableInfo.cardsOnTable=table.getCardList();
+					response = new SampleResponse("C", table.getCardList(),false);
+					server.sendToAllTCP(response);
 				}
+				
+				
+				
+				
 			}
 		}
 	}

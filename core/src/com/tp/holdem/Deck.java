@@ -9,6 +9,7 @@ public class Deck {
   	final private List<Card> cards = new ArrayList<Card>(52);
   	final private transient String[] suits = {"Spade", "Heart", "Diamond", "Club"};
   	final private transient String[] honours = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+  	
   	public Deck(){
     		for(int i=0; i<=12; i++)
     		{
@@ -48,6 +49,13 @@ public class Deck {
       
   	public void shuffleCards(){
   		  Collections.shuffle(cards);
+  	}
+  	
+  	public Card drawCard()
+  	{
+  		Card card = cards.get(0);
+  		cards.remove(0);
+  		return card;
   	}
 	
 }

@@ -70,8 +70,15 @@ public class GameRenderer {
 	        	}
 	        }
         }
-
-        
+        if(TableInfo.changesInTable)
+        {
+        	for(int i=0;i<TableInfo.cardsOnTable.size();i++)
+        	{
+        		findCurrentCardTexture(TableInfo.cardsOnTable.get(i));
+        		batcher.draw(currentCardTexture, 315+i*82,325);
+        	}
+        	
+        }
         batcher.end();
     }
     

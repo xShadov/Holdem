@@ -7,6 +7,7 @@ public class SampleResponse {
 	public String text="";
 	public String TAG="";
 	public List<Player> players;
+	public List<Card> cards;
 	public int number = 0;
 	
 	public int getNumber() {
@@ -20,7 +21,11 @@ public class SampleResponse {
 	public List<Player> getPlayers() {
 		return players;
 	}
-
+	
+	public List<Card> getCards()
+	{
+		return cards;
+	}
 	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
@@ -43,6 +48,11 @@ public class SampleResponse {
 	
 	public SampleResponse(String TAG, List<Player> players){
 		this.players = players;
+		this.TAG = TAG;
+	}
+	
+	public SampleResponse(String TAG, List<Card> cards, boolean dummy){
+		this.cards = cards;
 		this.TAG = TAG;
 	}
 	
