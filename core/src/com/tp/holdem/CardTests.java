@@ -41,6 +41,32 @@ public class CardTests {
 		System.out.println(HandOperations.findHandRank(cards, tableCards));
     } 
 	
+	@Test
+	public final void compareSingleHand(){
+		List<Card> cards = new ArrayList<Card>();
+		cards.add(new Card("4", "Heart"));
+		cards.add(new Card("5", "Spade"));
+		List<Card> tableCards = new ArrayList<Card>();
+		tableCards.add(new Card("6", "Club"));
+		tableCards.add(new Card("8", "Heart"));
+		tableCards.add(new Card("9", "Spade"));
+		tableCards.add(new Card("3", "Club"));
+		tableCards.add(new Card("7", "Spade"));
+		List<HandRank> hands = new ArrayList<HandRank>();
+		hands.add(HandOperations.findHandRank(cards, tableCards));
+		cards = new ArrayList<Card>();
+		cards.add(new Card("Queen", "Heart"));
+		cards.add(new Card("King", "Heart"));
+		tableCards = new ArrayList<Card>();
+		tableCards.add(new Card("Ace", "Heart"));
+		tableCards.add(new Card("10", "Heart"));
+		tableCards.add(new Card("Jack", "Heart"));
+		tableCards.add(new Card("3", "Club"));
+		tableCards.add(new Card("7", "Spade"));
+		hands.add(HandOperations.findHandRank(cards, tableCards));
+		HandRankComparator comp = new HandRankComparator();
+		System.out.println(comp.compare(hands.get(1), hands.get(0)));
+	}
 	@Test                                        
     public final void handCompare() {          
 		List<Card> cards = new ArrayList<Card>();

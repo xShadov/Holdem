@@ -227,6 +227,7 @@ public class HandOperations {
 	    } 
 	    cleanDeck();
 	    if(cardsInARow==6 || cardsInARow==7) trimDeckDown(cardsInARow-6);
+	    cleanDeck();
 	    return isStraight;
 	}
 

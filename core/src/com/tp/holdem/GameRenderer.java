@@ -22,7 +22,7 @@ public class GameRenderer {
     private BitmapFont font;
     private List<Player> players;
     private Texture cards;
-    private TextureRegion blankCard, spadeCard, clubCard, diamondCard, heartCard, reverse;
+    private TextureRegion reverse;
     private int[] positionX = {400, 141, 90, 105, 220, 420, 620, 750, 750, 637};
     private int[] positionY = {134, 140, 295, 460, 585, 565, 595, 465, 285, 128};
     public GameRenderer(GameWorld world){
@@ -30,7 +30,6 @@ public class GameRenderer {
     	myWorld = world;
     	cam = new OrthographicCamera();
         cam.setToOrtho(false, 1024, 780);
-        blankCard = new TextureRegion(new Texture("data/blankCard.png"), 0, 0, 80, 96);
         batcher = new SpriteBatch();
         batcher.setProjectionMatrix(cam.combined);
         shapeRenderer = new ShapeRenderer();
@@ -59,9 +58,9 @@ public class GameRenderer {
         if(players!=null){
 	        for(int i=0; i<players.size();i++){
 	        	if(players.get(i).getNumber()==Info.yourNumber){
-		        	findCurrentCardTexture(players.get(i).getHand().get(0));
+		        	findCurrentCardTexture(Info.yourCards.get(0));
 		        	batcher.draw(currentCardTexture, positionX[i]+15, positionY[i]+2);
-		        	findCurrentCardTexture(players.get(i).getHand().get(1));
+		        	findCurrentCardTexture(Info.yourCards.get(1));
 		        	batcher.draw(currentCardTexture, positionX[i]+82+15, positionY[i]+2);
 	        	}
 	        	else{

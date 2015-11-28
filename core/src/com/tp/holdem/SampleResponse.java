@@ -50,7 +50,7 @@ public class SampleResponse {
 		this.players = players;
 		this.TAG = TAG;
 	}
-	
+
 	public SampleResponse(String TAG, List<Card> cards, boolean dummy){
 		this.cards = cards;
 		this.TAG = TAG;

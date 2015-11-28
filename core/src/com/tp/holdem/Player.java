@@ -15,6 +15,7 @@ public class Player {
   	private int betAmount = 0;
   	private int chipsAmount = 0;
   	private boolean isFolded = false;
+  	private int connectionId;
   	
   	public Player(){
   		
@@ -104,6 +105,18 @@ public class Player {
 
 	public void setChipsAmount(int chipsAmount) {
 		this.chipsAmount = chipsAmount;
+	}
+
+	public int getConnectionId() {
+		return connectionId;
+	}
+
+	public void setConnectionId(int connectionId) {
+		this.connectionId = connectionId;
+	}
+
+	public void setHand(List<Card> hand) {
+		this.hand = hand;
 	}
 
 	

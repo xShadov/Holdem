@@ -16,6 +16,7 @@ public class KryoServer implements Runnable {
 	public boolean running = true;
 	private volatile boolean gameStarted = false;
 	private List<Player> players = new ArrayList<Player>();
+	private List<Player> playersWithHiddenCards = new ArrayList<Player>();
 	private int counter = 0;
 	private int numPlayers = 0;
 	private int turnPlayer = 0;
@@ -50,6 +51,7 @@ public class KryoServer implements Runnable {
           public synchronized void connected(Connection con){
         	  players.add(new Player(numPlayers));
         	  players.get(numPlayers).setChipsAmount(1500);
+        	  players.get(numPlayers).setConnectionId(con.getID());
         	  response = new SampleResponse("N", numPlayers);
         	  server.sendToTCP(con.getID(), response);
         	  numPlayers++;
@@ -87,41 +89,40 @@ public class KryoServer implements Runnable {
 			if(gameStarted){
 				if(newHand){
 					if(deck==null) deck=new Deck();
-					if(table==null)table=new Table();
+					if(table==null) table=new Table();
 					deck.dealCards(2, players);
-					newHand=false;
-					players.get(turnPlayer).setHasDealerButton(true);	
-					players.get(turnPlayer+1).setHasSmallBlind(true);
-					players.get(turnPlayer+1).setChipsAmount(players.get(turnPlayer+1).getChipsAmount()-smallBlindAmount);
-					players.get(turnPlayer+1).setBetAmount(smallBlindAmount);
-					if(numPlayers==2){
-						players.get(turnPlayer).setHasBigBlind(true);
-						players.get(turnPlayer).setBetAmount(bigBlindAmount);
-						players.get(turnPlayer).setChipsAmount(players.get(turnPlayer).getChipsAmount()-bigBlindAmount);
-					}else{
-						players.get(turnPlayer+2).setHasBigBlind(true);
-						players.get(turnPlayer+2).setBetAmount(bigBlindAmount);
-						players.get(turnPlayer+2).setChipsAmount(players.get(turnPlayer+2).getChipsAmount()-bigBlindAmount);
+					for(Player player : players){
+						//HCD - hand cards dealt
+						response = new SampleResponse("HCD", player.getHand(), false);
+						server.sendToTCP(player.getConnectionId(), response);
 					}
-
-					response = new SampleResponse("R", players);
-					server.sendToAllTCP(response);
-					//flop - 3 karty na stol
-					table.addCard(deck.drawCard());
-					table.addCard(deck.drawCard());
-					table.addCard(deck.drawCard());
-					//turn
-					table.addCard(deck.drawCard());
-					//river
-					table.addCard(deck.drawCard());
-					//TableInfo.cardsOnTable=table.getCardList();
-					response = new SampleResponse("C", table.getCardList(),false);
-					server.sendToAllTCP(response);
+					newHand=false;
+					players.get(turnPlayer%numPlayers).setHasDealerButton(true);	
+					players.get((turnPlayer+1)%numPlayers).setHasSmallBlind(true);
+					players.get((turnPlayer+1)%numPlayers).setChipsAmount(players.get((turnPlayer+1)%numPlayers).getChipsAmount()-smallBlindAmount);
+					players.get((turnPlayer+1)%numPlayers).setBetAmount(smallBlindAmount);
+					players.get((turnPlayer+2)%numPlayers).setHasBigBlind(true);
+					players.get((turnPlayer+2)%numPlayers).setBetAmount(bigBlindAmount);
+					players.get((turnPlayer+2)%numPlayers).setChipsAmount(players.get((turnPlayer+2)%numPlayers).getChipsAmount()-bigBlindAmount);
 				}
 				
-				
-				
-				
+				playersWithHiddenCards = new ArrayList<Player>(players);
+				for(Player player : playersWithHiddenCards){
+					player.setHand(null);
+				}
+				response = new SampleResponse("R", playersWithHiddenCards);
+				server.sendToAllTCP(response);
+				//flop - 3 karty na stol
+				table.addCard(deck.drawCard());
+				table.addCard(deck.drawCard());
+				table.addCard(deck.drawCard());
+				//turn
+				table.addCard(deck.drawCard());
+				//river
+				table.addCard(deck.drawCard());
+				//TableInfo.cardsOnTable=table.getCardList();
+				response = new SampleResponse("C", table.getCardList(), false);
+				server.sendToAllTCP(response);
 			}
 		}
 	}

@@ -45,6 +45,10 @@ public class KryoClient {
             			  TableInfo.cardsOnTable=response.getCards();
             			  TableInfo.changesInTable=true;
             		  }
+            		  if(response.getTAG().equals("HCD"))
+            		  {
+            			  Info.yourCards=response.getCards();
+            		  }
             	  }
               }
            });
