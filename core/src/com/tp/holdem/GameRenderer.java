@@ -30,7 +30,7 @@ public class GameRenderer {
     private List<Card> cardsOnTable;
     private Texture cards;
     private int yourNumber=0;
-    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, smallStack, semiStack, bigStack;
+    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, smallStack, semiStack, bigStack, spotlight;
     private int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
     private int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
     private int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
@@ -60,6 +60,7 @@ public class GameRenderer {
         cards = new Texture(Gdx.files.internal("data/cards.png"));
         box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
+        spotlight = new TextureRegion(new Texture(Gdx.files.internal("data/spotlight.png")), 0, 0, 352, 740);
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
 		font.getData().setScale(.4f);
 		font2 = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
@@ -81,6 +82,20 @@ public class GameRenderer {
         }
         if(players!=null){
 	        for(int i=0; i<players.size();i++){
+	        	if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
+	        		if(yourNumber == turnToBet){
+	        			batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
+	        			break;
+	        		} else {
+	        			batcher.draw(spotlight, positionX[i]-130, positionY[i]-40);
+	        			break;
+	        		}
+	        	}
+	        }
+	        for(int i=0; i<players.size();i++){
+	        	if(yourNumber == turnToBet){
+	        		font.draw(batcher, "YOUR TURN", 300, 600);
+	        	}
 	        	if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber){
 		        	findCurrentCardTexture(yourCards.get(0));
 		        	batcher.draw(currentCardTexture, positionX[i], positionY[i]);
@@ -115,9 +130,6 @@ public class GameRenderer {
 		        	else{
 		        		batcher.draw(bigStack, chipsPositionX[i], chipsPositionY[i]);
 		        	}
-	        	}
-	        	if(turnToBet == yourNumber){
-	        		font.draw(batcher, "YOUR TURN", 300, 600);
 	        	}
 	        }
         }
