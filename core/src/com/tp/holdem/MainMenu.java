@@ -9,11 +9,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 class MyWindowListener extends WindowAdapter
 {
@@ -33,54 +36,33 @@ class PropertiesWindowListener extends WindowAdapter
     public void windowDeactivated(WindowEvent e) {properties.dispose();}
 }
 
-//Server starts but MainMenu is waiting for the server to finish what its doing, making menu unusable after start of the server.
 class ButtonServerListener implements ActionListener
 {
-	private static KryoServer kryo;
-	
-	public ButtonServerListener() {	}
+	private MainMenu menu;
+	public ButtonServerListener(MainMenu menu) 
+	{
+		this.menu=menu;
+	}
 	
 	public void actionPerformed(ActionEvent e)
 	{
-		
-		try
-		{
-			kryo = new KryoServer();
-			runServer();			
-		}
-		catch (Exception e1) {
-			e1.printStackTrace();
-		}
+		menu.startServer();
+		menu.checkThreads();
 	}
-	private static void runServer()
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				kryo.main(new String[0]);
-			}
-		}
-				
-				
-									);
-	}
-	
 };
 
 class ButtonServer extends JButton
 {
-	public ButtonServer()
+	public ButtonServer(MainMenu menu)
 	{
 		super("START SERVER");
-		addActionListener(new ButtonServerListener());
+		addActionListener(new ButtonServerListener(menu));
 	}
 };
 
 class ButtonPropertiesListener implements ActionListener
 {
-	MainMenu menu;
+	private MainMenu menu;
 	public ButtonPropertiesListener(MainMenu menu)
 	{
 		this.menu=menu;
@@ -104,31 +86,33 @@ class ButtonProperties extends JButton
 
 class ButtonClientListener implements ActionListener
 {
-	public ButtonClientListener()
+	MainMenu menu;
+	public ButtonClientListener(MainMenu menu)
 	{
-		
+		this.menu=menu;
 	}
 	public void actionPerformed(ActionEvent e)
 	{
-		
+		//menu.startClient();
+		//menu.checkThreads();
 	}
 	
 };
 
 class ButtonClient extends JButton
 {
-	public ButtonClient()
+	public ButtonClient(MainMenu menu)
 	{
 		super("START CLIENT");
-		addActionListener(new ButtonClientListener());
+		addActionListener(new ButtonClientListener(menu));
 	}
 	
 };
 
 class ButtonLimitListener implements ActionListener
 {
-	ButtonLimit button;
-	MainMenu menu;
+	private ButtonLimit button;
+	private MainMenu menu;
 	public ButtonLimitListener(ButtonLimit button,MainMenu menu) 
 	{
 		this.button=button;
@@ -169,7 +153,7 @@ class ButtonLimit extends JButton
 
 class ButtonPlayersLessListener implements ActionListener
 {
-	MainMenu menu;
+	private MainMenu menu;
 	public ButtonPlayersLessListener(MainMenu menu)
 	{
 		this.menu=menu;
@@ -179,7 +163,7 @@ class ButtonPlayersLessListener implements ActionListener
 		if(menu.getPlayersCount()>0)
 		{
 			menu.setPlayersCount(menu.getPlayersCount()-1);
-			menu.playersCount.setText(String.valueOf(menu.getPlayersCount()));
+			menu.playersCount.setText(String.valueOf(menu.getPlayersCount()) + " players");
 		}
 	}
 	
@@ -196,7 +180,7 @@ class ButtonPlayersLess extends JButton
 
 class ButtonPlayersMoreListener implements ActionListener
 {
-	MainMenu menu;
+	private MainMenu menu;
 	public ButtonPlayersMoreListener(MainMenu menu)
 	{
 		this.menu=menu;
@@ -206,7 +190,7 @@ class ButtonPlayersMoreListener implements ActionListener
 		if(menu.getPlayersCount()<10)
 		{
 			menu.setPlayersCount(menu.getPlayersCount()+1);
-			menu.playersCount.setText(String.valueOf(menu.getPlayersCount()));
+			menu.playersCount.setText(String.valueOf(menu.getPlayersCount())+ " players");
 		}
 	}
 	
@@ -223,7 +207,7 @@ class ButtonPlayersMore extends JButton
 
 class ButtonBotsLessListener implements ActionListener
 {
-	MainMenu menu;
+	private MainMenu menu;
 	public ButtonBotsLessListener(MainMenu menu)
 	{
 		this.menu=menu;
@@ -233,7 +217,7 @@ class ButtonBotsLessListener implements ActionListener
 		if(menu.getBotsCount()>0)
 		{
 			menu.setBotsCount(menu.getBotsCount()-1);
-			menu.botsCount.setText(String.valueOf(menu.getBotsCount()));
+			menu.botsCount.setText(String.valueOf(menu.getBotsCount())+" bots");
 		}
 	}
 	
@@ -251,7 +235,7 @@ class ButtonBotsLess extends JButton
 
 class ButtonBotsMoreListener implements ActionListener
 {
-	MainMenu menu;
+	private MainMenu menu;
 	public ButtonBotsMoreListener(MainMenu menu)
 	{
 		this.menu=menu;
@@ -261,7 +245,7 @@ class ButtonBotsMoreListener implements ActionListener
 		if(menu.getBotsCount()<10)
 		{
 			menu.setBotsCount(menu.getBotsCount()+1);
-			menu.botsCount.setText(String.valueOf(menu.getBotsCount()));
+			menu.botsCount.setText(String.valueOf(menu.getBotsCount())+" bots");
 		}
 	}
 	
@@ -278,7 +262,7 @@ class ButtonBotsMore extends JButton
 
 class ButtonOKListener implements ActionListener
 {
-	JFrame properties;
+	private JFrame properties;
 	public ButtonOKListener(JFrame properties)
 	{
 		this.properties=properties;
@@ -302,11 +286,55 @@ class ButtonOK extends JButton
 
 public class MainMenu extends JFrame
 {
+	private ExecutorService gameExecutor = Executors.newSingleThreadExecutor();
+	private Future<?> server;
+	private Future<?> clients;
+	private static KryoServer kryo;
+	//private static DesktopLauncher client;
+	
 	private int playersC = 3;
 	private int botsC = 0;
 	private String limit = "no-limit";
-	Label playersCount = new Label("3");
-	Label botsCount = new Label("0");
+	Label playersCount = new Label("3 players");
+	Label botsCount = new Label("0 bots");
+	
+	public static void main(String args[])
+	{
+		checkThreads();
+		MainMenu menu = new MainMenu();
+		checkThreads();
+		menu.setVisible(true);
+	}
+	
+	public static void checkThreads()
+	{
+		ThreadGroup mainThreadGroup = Thread.currentThread().getThreadGroup();
+        ThreadGroup systemThreadGroup = mainThreadGroup.getParent();
+        systemThreadGroup.list();
+	}
+	
+	public void startServer()
+	{
+		if(server !=null) server.cancel(true);
+		server = gameExecutor.submit(new Runnable()
+		{
+			public void run()
+			{
+				kryo.main(new String[0]);
+			}
+		});
+	}
+	
+	/*public void startClient()
+	{
+		clients = gameExecutor.submit(new Runnable()
+		{
+			public void run()
+			{
+				client.main(new String[0]);
+			}
+		});
+	}*/
 	
 	public void setPlayersCount(int playersC)
 	{
@@ -346,9 +374,9 @@ public class MainMenu extends JFrame
 		addWindowListener(new MyWindowListener());
 		setFont(new Font(Font.SANS_SERIF,Font.PLAIN,20));
 		
-		ButtonServer server = new ButtonServer();
+		ButtonServer server = new ButtonServer(this);
 		ButtonProperties properties = new ButtonProperties(this);
-		ButtonClient client = new ButtonClient();
+		ButtonClient client = new ButtonClient(this);
 		
 		JPanel masterPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints layout = new GridBagConstraints();
@@ -429,12 +457,4 @@ public class MainMenu extends JFrame
         setResizable(false);
         properties.setVisible(true);
 	}
-	
-	public static void main(String args[])
-	{
-		MainMenu menu = new MainMenu();
-		menu.setVisible(true);
-	}
-	
-	
 }
