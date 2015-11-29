@@ -8,7 +8,6 @@ public class Player {
   	private int number;
   	private List<Card> hand = new ArrayList<Card>();
   	private String name;
-  	private boolean hisTurnToBet = false;
   	private boolean hasDealerButton = false;
   	private boolean hasBigBlind = false;
   	private boolean hasSmallBlind = false;
@@ -115,14 +114,6 @@ public class Player {
 
 	public void setInGame(boolean inGame) {
 		this.inGame = inGame;
-	}
-
-	public boolean isHisTurnToBet() {
-		return hisTurnToBet;
-	}
-
-	public void setHisTurnToBet(boolean hisTurnToBet) {
-		this.hisTurnToBet = hisTurnToBet;
 	}
 
 	public boolean isInGame() {
