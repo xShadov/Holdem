@@ -25,6 +25,7 @@ public class KryoServer implements Runnable {
 	private int betPlayer = 0;
 	private boolean bidingOver = false;
 	private boolean flopTime = false;
+	private int handsCounter = 0;
 	private int bidingCount = 0;
 	private boolean turnTime = false;
 	private boolean riverTime = false;
@@ -32,8 +33,9 @@ public class KryoServer implements Runnable {
 	private Deck deck = null;
 	private Table table = null;
 	private boolean bidingTime = false;
-	private int smallBlindAmount = 20;
-	private int bigBlindAmount = 50;
+	private int startingSmallBlindAmount = 20;
+	private int smallBlindAmount = Integer.valueOf(startingSmallBlindAmount);
+	private int bigBlindAmount = smallBlindAmount*2;
 	private boolean newHand = false;
 	private SampleResponse response;
 	
@@ -184,6 +186,21 @@ public class KryoServer implements Runnable {
 			response = new SampleResponse("MW");
 		}
 		server.sendToAllTCP(response);
+		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		resetAfterRound();
+	}
+
+	private void resetAfterRound() {
+		handsCounter++;
+		if(handsCounter%10==0){
+			smallBlindAmount+=startingSmallBlindAmount;
+			bigBlindAmount=smallBlindAmount*2;
+		}
+		newHand = true;
 	}
 
 	private void setFirstAndLastToBet() {
@@ -265,28 +282,28 @@ public class KryoServer implements Runnable {
 
 	private void handleReceived(Object object) {
 		if (object instanceof SampleRequest) {
-        	  SampleRequest request = (SampleRequest) object;
-    		  if(request.getTAG().equals("B")){
-    			  if(bidingTime && !bidingOver){
-	    			  if(request.getNumber()==betPlayer){
-	    				  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+request.getBetAmount());
-	    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-request.getBetAmount());
-	    				  table.setPot(table.getPot()+players.get(request.getNumber()).getBetAmount());
-	    				  if(request.getNumber()==lastToBet && table.getRaiseAmount()==0){
-	    					  bidingOver = true;
-	    					  waitingForPlayerResponse = false;
-	    				  } else{
-	        				  setBetPlayer();
-	    				  }
-	    			  }
+    	  SampleRequest request = (SampleRequest) object;
+		  if(request.getTAG().equals("B")){
+			  if(bidingTime && !bidingOver){
+    			  if(request.getNumber()==betPlayer){
+    				  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+request.getBetAmount());
+    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-request.getBetAmount());
+    				  table.setPot(table.getPot()+players.get(request.getNumber()).getBetAmount());
+    				  if(request.getNumber()==lastToBet && table.getRaiseAmount()==0){
+    					  bidingOver = true;
+    					  waitingForPlayerResponse = false;
+    				  } else{
+        				  setBetPlayer();
+    				  }
     			  }
-    		  }
-          }
+			  }
+		  }
+      }
 	}
 	
     private void initiateNewHand() {
-		if(deck==null) deck=new Deck();
-		if(table==null) table=new Table();
+		deck = new Deck();
+		table = new Table();
 		table.setBigBlindAmount(bigBlindAmount);
 		table.setSmallBlindAmount(smallBlindAmount);
 		deck.dealCards(2, players);
