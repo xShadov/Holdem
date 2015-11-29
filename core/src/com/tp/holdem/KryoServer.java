@@ -20,6 +20,9 @@ public class KryoServer implements Runnable {
 	private int counter = 0;
 	private int numPlayers = 0;
 	private int turnPlayer = 0;
+	private boolean flopTime = false;
+	private boolean turnTime = false;
+	private boolean riverTime = false;
 	private Deck deck = null;
 	private Table table = null;
 	private int smallBlindAmount = 20;
@@ -113,13 +116,22 @@ public class KryoServer implements Runnable {
 				response = new SampleResponse("R", playersWithHiddenCards);
 				server.sendToAllTCP(response);
 				//flop - 3 karty na stol
-				table.addCard(deck.drawCard());
-				table.addCard(deck.drawCard());
-				table.addCard(deck.drawCard());
+				if(flopTime){
+					flopTime = false;
+					table.addCard(deck.drawCard());
+					table.addCard(deck.drawCard());
+					table.addCard(deck.drawCard());
+				}
 				//turn
-				table.addCard(deck.drawCard());
+				if(turnTime){
+					turnTime = false;
+					table.addCard(deck.drawCard());
+				}
 				//river
-				table.addCard(deck.drawCard());
+				if(riverTime){
+					riverTime = false;
+					table.addCard(deck.drawCard());
+				}
 				//TableInfo.cardsOnTable=table.getCardList();
 				response = new SampleResponse("C", table.getCardList(), false);
 				server.sendToAllTCP(response);

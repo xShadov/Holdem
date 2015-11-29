@@ -21,7 +21,10 @@ public class GameRenderer {
     private SpriteBatch batcher;
     private BitmapFont font;
     private List<Player> players;
+    private List<Card> yourCards;
+    private List<Card> cardsOnTable;
     private Texture cards;
+    private int yourNumber;
     private TextureRegion reverse;
     private int[] positionX = {400, 141, 90, 105, 220, 420, 620, 750, 750, 637};
     private int[] positionY = {134, 140, 295, 460, 585, 565, 595, 465, 285, 128};
@@ -43,11 +46,6 @@ public class GameRenderer {
     
     public void render(float delta, float runTime) {
     	
-    	if(Info.changes){
-    		players=Info.players;
-    		Info.changes=false;
-    	}
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -57,10 +55,10 @@ public class GameRenderer {
         batcher.enableBlending();
         if(players!=null){
 	        for(int i=0; i<players.size();i++){
-	        	if(players.get(i).getNumber()==Info.yourNumber){
-		        	findCurrentCardTexture(Info.yourCards.get(0));
+	        	if(players.get(i).getNumber()==yourNumber){
+		        	findCurrentCardTexture(yourCards.get(0));
 		        	batcher.draw(currentCardTexture, positionX[i]+15, positionY[i]+2);
-		        	findCurrentCardTexture(Info.yourCards.get(1));
+		        	findCurrentCardTexture(yourCards.get(1));
 		        	batcher.draw(currentCardTexture, positionX[i]+82+15, positionY[i]+2);
 	        	}
 	        	else{
@@ -69,14 +67,13 @@ public class GameRenderer {
 	        	}
 	        }
         }
-        if(TableInfo.changesInTable)
+        if(cardsOnTable!=null)
         {
-        	for(int i=0;i<TableInfo.cardsOnTable.size();i++)
+        	for(int i=0;i<cardsOnTable.size();i++)
         	{
-        		findCurrentCardTexture(TableInfo.cardsOnTable.get(i));
+        		findCurrentCardTexture(cardsOnTable.get(i));
         		batcher.draw(currentCardTexture, 315+i*82,325);
         	}
-        	
         }
         batcher.end();
     }
@@ -84,4 +81,38 @@ public class GameRenderer {
     public void findCurrentCardTexture(Card card){
         currentCardTexture = new TextureRegion(cards, card.getxCordination(), card.getyCordination(), 69, 94);
     }
+    
+    public void changesOccurred(String TAG, SampleResponse response){
+    	if(TAG.equals("R")){
+    		players = response.getPlayers();
+    	}
+    	else if(TAG.equals("N")){
+    		yourNumber = response.getNumber();
+    	}
+    	else if(TAG.equals("C")){
+    		cardsOnTable = response.getCards();
+    	}
+    	else if(TAG.equals("HCD")){
+    		yourCards = response.getCards();
+    	}
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -12,13 +12,14 @@ import com.esotericsoftware.kryonet.Listener;
 public class KryoClient {
 
 	private Client simulationClient;
-
-    public KryoClient() {
+	private GameRenderer renderer;
+    public KryoClient(GameRenderer renderer) {
 
         try {
            simulationClient = new Client();
            simulationClient.start();
-
+           this.renderer = renderer;
+           
            Kryo kryo = simulationClient.getKryo();
            kryo.register(SampleResponse.class);
            kryo.register(SampleRequest.class);
@@ -34,20 +35,18 @@ public class KryoClient {
             	  if (object instanceof SampleResponse) {
             		  SampleResponse response = (SampleResponse) object;
             		  if(response.getTAG().equals("R")){
-            			  Info.players=response.getPlayers();
-            			  Info.changes=true;
+            			  changes("R", response);
             		  }
             		  if(response.getTAG().equals("N")){
-            			  Info.yourNumber=response.getNumber();
+            			  changes("N", response);
             		  }
             		  if(response.getTAG().equals("C"))
             		  {
-            			  TableInfo.cardsOnTable=response.getCards();
-            			  TableInfo.changesInTable=true;
+            			  changes("C", response);
             		  }
             		  if(response.getTAG().equals("HCD"))
             		  {
-            			  Info.yourCards=response.getCards();
+            			  changes("HCD", response);
             		  }
             	  }
               }
@@ -75,5 +74,9 @@ public class KryoClient {
            }
         }.start();
      }
+    
+    public void changes(String TAG, SampleResponse response){
+    	renderer.changesOccurred(TAG, response);
+    }
 }
 

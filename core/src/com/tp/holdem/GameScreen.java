@@ -34,6 +34,12 @@ public class GameScreen implements Screen, InputProcessor {
     public GameScreen() {
     	world = new GameWorld();
     	renderer = new GameRenderer(world);
+		try{
+			new KryoClient(renderer);
+		} catch (Exception e){
+			e.printStackTrace();
+			System.exit(1);
+		}
     	world.setRenderer(renderer);
         Gdx.input.setInputProcessor(this);
     }

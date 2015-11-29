@@ -11,12 +11,6 @@ public class Holdem extends Game {
 	
 	@Override
 	public void create() {
-		try{
-			new KryoClient();
-		} catch (Exception e){
-			e.printStackTrace();
-			System.exit(1);
-		}
 		setScreen(new GameScreen());
 	}
 
