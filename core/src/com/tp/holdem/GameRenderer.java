@@ -29,7 +29,7 @@ public class GameRenderer {
     private List<Card> cardsOnTable;
     private Texture cards;
     private int yourNumber=0;
-    private TextureRegion reverse, bigBlind, smallBlind, dealer, box;
+    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, smallStack, semiStack, bigStack;
     private int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
     private int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
     private int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
@@ -38,11 +38,16 @@ public class GameRenderer {
     private int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
     private int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
     private int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
+    private int[] chipsPositionX = {507, 313, 274, 286, 358, 538, 631, 705, 738, 636 };
+    private int[] chipsPositionY = {273, 288, 374, 441, 501, 484, 484, 451, 370, 280 };
     public GameRenderer(GameWorld world){
     	bg = new TextureRegion(new Texture("data/pokerTable.jpg"), 0, 0, 1024, 780);
     	dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
     	smallBlind = new TextureRegion(new Texture("data/smallBlind.png"), 0, 0, 35, 32);
     	bigBlind = new TextureRegion(new Texture("data/bigBlind.png"), 0, 0, 36, 34);
+    	smallStack = new TextureRegion(new Texture("data/smallStack.png"), 0, 0, 28, 28);
+    	semiStack = new TextureRegion(new Texture("data/semiStack.png"), 0, 0, 28, 30);
+    	bigStack = new TextureRegion(new Texture("data/bigStack.png"), 0, 0, 31, 33);
     	myWorld = world;
     	cam = new OrthographicCamera();
         cam.setToOrtho(false, 1024, 780);
@@ -97,6 +102,18 @@ public class GameRenderer {
         		batcher.draw(box, boxPositionX[i], boxPositionY[i]);
         		font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+75);
         		font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+30);
+	        	if(players.get((i+yourNumber)%players.size()).getBetAmount()>0)
+	        	{
+	        		if(players.get((i+yourNumber)%players.size()).getBetAmount()<300){
+	        			batcher.draw(smallStack, chipsPositionX[i], chipsPositionY[i]);
+	        		}
+		        	else if(players.get((i+yourNumber)%players.size()).getBetAmount()<1500){
+		        		batcher.draw(semiStack, chipsPositionX[i], chipsPositionY[i]);
+		        	}
+		        	else{
+		        		batcher.draw(bigStack, chipsPositionX[i], chipsPositionY[i]);
+		        	}
+	        	}
 	        }
         }
         if(cardsOnTable!=null)
