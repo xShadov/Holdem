@@ -29,11 +29,18 @@ public class GameRenderer {
     private List<Card> cardsOnTable;
     private Texture cards;
     private int yourNumber=0;
-    private TextureRegion reverse;
+    private TextureRegion reverse, bigBlind, smallBlind, dealer;
     private int[] positionX = {400, 141, 90, 105, 220, 420, 620, 750, 750, 637};
     private int[] positionY = {134, 140, 295, 460, 585, 565, 595, 465, 285, 128};
+    private int[] dealerPositionX = {415, 255, 253, 280, 363, 517, 682, 682, 678, 582};
+    private int[] dealerPositionY = {232, 253, 382, 498, 526, 507, 526, 412, 291, 241};
+    private int[] blindPositionX = {480, 307, 253, 274, 314, 457, 625, 679, 696, 640};
+    private int[] blindPositionY = {241, 231, 330, 450, 553, 517, 534, 468, 345, 259};
     public GameRenderer(GameWorld world){
     	bg = new TextureRegion(new Texture("data/pokerTable.jpg"), 0, 0, 1024, 780);
+    	dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
+    	smallBlind = new TextureRegion(new Texture("data/smallBlind.png"), 0, 0, 35, 32);
+    	bigBlind = new TextureRegion(new Texture("data/bigBlind.png"), 0, 0, 36, 34);
     	myWorld = world;
     	cam = new OrthographicCamera();
         cam.setToOrtho(false, 1024, 780);
@@ -73,6 +80,15 @@ public class GameRenderer {
 	        		batcher.draw(reverse, positionX[i]+15, positionY[i]+2);
 	        		batcher.draw(reverse, positionX[i]+82+15, positionY[i]+2);
 	        	}
+	        	if(players.get(i).isHasDealerButton()){
+	        		batcher.draw(dealer, dealerPositionX[i], dealerPositionY[i]);
+	        	}
+	        	if(players.get(i).isHasSmallBlind()){
+	        		batcher.draw(smallBlind, blindPositionX[i], blindPositionY[i]);
+	        	}
+	        	else if(players.get(i).isHasBigBlind()){
+	        		batcher.draw(bigBlind, blindPositionX[i], blindPositionY[i]);
+	        	}
 	        }
         }
         if(cardsOnTable!=null)
@@ -80,7 +96,7 @@ public class GameRenderer {
         	for(int i=0;i<cardsOnTable.size();i++)
         	{
         		findCurrentCardTexture(cardsOnTable.get(i));
-        		batcher.draw(currentCardTexture, 315+i*82,325);
+        		batcher.draw(currentCardTexture, 315+i*82,360);
         	}
         }
         batcher.end();

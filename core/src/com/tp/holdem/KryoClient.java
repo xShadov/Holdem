@@ -49,7 +49,6 @@ public class KryoClient {
             		  }
             		  if(response.getTAG().equals("W"))
             		  {
-            			  System.out.println("W from server");
             			  changes("W", response);
             		  }
             	  }

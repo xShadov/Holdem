@@ -16,6 +16,7 @@ public class Player {
   	private int chipsAmount = 0;
   	private boolean isFolded = false;
   	private int connectionId;
+  	private boolean inGame = true;
   	
   	public Player(){
   		
@@ -117,6 +118,10 @@ public class Player {
 
 	public void setHand(List<Card> hand) {
 		this.hand = hand;
+	}
+
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
 	}
 
 	

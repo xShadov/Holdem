@@ -20,9 +20,9 @@ public class KryoServer implements Runnable {
 	private int counter = 0;
 	private int numPlayers = 0;
 	private int turnPlayer = 0;
-	private boolean flopTime = false;
-	private boolean turnTime = false;
-	private boolean riverTime = false;
+	private boolean flopTime = true;
+	private boolean turnTime = true;
+	private boolean riverTime = true;
 	private Deck deck = null;
 	private Table table = null;
 	private int smallBlindAmount = 20;
@@ -69,7 +69,9 @@ public class KryoServer implements Runnable {
   			  }
           }
           public synchronized void disconnected(Connection con){
-        	  numPlayers--;
+        	  for(Player player : players){
+        		  if(player.getConnectionId()==con.getID()) player.setInGame(false);
+        	  }
           }
       });
       
