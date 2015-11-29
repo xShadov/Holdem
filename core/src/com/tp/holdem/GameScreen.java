@@ -28,15 +28,15 @@ public class GameScreen implements Screen, InputProcessor {
     private Skin buttonsSkin;
     private BitmapFont font;
     private TextureAtlas atlas;
-    
-
+    private SampleRequest request;
+    private KryoClient client;
     // This is the constructor, not the class declaration
     public GameScreen() {
     	world = new GameWorld();
     	renderer = new GameRenderer(world);
-		try{
-			new KryoClient(renderer);
-		} catch (Exception e){
+    	try{
+    		client = new KryoClient(renderer);
+    	} catch (Exception e){
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -120,7 +120,10 @@ public class GameScreen implements Screen, InputProcessor {
     		@Override
     		public void clicked(InputEvent event,float x, float y)
     		{
-    			//TODO
+    			if(renderer.getTurnToBet()==renderer.getYourNumber()){
+    				request = new SampleRequest("B", 150, renderer.getYourNumber());
+    				client.getSimulationClient().sendTCP(request);
+    			}
     		}
     	} );
     	stage.addActor(betButton);

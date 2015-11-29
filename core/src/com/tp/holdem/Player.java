@@ -17,6 +17,7 @@ public class Player {
   	private boolean isFolded = false;
   	private int connectionId;
   	private boolean inGame = true;
+  	private boolean isAllIn = false;
   	
   	public Player(){
   		
@@ -58,14 +59,6 @@ public class Player {
 
 	public void setFolded(boolean isFolded) {
 		this.isFolded = isFolded;
-	}
-
-	public boolean isHisTurn() {
-		return hisTurnToBet;
-	}
-
-	public void setHisTurn(boolean hisTurn) {
-		this.hisTurnToBet = hisTurn;
 	}
 
 	public boolean isHasDealerButton() {
@@ -130,6 +123,22 @@ public class Player {
 
 	public void setHisTurnToBet(boolean hisTurnToBet) {
 		this.hisTurnToBet = hisTurnToBet;
+	}
+
+	public boolean isInGame() {
+		return inGame;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public boolean isAllIn() {
+		return isAllIn;
+	}
+
+	public void setAllIn(boolean isAllIn) {
+		this.isAllIn = isAllIn;
 	}
 
 	

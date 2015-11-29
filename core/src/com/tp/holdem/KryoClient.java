@@ -51,6 +51,10 @@ public class KryoClient {
             		  {
             			  changes("W", response);
             		  }
+            		  if(response.getTAG().equals("B"))
+            		  {
+            			  changes("B", response);
+            		  }
             	  }
               }
            });
@@ -81,5 +85,9 @@ public class KryoClient {
     public void changes(String TAG, SampleResponse response){
     	renderer.changesOccurred(TAG, response);
     }
+
+	public Client getSimulationClient() {
+		return simulationClient;
+	}
 }
 

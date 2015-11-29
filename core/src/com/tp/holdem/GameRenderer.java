@@ -24,6 +24,7 @@ public class GameRenderer {
     private boolean waitingForAll;
     private String waitingMessage = "Nope";
     private int pot = 0;
+    private int turnToBet;
     private List<Player> players;
     private List<Card> yourCards;
     private List<Card> cardsOnTable;
@@ -60,7 +61,7 @@ public class GameRenderer {
         box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		font.getData().setScale(.54f);
+		font.getData().setScale(.4f);
 		font2 = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
 		font2.getData().setScale(.80f);
     }
@@ -100,8 +101,9 @@ public class GameRenderer {
 	        		batcher.draw(bigBlind, blindPositionX[i], blindPositionY[i]);
 	        	}
         		batcher.draw(box, boxPositionX[i], boxPositionY[i]);
-        		font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+75);
-        		font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+30);
+        		font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+81);
+        		font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+54);
+        		font.draw(batcher, "Bet: "+players.get((i+yourNumber)%players.size()).getBetAmount(), boxPositionX[i]+18, boxPositionY[i]+27);
 	        	if(players.get((i+yourNumber)%players.size()).getBetAmount()>0)
 	        	{
 	        		if(players.get((i+yourNumber)%players.size()).getBetAmount()<300){
@@ -113,6 +115,9 @@ public class GameRenderer {
 		        	else{
 		        		batcher.draw(bigStack, chipsPositionX[i], chipsPositionY[i]);
 		        	}
+	        	}
+	        	if(turnToBet == yourNumber){
+	        		font.draw(batcher, "YOUR TURN", 300, 600);
 	        	}
 	        }
         }
@@ -151,7 +156,18 @@ public class GameRenderer {
     		waitingForAll = true;
     		waitingMessage = response.getText();
     	}
+    	else if(TAG.equals("B")){
+    		turnToBet = response.getNumber();
+    	}
     }
+
+	public int getYourNumber() {
+		return yourNumber;
+	}
+	
+	public int getTurnToBet() {
+		return turnToBet;
+	}
 }
 
 
