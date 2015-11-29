@@ -289,7 +289,7 @@ public class MainMenu extends JFrame
 	private ExecutorService gameExecutor = Executors.newSingleThreadExecutor();
 	private Future<?> server;
 	private Future<?> clients;
-	private static KryoServer kryo;
+	//private static KryoServer kryo;
 	//private static DesktopLauncher client;
 	
 	private int playersC = 3;
@@ -320,7 +320,12 @@ public class MainMenu extends JFrame
 		{
 			public void run()
 			{
-				kryo.main(new String[0]);
+					try {
+						KryoServer kryo = new KryoServer(playersC, botsC, limit);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
 			}
 		});
 	}
@@ -392,10 +397,10 @@ public class MainMenu extends JFrame
 		layout.gridy = 1;
 		layout.gridwidth = 1;
         masterPanel.add(properties,layout);
-        layout.gridx = 0;
-        layout.gridy = 2;
-        layout.gridwidth = 1;
-        masterPanel.add(client,layout);
+        //layout.gridx = 0;
+        //layout.gridy = 2;
+        //layout.gridwidth = 1;
+        //masterPanel.add(client,layout);
         
         this.getContentPane().add(masterPanel);
         setResizable(false);

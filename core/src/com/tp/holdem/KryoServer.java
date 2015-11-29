@@ -36,7 +36,7 @@ public class KryoServer implements Runnable {
 	private boolean newHand = false;
 	private SampleResponse response;
 	
-	public KryoServer() throws Exception {
+	public KryoServer(int playersCount, int botsCount,String limitType) throws Exception {
 
       server = new Server();
 
@@ -217,7 +217,7 @@ public class KryoServer implements Runnable {
 	
 	public static void main(String[] args) {
 		try {
-			new KryoServer();
+			new KryoServer(3,0,"no-limit");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
