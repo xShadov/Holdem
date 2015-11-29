@@ -8,6 +8,7 @@ public class SampleResponse {
 	public String TAG="";
 	public List<Player> players;
 	public List<Card> cards;
+	public Table table;
 	public int number = 0;
 	
 	public int getNumber() {
@@ -43,7 +44,13 @@ public class SampleResponse {
 	}
 	
 	public SampleResponse(String TAG, String text){
+		this.TAG = TAG;
 		this.text=text;
+	}
+	
+	public SampleResponse(String TAG, Table table){
+		this.TAG = TAG;
+		this.table = table;
 	}
 	
 	public SampleResponse(String TAG, List<Player> players){
@@ -67,6 +74,14 @@ public class SampleResponse {
 	
 	public void setText(String text){
 		this.text = text;
+	}
+
+	public Table getTable() {
+		return table;
+	}
+
+	public void setTable(Table table) {
+		this.table = table;
 	}
 }
 

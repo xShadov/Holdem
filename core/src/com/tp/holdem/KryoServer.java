@@ -51,6 +51,7 @@ public class KryoServer implements Runnable {
         		  
         	  }
           } 
+          
           public synchronized void connected(Connection con){
         	  players.add(new Player(numPlayers));
         	  players.get(numPlayers).setChipsAmount(1500);
@@ -62,10 +63,10 @@ public class KryoServer implements Runnable {
   				  newHand=true;
   				  gameStarted=true;
   			  }
-  			  //else{
-  	      	//	  response = new SampleResponse("W", "Waiting for all players");
-  	    	//	  server.sendToAllTCP(response);
-  			 // }
+  			  else{
+  	      		  response = new SampleResponse("W", "Waiting for all players");
+  	      		  server.sendToTCP(con.getID(), response);
+  			  }
           }
           public synchronized void disconnected(Connection con){
         	  numPlayers--;
@@ -113,6 +114,7 @@ public class KryoServer implements Runnable {
 				for(Player player : playersWithHiddenCards){
 					player.setHand(null);
 				}
+				
 				response = new SampleResponse("R", playersWithHiddenCards);
 				server.sendToAllTCP(response);
 				//flop - 3 karty na stol
@@ -133,7 +135,7 @@ public class KryoServer implements Runnable {
 					table.addCard(deck.drawCard());
 				}
 				//TableInfo.cardsOnTable=table.getCardList();
-				response = new SampleResponse("C", table.getCardList(), false);
+				response = new SampleResponse("T", table);
 				server.sendToAllTCP(response);
 			}
 		}

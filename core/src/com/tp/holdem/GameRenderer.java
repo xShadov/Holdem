@@ -20,11 +20,15 @@ public class GameRenderer {
     private TextureRegion bg, currentCardTexture;
     private SpriteBatch batcher;
     private BitmapFont font;
+    private Table table;
+    private boolean waitingForAll;
+    private String waitingMessage = "Nope";
+    private int pot = 0;
     private List<Player> players;
     private List<Card> yourCards;
     private List<Card> cardsOnTable;
     private Texture cards;
-    private int yourNumber;
+    private int yourNumber=0;
     private TextureRegion reverse;
     private int[] positionX = {400, 141, 90, 105, 220, 420, 620, 750, 750, 637};
     private int[] positionY = {134, 140, 295, 460, 585, 565, 595, 465, 285, 128};
@@ -41,7 +45,7 @@ public class GameRenderer {
         cards = new Texture(Gdx.files.internal("data/cards.png"));
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		font.getData().setScale(.25f);
+		font.getData().setScale(.80f);
     }
     
     public void render(float delta, float runTime) {
@@ -50,9 +54,13 @@ public class GameRenderer {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batcher.begin();
-
+        
         batcher.draw(bg, 0, 0, 1024, 780);
         batcher.enableBlending();
+        
+        if(waitingForAll){
+        	font.draw(batcher, waitingMessage, 250, 500);
+        }
         if(players!=null){
 	        for(int i=0; i<players.size();i++){
 	        	if(players.get(i).getNumber()==yourNumber){
@@ -89,11 +97,18 @@ public class GameRenderer {
     	else if(TAG.equals("N")){
     		yourNumber = response.getNumber();
     	}
-    	else if(TAG.equals("C")){
-    		cardsOnTable = response.getCards();
+    	else if(TAG.equals("T")){
+    		table = response.getTable();
+    		cardsOnTable = table.getCardList();
+    		pot = table.getPot();
     	}
     	else if(TAG.equals("HCD")){
+    		waitingForAll = false;
     		yourCards = response.getCards();
+    	}
+    	else if(TAG.equals("W")){
+    		waitingForAll = true;
+    		waitingMessage = response.getText();
     	}
     }
 }
