@@ -19,7 +19,7 @@ public class GameRenderer {
     private ShapeRenderer shapeRenderer;
     private TextureRegion bg, currentCardTexture;
     private SpriteBatch batcher;
-    private BitmapFont font;
+    private BitmapFont font, font2;
     private Table table;
     private boolean waitingForAll;
     private String waitingMessage = "Nope";
@@ -29,13 +29,15 @@ public class GameRenderer {
     private List<Card> cardsOnTable;
     private Texture cards;
     private int yourNumber=0;
-    private TextureRegion reverse, bigBlind, smallBlind, dealer;
-    private int[] positionX = {400, 141, 90, 105, 220, 420, 620, 750, 750, 637};
-    private int[] positionY = {134, 140, 295, 460, 585, 565, 595, 465, 285, 128};
-    private int[] dealerPositionX = {415, 255, 253, 280, 363, 517, 682, 682, 678, 582};
-    private int[] dealerPositionY = {232, 253, 382, 498, 526, 507, 526, 412, 291, 241};
-    private int[] blindPositionX = {480, 307, 253, 274, 314, 457, 625, 679, 696, 640};
-    private int[] blindPositionY = {241, 231, 330, 450, 553, 517, 534, 468, 345, 259};
+    private TextureRegion reverse, bigBlind, smallBlind, dealer, box;
+    private int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
+    private int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
+    private int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
+    private int[] dealerPositionY = {237, 243, 330, 442, 502, 499, 516, 429, 313, 244};
+    private int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
+    private int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
+    private int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
+    private int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
     public GameRenderer(GameWorld world){
     	bg = new TextureRegion(new Texture("data/pokerTable.jpg"), 0, 0, 1024, 780);
     	dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
@@ -50,9 +52,12 @@ public class GameRenderer {
         shapeRenderer.setProjectionMatrix(cam.combined);
 
         cards = new Texture(Gdx.files.internal("data/cards.png"));
+        box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		font.getData().setScale(.80f);
+		font.getData().setScale(.54f);
+		font2 = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
+		font2.getData().setScale(.80f);
     }
     
     public void render(float delta, float runTime) {
@@ -66,29 +71,32 @@ public class GameRenderer {
         batcher.enableBlending();
         
         if(waitingForAll){
-        	font.draw(batcher, waitingMessage, 250, 500);
+        	font2.draw(batcher, waitingMessage, 300, 500);
         }
         if(players!=null){
 	        for(int i=0; i<players.size();i++){
-	        	if(players.get(i).getNumber()==yourNumber){
+	        	if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber){
 		        	findCurrentCardTexture(yourCards.get(0));
-		        	batcher.draw(currentCardTexture, positionX[i]+15, positionY[i]+2);
+		        	batcher.draw(currentCardTexture, positionX[i], positionY[i]);
 		        	findCurrentCardTexture(yourCards.get(1));
-		        	batcher.draw(currentCardTexture, positionX[i]+82+15, positionY[i]+2);
+		        	batcher.draw(currentCardTexture, positionX[i]+20, positionY[i]-15);
 	        	}
 	        	else{
-	        		batcher.draw(reverse, positionX[i]+15, positionY[i]+2);
-	        		batcher.draw(reverse, positionX[i]+82+15, positionY[i]+2);
+	        		batcher.draw(reverse, positionX[i], positionY[i]);
+	        		batcher.draw(reverse, positionX[i]+20, positionY[i]-15);
 	        	}
-	        	if(players.get(i).isHasDealerButton()){
+	        	if(players.get((i+yourNumber)%players.size()).isHasDealerButton()){
 	        		batcher.draw(dealer, dealerPositionX[i], dealerPositionY[i]);
 	        	}
-	        	if(players.get(i).isHasSmallBlind()){
+	        	if(players.get((i+yourNumber)%players.size()).isHasSmallBlind()){
 	        		batcher.draw(smallBlind, blindPositionX[i], blindPositionY[i]);
 	        	}
-	        	else if(players.get(i).isHasBigBlind()){
+	        	else if(players.get((i+yourNumber)%players.size()).isHasBigBlind()){
 	        		batcher.draw(bigBlind, blindPositionX[i], blindPositionY[i]);
 	        	}
+        		batcher.draw(box, boxPositionX[i], boxPositionY[i]);
+        		font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+75);
+        		font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+30);
 	        }
         }
         if(cardsOnTable!=null)

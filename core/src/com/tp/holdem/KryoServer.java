@@ -20,11 +20,14 @@ public class KryoServer implements Runnable {
 	private int counter = 0;
 	private int numPlayers = 0;
 	private int turnPlayer = 0;
-	private boolean flopTime = true;
-	private boolean turnTime = true;
-	private boolean riverTime = true;
+	private int betPlayer = 0;
+	private boolean flopTime = false;
+	private boolean turnTime = false;
+	private boolean riverTime = false;
+	private boolean waitingForPlayerResponse = false;
 	private Deck deck = null;
 	private Table table = null;
+	private boolean bidingTime = false;
 	private int smallBlindAmount = 20;
 	private int bigBlindAmount = 50;
 	private boolean newHand = false;
@@ -59,7 +62,7 @@ public class KryoServer implements Runnable {
         	  response = new SampleResponse("N", numPlayers);
         	  server.sendToTCP(con.getID(), response);
         	  numPlayers++;
-  			  if(numPlayers==2){
+  			  if(numPlayers==3){
   				  newHand=true;
   				  gameStarted=true;
   			  }
@@ -110,6 +113,18 @@ public class KryoServer implements Runnable {
 					players.get((turnPlayer+2)%numPlayers).setHasBigBlind(true);
 					players.get((turnPlayer+2)%numPlayers).setBetAmount(bigBlindAmount);
 					players.get((turnPlayer+2)%numPlayers).setChipsAmount(players.get((turnPlayer+2)%numPlayers).getChipsAmount()-bigBlindAmount);
+					turnPlayer++;
+					bidingTime = true;
+					betPlayer = (turnPlayer+2)%numPlayers;
+				}
+				
+				if(bidingTime){
+					if(!waitingForPlayerResponse){
+						sendBetResponse(betPlayer);
+					}
+					else{
+						betPlayer++;
+					}
 				}
 				
 				playersWithHiddenCards = new ArrayList<Player>(players);
@@ -143,6 +158,13 @@ public class KryoServer implements Runnable {
 		}
 	}
 	
+	private void sendBetResponse(int numberToBet) {
+		players.get(numberToBet).setHisTurnToBet(true);
+		response = new SampleResponse("B", numberToBet);
+		server.sendToTCP(players.get(numberToBet).getConnectionId(), response);
+		waitingForPlayerResponse = true;
+	}
+
 	public static void main(String[] args) {
 		try {
 			new KryoServer();
