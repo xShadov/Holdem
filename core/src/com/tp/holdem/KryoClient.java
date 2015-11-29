@@ -33,28 +33,7 @@ public class KryoClient {
               public synchronized void received(Connection connection, Object object) {
             	  if (object instanceof SampleResponse) {
             		  SampleResponse response = (SampleResponse) object;
-            		  if(response.getTAG().equals("R")){
-            			  changes("R", response);
-            		  }
-            		  if(response.getTAG().equals("N")){
-            			  changes("N", response);
-            		  }
-            		  if(response.getTAG().equals("T"))
-            		  {
-            			  changes("T", response);
-            		  }
-            		  if(response.getTAG().equals("HCD"))
-            		  {
-            			  changes("HCD", response);
-            		  }
-            		  if(response.getTAG().equals("W"))
-            		  {
-            			  changes("W", response);
-            		  }
-            		  if(response.getTAG().equals("B"))
-            		  {
-            			  changes("B", response);
-            		  }
+        			  changes(response.getTAG(), response);
             	  }
               }
            });

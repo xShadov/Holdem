@@ -38,7 +38,7 @@ public class CardTests {
 		tableCards.add(new Card("9", "Spade"));
 		tableCards.add(new Card("3", "Club"));
 		tableCards.add(new Card("King", "Spade"));
-		System.out.println(HandOperations.findHandRank(cards, tableCards));
+		System.out.println(HandOperations.findHandRank(0, cards, tableCards));
     } 
 	
 	@Test
@@ -53,7 +53,7 @@ public class CardTests {
 		tableCards.add(new Card("3", "Club"));
 		tableCards.add(new Card("7", "Spade"));
 		List<HandRank> hands = new ArrayList<HandRank>();
-		hands.add(HandOperations.findHandRank(cards, tableCards));
+		hands.add(HandOperations.findHandRank(0, cards, tableCards));
 		cards = new ArrayList<Card>();
 		cards.add(new Card("Queen", "Heart"));
 		cards.add(new Card("King", "Heart"));
@@ -63,9 +63,12 @@ public class CardTests {
 		tableCards.add(new Card("Jack", "Heart"));
 		tableCards.add(new Card("3", "Club"));
 		tableCards.add(new Card("7", "Spade"));
-		hands.add(HandOperations.findHandRank(cards, tableCards));
+		hands.add(HandOperations.findHandRank(1, cards, tableCards));
 		HandRankComparator comp = new HandRankComparator();
-		System.out.println(comp.compare(hands.get(1), hands.get(0)));
+		if(comp.compare(hands.get(1), hands.get(1))==0){
+			System.out.println(1);
+		}
+		else System.out.println(0);
 	}
 	@Test                                        
     public final void handCompare() {          
@@ -80,7 +83,7 @@ public class CardTests {
 		tableCards.add(new Card("King", "Spade"));
 		List<HandRank> hands = new ArrayList<HandRank>();
 		
-		hands.add(HandOperations.findHandRank(cards, tableCards));
+		hands.add(HandOperations.findHandRank(0, cards, tableCards));
 		cards = new ArrayList<Card>();
 		cards.add(new Card("10", "Heart"));
 		cards.add(new Card("Jack", "Heart"));
@@ -90,7 +93,7 @@ public class CardTests {
 		tableCards.add(new Card("Ace", "Heart"));
 		tableCards.add(new Card("3", "Club"));
 		tableCards.add(new Card("King", "Spade"));
-		hands.add(HandOperations.findHandRank(cards, tableCards));
+		hands.add(HandOperations.findHandRank(1, cards, tableCards));
 
 		cards = new ArrayList<Card>();
 		cards.add(new Card("10", "Heart"));
@@ -101,7 +104,7 @@ public class CardTests {
 		tableCards.add(new Card("8", "Heart"));
 		tableCards.add(new Card("3", "Club"));
 		tableCards.add(new Card("9", "Spade"));
-		hands.add(HandOperations.findHandRank(cards, tableCards));
+		hands.add(HandOperations.findHandRank(2, cards, tableCards));
 		
 		cards = new ArrayList<Card>();
 		cards.add(new Card("10", "Heart"));
@@ -112,7 +115,7 @@ public class CardTests {
 		tableCards.add(new Card("8", "Heart"));
 		tableCards.add(new Card("3", "Club"));
 		tableCards.add(new Card("9", "Spade"));
-		hands.add(HandOperations.findHandRank(cards, tableCards));
+		hands.add(HandOperations.findHandRank(3, cards, tableCards));
 		
 		Collections.sort(hands, new HandRankComparator());
 		for(HandRank hand : hands){

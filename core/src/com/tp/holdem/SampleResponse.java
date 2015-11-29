@@ -43,6 +43,10 @@ public class SampleResponse {
 		
 	}
 	
+	public SampleResponse(String TAG){
+		this.TAG = TAG;
+	}
+	
 	public SampleResponse(String TAG, String text){
 		this.TAG = TAG;
 		this.text=text;

@@ -8,32 +8,32 @@ public class HandOperations {
 
 	public static List<Card> cardsThatMakeDeck;
 	
-	public static HandRank findHandRank(List<Card> hand, List<Card> tableCards){
+	public static HandRank findHandRank(int playerNumber, List<Card> hand, List<Card> tableCards){
 		List<Card> cards = new ArrayList<Card>();
 		cards.addAll(hand);
 		cards.addAll(tableCards);
 		Collections.sort(cards, new CardComparator());
 		
 		if (isARoyalFlush(cards)) {
-			return new HandRank(HandRankingEnum.ROYAL_FLUSH, cardsThatMakeDeck);
+			return new HandRank(playerNumber, HandRankingEnum.ROYAL_FLUSH, cardsThatMakeDeck);
 	    } else if (isAStraightFlush(cards)) {
-	    	return new HandRank(HandRankingEnum.STRAIGHT_FLUSH, cardsThatMakeDeck);
+	    	return new HandRank(playerNumber, HandRankingEnum.STRAIGHT_FLUSH, cardsThatMakeDeck);
 	    } else if (isAFourOfAKind(cards)) {
-	        return new HandRank(HandRankingEnum.FOUR_OF_A_KIND, cardsThatMakeDeck);
+	        return new HandRank(playerNumber, HandRankingEnum.FOUR_OF_A_KIND, cardsThatMakeDeck);
 	    } else if (isAFullHouse(cards)) {
-	        return new HandRank(HandRankingEnum.FULL_HOUSE, cardsThatMakeDeck);
+	        return new HandRank(playerNumber, HandRankingEnum.FULL_HOUSE, cardsThatMakeDeck);
 	    } else if (isAFlush(cards)) {
-	        return new HandRank(HandRankingEnum.FLUSH, cardsThatMakeDeck);
+	        return new HandRank(playerNumber, HandRankingEnum.FLUSH, cardsThatMakeDeck);
 	    } else if (isAStraight(cards)) {
-	        return new HandRank(HandRankingEnum.STRAIGHT, cardsThatMakeDeck);
+	        return new HandRank(playerNumber, HandRankingEnum.STRAIGHT, cardsThatMakeDeck);
 	    } else if (isThreeOfAKind(cards)) {
-	        return new HandRank(HandRankingEnum.THREE_OF_A_KIND, cardsThatMakeDeck);
+	        return new HandRank(playerNumber, HandRankingEnum.THREE_OF_A_KIND, cardsThatMakeDeck);
 	    } else if (isTwoPair(cards)) {
-	        return new HandRank(HandRankingEnum.TWO_PAIR, cardsThatMakeDeck);
+	        return new HandRank(playerNumber, HandRankingEnum.TWO_PAIR, cardsThatMakeDeck);
 	    } else if (isPair(cards)) {
-	        return new HandRank(HandRankingEnum.PAIR, cardsThatMakeDeck);
+	        return new HandRank(playerNumber, HandRankingEnum.PAIR, cardsThatMakeDeck);
 	    } else {
-	        return new HandRank(HandRankingEnum.HIGH_CARD, getFiveMaxCards(cards));
+	        return new HandRank(playerNumber, HandRankingEnum.HIGH_CARD, getFiveMaxCards(cards));
 	    }
 	}
 	

@@ -5,21 +5,34 @@ import java.util.List;
 
 public class Player {
 
-  	private int number;
+  	private int number = -1;
   	private List<Card> hand = new ArrayList<Card>();
-  	private String name;
+  	private String name = "";
   	private boolean hasDealerButton = false;
   	private boolean hasBigBlind = false;
   	private boolean hasSmallBlind = false;
   	private int betAmount = 0;
   	private int chipsAmount = 0;
   	private boolean isFolded = false;
-  	private int connectionId;
+  	private int connectionId = 0;
   	private boolean inGame = true;
   	private boolean isAllIn = false;
   	
   	public Player(){
-  		
+
+  	}
+
+  	public void setAllProperties(Player player){
+  		this.number = player.getNumber();
+  	  	this.name = player.getName();
+  	  	this.hasDealerButton = player.isHasDealerButton();
+  	 	this.hasBigBlind = player.isHasBigBlind();
+  	 	this.hasSmallBlind = player.isHasSmallBlind();
+  		this.betAmount = player.getBetAmount();
+  		this.chipsAmount = player.getChipsAmount();
+  		this.isFolded = player.isFolded;
+  		this.inGame = player.isInGame();
+  		this.isAllIn = player.isAllIn;
   	}
   	
 	public Player(final int number){

@@ -6,19 +6,22 @@ public class HandRank {
 
 	private HandRankingEnum hand;
 	private List<Card> cardsThatMakeDeck;
+	private int playerNumber;
 	
 	public HandRank(){
 		
 	}
 	
-	public HandRank(HandRankingEnum hand, List<Card> cardsThatMakeDeck){
+	public HandRank(int playerNumber, HandRankingEnum hand, List<Card> cardsThatMakeDeck){
 		this.hand=hand;
+		this.playerNumber = playerNumber;
 		this.cardsThatMakeDeck=cardsThatMakeDeck;
 	}
 
 	@Override
 	public String toString(){
-		String string = hand.toString();
+		String string = playerNumber+" ";
+		string+= hand.toString();
 		for(Card card : cardsThatMakeDeck){
 			string+=" "+card.getHonour()+" "+card.getSuit();
 		}
@@ -39,5 +42,13 @@ public class HandRank {
 
 	public void setCardsThatMakeDeck(List<Card> cardsThatMakeDeck) {
 		this.cardsThatMakeDeck = cardsThatMakeDeck;
+	}
+
+	public int getPlayerNumber() {
+		return playerNumber;
+	}
+
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
 	}
 }

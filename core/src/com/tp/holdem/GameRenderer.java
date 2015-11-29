@@ -19,10 +19,12 @@ public class GameRenderer {
     private ShapeRenderer shapeRenderer;
     private TextureRegion bg, currentCardTexture;
     private SpriteBatch batcher;
-    private BitmapFont font, font2;
+    private BitmapFont font, font2, font3;
     private Table table;
     private boolean waitingForAll;
     private String waitingMessage = "Nope";
+    private int winnerNumber = -1;
+    private boolean tie = false;
     private int pot = 0;
     private int turnToBet;
     private List<Player> players;
@@ -65,6 +67,8 @@ public class GameRenderer {
 		font.getData().setScale(.4f);
 		font2 = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
 		font2.getData().setScale(.80f);
+		font3 = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
+		font3.getData().setScale(1.5f);
     }
     
     public void render(float delta, float runTime) {
@@ -76,6 +80,18 @@ public class GameRenderer {
         
         batcher.draw(bg, 0, 0, 1024, 780);
         batcher.enableBlending();
+        
+        if(winnerNumber!=-1){
+        	if(winnerNumber == yourNumber){
+        		font3.draw(batcher, "YOU WIN!", 320, 550);
+        	}
+        	else{
+        		font3.draw(batcher, players.get(winnerNumber).getName()+" WON!", 320, 550);
+        	}
+        }
+        else if(tie){
+        	font3.draw(batcher, "TIE!", 320, 550);
+        }
         
         if(waitingForAll){
         	font2.draw(batcher, waitingMessage, 300, 500);
@@ -162,6 +178,8 @@ public class GameRenderer {
     	}
     	else if(TAG.equals("HCD")){
     		waitingForAll = false;
+    		tie = false;
+    		winnerNumber = -1;
     		yourCards = response.getCards();
     	}
     	else if(TAG.equals("W")){
@@ -170,6 +188,12 @@ public class GameRenderer {
     	}
     	else if(TAG.equals("B")){
     		turnToBet = response.getNumber();
+    	}
+    	else if(TAG.equals("OW")){
+    		winnerNumber = response.getNumber();
+    	}
+    	else if(TAG.equals("MW")){
+    		tie = true;
     	}
     }
 
