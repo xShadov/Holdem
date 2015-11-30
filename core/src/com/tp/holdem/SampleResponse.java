@@ -10,6 +10,7 @@ public class SampleResponse {
 	public List<Card> cards;
 	public Table table;
 	public int number = 0;
+	public int maxBetOnTable = 0;
 	
 	public int getNumber() {
 		return number;
@@ -72,6 +73,12 @@ public class SampleResponse {
 		this.number = number;
 	}
 	
+	public SampleResponse(String TAG, int number, int maxBetOnTable){
+		this.TAG = TAG;
+		this.number = number;
+		this.maxBetOnTable = maxBetOnTable;
+	}
+	
 	public String getText(){
 		return text;
 	}
@@ -86,6 +93,14 @@ public class SampleResponse {
 
 	public void setTable(Table table) {
 		this.table = table;
+	}
+
+	public int getMaxBetOnTable() {
+		return maxBetOnTable;
+	}
+
+	public void setMaxBetOnTable(int maxBetOnTable) {
+		this.maxBetOnTable = maxBetOnTable;
 	}
 }
 

@@ -22,6 +22,11 @@ public class SampleRequest {
 		this.number = number;
 	}
 	
+	public SampleRequest(String TAG, int number){
+		this.TAG = TAG;
+		this.number = number;
+	}
+	
 	public String getText(){
 		return text;
 	}

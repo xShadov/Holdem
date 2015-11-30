@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 
 public class GameRenderer {
 
@@ -25,7 +26,11 @@ public class GameRenderer {
     private String waitingMessage = "Nope";
     private int winnerNumber = -1;
     private boolean tie = false;
+    private int bigBlindAmount = 0;
+    private int smallBlindAmount = 0;
     private int pot = 0;
+    private int maxBetOnTable = 0;
+    private int yourBetAmount = 0;
     private int turnToBet;
     private List<Player> players;
     private List<Card> yourCards;
@@ -81,7 +86,110 @@ public class GameRenderer {
         batcher.draw(bg, 0, 0, 1024, 780);
         batcher.enableBlending();
         
-        if(winnerNumber!=-1){
+        
+        drawWinMessage();
+        font3.draw(batcher, "MB:"+maxBetOnTable+"", 320, 550);
+        if(table!=null){
+        	font3.draw(batcher, "POT:"+table.getPot()+"", 600, 550);
+        }
+        drawWaitMessage();
+        if(players!=null){
+	        drawSpotlight();
+	        for(int i=0; i<players.size();i++){
+	        	drawCards(i);
+	        	drawButtons(i);
+        		drawInfoBoxes(i);
+	        	drawChips(i);
+	        }
+        }
+        if(cardsOnTable!=null)
+        {
+        	for(int i=0;i<cardsOnTable.size();i++)
+        	{
+        		drawCardsOnTable(i);
+        	}
+        }
+        batcher.end();
+    }
+
+	private void drawCardsOnTable(int i) {
+		findCurrentCardTexture(cardsOnTable.get(i));
+		batcher.draw(currentCardTexture, 315+i*82,360);
+	}
+
+	private void drawChips(int i) {
+		if(players.get((i+yourNumber)%players.size()).getBetAmount()>0 && players.get((i+yourNumber)%players.size()).isInGame())
+		{
+			if(players.get((i+yourNumber)%players.size()).getBetAmount()<300){
+				batcher.draw(smallStack, chipsPositionX[i], chipsPositionY[i]);
+			}
+			else if(players.get((i+yourNumber)%players.size()).getBetAmount()<1500){
+				batcher.draw(semiStack, chipsPositionX[i], chipsPositionY[i]);
+			}
+			else{
+				batcher.draw(bigStack, chipsPositionX[i], chipsPositionY[i]);
+			}
+		}
+	}
+
+	private void drawInfoBoxes(int i) {
+		if(players.get((i+yourNumber)%players.size()).isInGame()){
+			batcher.draw(box, boxPositionX[i], boxPositionY[i]);
+			font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+81);
+			font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+54);
+			font.draw(batcher, "Bet: "+players.get((i+yourNumber)%players.size()).getBetAmount(), boxPositionX[i]+18, boxPositionY[i]+27);
+		}
+	}
+
+	private void drawButtons(int i) {
+		if(players.get((i+yourNumber)%players.size()).isHasDealerButton() && players.get((i+yourNumber)%players.size()).isInGame()){
+			batcher.draw(dealer, dealerPositionX[i], dealerPositionY[i]);
+		}
+		if(players.get((i+yourNumber)%players.size()).isHasSmallBlind() && players.get((i+yourNumber)%players.size()).isInGame()){
+			batcher.draw(smallBlind, blindPositionX[i], blindPositionY[i]);
+		}
+		else if(players.get((i+yourNumber)%players.size()).isHasBigBlind() && players.get((i+yourNumber)%players.size()).isInGame()){
+			batcher.draw(bigBlind, blindPositionX[i], blindPositionY[i]);
+		}
+	}
+
+	private void drawCards(int i) {
+		if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber && players.get((i+yourNumber)%players.size()).isInGame()){
+			findCurrentCardTexture(yourCards.get(0));
+			batcher.draw(currentCardTexture, positionX[i], positionY[i]);
+			findCurrentCardTexture(yourCards.get(1));
+			batcher.draw(currentCardTexture, positionX[i]+20, positionY[i]-15);
+		}
+		else{
+			if(players.get((i+yourNumber)%players.size()).isInGame()){
+				batcher.draw(reverse, positionX[i], positionY[i]);
+				batcher.draw(reverse, positionX[i]+20, positionY[i]-15);
+			}
+		}
+	}
+	
+	private void drawSpotlight() {
+		for(int i=0; i<players.size();i++){
+			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet && players.get((i+yourNumber)%players.size()).isInGame()){
+				if(yourNumber == turnToBet){
+					batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
+					break;
+				} else {
+					batcher.draw(spotlight, positionX[i]-130, positionY[i]-40);
+					break;
+				}
+			}
+		}
+	}
+
+	private void drawWaitMessage() {
+		if(waitingForAll){
+        	font2.draw(batcher, waitingMessage, 300, 500);
+        }
+	}
+
+	private void drawWinMessage() {
+		if(winnerNumber!=-1){
         	if(winnerNumber == yourNumber){
         		font3.draw(batcher, "YOU WIN!", 320, 550);
         	}
@@ -92,73 +200,7 @@ public class GameRenderer {
         else if(tie){
         	font3.draw(batcher, "TIE!", 320, 550);
         }
-        
-        if(waitingForAll){
-        	font2.draw(batcher, waitingMessage, 300, 500);
-        }
-        if(players!=null){
-	        for(int i=0; i<players.size();i++){
-	        	if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
-	        		if(yourNumber == turnToBet){
-	        			batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
-	        			break;
-	        		} else {
-	        			batcher.draw(spotlight, positionX[i]-130, positionY[i]-40);
-	        			break;
-	        		}
-	        	}
-	        }
-	        for(int i=0; i<players.size();i++){
-	        	if(yourNumber == turnToBet){
-	        		font.draw(batcher, "YOUR TURN", 300, 600);
-	        	}
-	        	if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber){
-		        	findCurrentCardTexture(yourCards.get(0));
-		        	batcher.draw(currentCardTexture, positionX[i], positionY[i]);
-		        	findCurrentCardTexture(yourCards.get(1));
-		        	batcher.draw(currentCardTexture, positionX[i]+20, positionY[i]-15);
-	        	}
-	        	else{
-	        		batcher.draw(reverse, positionX[i], positionY[i]);
-	        		batcher.draw(reverse, positionX[i]+20, positionY[i]-15);
-	        	}
-	        	if(players.get((i+yourNumber)%players.size()).isHasDealerButton()){
-	        		batcher.draw(dealer, dealerPositionX[i], dealerPositionY[i]);
-	        	}
-	        	if(players.get((i+yourNumber)%players.size()).isHasSmallBlind()){
-	        		batcher.draw(smallBlind, blindPositionX[i], blindPositionY[i]);
-	        	}
-	        	else if(players.get((i+yourNumber)%players.size()).isHasBigBlind()){
-	        		batcher.draw(bigBlind, blindPositionX[i], blindPositionY[i]);
-	        	}
-        		batcher.draw(box, boxPositionX[i], boxPositionY[i]);
-        		font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+81);
-        		font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+54);
-        		font.draw(batcher, "Bet: "+players.get((i+yourNumber)%players.size()).getBetAmount(), boxPositionX[i]+18, boxPositionY[i]+27);
-	        	if(players.get((i+yourNumber)%players.size()).getBetAmount()>0)
-	        	{
-	        		if(players.get((i+yourNumber)%players.size()).getBetAmount()<300){
-	        			batcher.draw(smallStack, chipsPositionX[i], chipsPositionY[i]);
-	        		}
-		        	else if(players.get((i+yourNumber)%players.size()).getBetAmount()<1500){
-		        		batcher.draw(semiStack, chipsPositionX[i], chipsPositionY[i]);
-		        	}
-		        	else{
-		        		batcher.draw(bigStack, chipsPositionX[i], chipsPositionY[i]);
-		        	}
-	        	}
-	        }
-        }
-        if(cardsOnTable!=null)
-        {
-        	for(int i=0;i<cardsOnTable.size();i++)
-        	{
-        		findCurrentCardTexture(cardsOnTable.get(i));
-        		batcher.draw(currentCardTexture, 315+i*82,360);
-        	}
-        }
-        batcher.end();
-    }
+	}
     
     public void findCurrentCardTexture(Card card){
         currentCardTexture = new TextureRegion(cards, card.getxCordination(), card.getyCordination(), 69, 94);
@@ -175,6 +217,8 @@ public class GameRenderer {
     		table = response.getTable();
     		cardsOnTable = table.getCardList();
     		pot = table.getPot();
+    		smallBlindAmount = table.getSmallBlindAmount();
+    		bigBlindAmount = table.getBigBlindAmount();
     	}
     	else if(TAG.equals("HCD")){
     		waitingForAll = false;
@@ -188,6 +232,7 @@ public class GameRenderer {
     	}
     	else if(TAG.equals("B")){
     		turnToBet = response.getNumber();
+    		maxBetOnTable = response.getMaxBetOnTable();
     	}
     	else if(TAG.equals("OW")){
     		winnerNumber = response.getNumber();
@@ -203,6 +248,14 @@ public class GameRenderer {
 	
 	public int getTurnToBet() {
 		return turnToBet;
+	}
+	
+	public int getYourBetAmount() {
+		return yourBetAmount;
+	}
+	
+	public int getMaxBetOnTable() {
+		return maxBetOnTable;
 	}
 }
 

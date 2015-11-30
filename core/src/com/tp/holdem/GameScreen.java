@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -66,7 +67,6 @@ public class GameScreen implements Screen, InputProcessor {
     	font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
     	atlas = new TextureAtlas("data/button.pack");
     	buttonsSkin = new Skin(atlas);
-    	
     	table = new Table(buttonsSkin);
     	table.setBounds(830, 0, 189, 154);
     	
@@ -93,7 +93,10 @@ public class GameScreen implements Screen, InputProcessor {
     		@Override
     		public void clicked(InputEvent event,float x, float y)
     		{
-    			//TODO
+    			if(renderer.getTurnToBet()==renderer.getYourNumber()){
+	    			request = new SampleRequest("CHECK", renderer.getYourNumber());
+					client.getSimulationClient().sendTCP(request);
+    			}
     		}
     	} );
     	stage.addActor(checkButton);
@@ -107,7 +110,10 @@ public class GameScreen implements Screen, InputProcessor {
     		@Override
     		public void clicked(InputEvent event,float x, float y)
     		{
-    			//TODO
+    			if(renderer.getTurnToBet()==renderer.getYourNumber()){
+	    			request = new SampleRequest("FOLD", renderer.getYourNumber());
+					client.getSimulationClient().sendTCP(request);
+    			}
     		}
     	} );
     	stage.addActor(foldButton);
@@ -121,7 +127,7 @@ public class GameScreen implements Screen, InputProcessor {
     		public void clicked(InputEvent event,float x, float y)
     		{
     			if(renderer.getTurnToBet()==renderer.getYourNumber()){
-    				request = new SampleRequest("B", 150, renderer.getYourNumber());
+    				request = new SampleRequest("BET", renderer.getMaxBetOnTable(), renderer.getYourNumber());
     				client.getSimulationClient().sendTCP(request);
     			}
     		}
@@ -136,7 +142,10 @@ public class GameScreen implements Screen, InputProcessor {
     		@Override
     		public void clicked(InputEvent event,float x, float y)
     		{
-    			//TODO
+    			if(renderer.getTurnToBet()==renderer.getYourNumber()){
+	    			request = new SampleRequest("CALL", renderer.getYourNumber());
+					client.getSimulationClient().sendTCP(request);
+    			}
     		}
     	} );
     	stage.addActor(callButton);
@@ -149,7 +158,10 @@ public class GameScreen implements Screen, InputProcessor {
     		@Override
     		public void clicked(InputEvent event,float x, float y)
     		{
-    			//TODO
+    			if(renderer.getTurnToBet()==renderer.getYourNumber()){
+	    			request = new SampleRequest("ALLIN", renderer.getYourNumber());
+					client.getSimulationClient().sendTCP(request);
+    			}
     		}
     	} );
     	stage.addActor(allInButton);
@@ -162,7 +174,10 @@ public class GameScreen implements Screen, InputProcessor {
     		@Override
     		public void clicked(InputEvent event,float x, float y)
     		{
-    			//TODO
+    			if(renderer.getTurnToBet()==renderer.getYourNumber()){
+	    			request = new SampleRequest("RAISE", renderer.getMaxBetOnTable()*2, renderer.getYourNumber());
+					client.getSimulationClient().sendTCP(request);
+    			}
     		}
     	} );
     	stage.addActor(raiseButton);

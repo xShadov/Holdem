@@ -9,7 +9,6 @@ public class Table {
 	private List<Card> cardsOnTable;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
-	private int raiseAmount;
 	
 	public Table()
 	{
@@ -59,13 +58,5 @@ public class Table {
 
 	public void setBigBlindAmount(int bigBlindAmount) {
 		this.bigBlindAmount = bigBlindAmount;
-	}
-
-	public int getRaiseAmount() {
-		return raiseAmount;
-	}
-
-	public void setRaiseAmount(int raiseAmount) {
-		this.raiseAmount = raiseAmount;
 	}
 }
