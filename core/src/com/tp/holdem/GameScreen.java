@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
@@ -69,6 +71,21 @@ public class GameScreen implements Screen, InputProcessor {
     	buttonsSkin = new Skin(atlas);
     	table = new Table(buttonsSkin);
     	table.setBounds(830, 0, 189, 154);
+
+    	Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+    	final Slider slider = new Slider(0, 10, 1, false, skin);
+		slider.setAnimateDuration(0.01f);
+		
+		slider.addListener(new ChangeListener() {
+			public void changed (ChangeEvent event, Actor actor) {
+				Gdx.app.log("UITest", "slider: " + slider.getValue());
+			}
+		});
+		
+		slider.setPosition(500, 400);
+		slider.setWidth(400);
+		
+		stage.addActor(slider);
     	
     	TextButtonStyle textButtonStyle = new TextButtonStyle();
     	textButtonStyle.up = buttonsSkin.getDrawable("button_up");
@@ -84,6 +101,8 @@ public class GameScreen implements Screen, InputProcessor {
     	callButton = new TextButton("CALL", textButtonStyle);
     	allInButton = new TextButton("ALL IN", textButtonStyle);
     	raiseButton = new TextButton("RAISE", textButtonStyle);
+    	
+    	checkButton.setVisible(false);
     	
     	checkButton.pad(10);
     	checkButton.getLabel().setFontScale(0.45f);
