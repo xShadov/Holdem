@@ -102,7 +102,7 @@ public class KryoServer implements Runnable {
 				}
 				
 				if(bidingTime){
-					if(!waitingForPlayerResponse || !bidingOver){
+					if(!waitingForPlayerResponse && !bidingOver){
 						sendBetResponse(betPlayer);
 					}
 					else{
@@ -114,7 +114,10 @@ public class KryoServer implements Runnable {
 						if(bidingCount-1==1) flopTime = true;
 						else if(bidingCount-1==2) turnTime = true;
 						else if(bidingCount-1==3) riverTime = true;
-						else if(bidingCount-1==4) timeToCheckWinner();
+						else if(bidingCount-1==4){
+							timeToCheckWinner();
+							break;
+						}
 					}
 				}
 				
@@ -130,25 +133,25 @@ public class KryoServer implements Runnable {
 					table.addCard(deck.drawCard());
 					table.addCard(deck.drawCard());
 					table.addCard(deck.drawCard());
-					setFirstAndLastToBet();
 					bidingTime = true;
 					bidingOver = false;
+					setFirstAndLastToBet();
 				}
 				//turn
 				if(turnTime){
 					turnTime = false;
 					table.addCard(deck.drawCard());
-					setFirstAndLastToBet();
 					bidingTime = true;
 					bidingOver = false;
+					setFirstAndLastToBet();
 				}
 				//river
 				if(riverTime){
 					riverTime = false;
 					table.addCard(deck.drawCard());
-					setFirstAndLastToBet();
 					bidingTime = true;
 					bidingOver = false;
+					setFirstAndLastToBet();
 				}
 				//TableInfo.cardsOnTable=table.getCardList();
 				response = new SampleResponse("T", table);
@@ -160,7 +163,6 @@ public class KryoServer implements Runnable {
 	
 	
 	private void timeToCheckWinner() {
-		sendBetResponse(-1);
 		List<HandRank> hands = new ArrayList<HandRank>();
 		List<Player> winners = new ArrayList<Player>();
 		for(int i=0; i<players.size(); i++){
@@ -221,8 +223,22 @@ public class KryoServer implements Runnable {
 			players.get(i).getHand().remove(1);
 			players.get(i).getHand().remove(0);
 		}
-		maxBetOnTable = Integer.valueOf(bigBlindAmount);
-		newHand = true;	
+		if(!notEnoughPlayers()){
+			maxBetOnTable = Integer.valueOf(bigBlindAmount);
+			newHand = true;	
+		}
+		else{
+			gameStarted = false;
+			response = new SampleResponse("GO");
+			server.sendToAllTCP(response);
+		}
+	}
+
+	private boolean notEnoughPlayers() {
+		for(int i=0; i<players.size();i++){
+			if(players.get(i).isInGame()) return false;
+		}
+		return true;
 	}
 
 	private void setFirstAndLastToBet() {
@@ -231,36 +247,48 @@ public class KryoServer implements Runnable {
 			lastToBet = (numPlayers+betPlayer-1)%numPlayers;
 		}
 		else{
-			betPlayer = Integer.valueOf(turnPlayer);
-			int counter = Integer.valueOf(betPlayer);
-			int helper = 0;
-			while(helper<numPlayers){
-				if(players.get(counter%numPlayers).isFolded() || players.get(counter%numPlayers).isAllIn() || !players.get(counter%numPlayers).isInGame()){
-					betPlayer=(betPlayer+1)%numPlayers;
-					counter++;
+			if(!everybodyAllIn()){
+				betPlayer = Integer.valueOf(turnPlayer);
+				int counter = Integer.valueOf(betPlayer);
+				int helper = 0;
+				while(helper<numPlayers){
+					if(players.get(counter%numPlayers).isFolded() || players.get(counter%numPlayers).isAllIn() || !players.get(counter%numPlayers).isInGame()){
+						betPlayer=(betPlayer+1)%numPlayers;
+						counter++;
+						helper++;
+					}	
+					else break;
+				}
+				lastToBet = (numPlayers+betPlayer-1)%numPlayers;
+				counter = Integer.valueOf(lastToBet);
+				helper = 0;
+				while(helper<numPlayers){
+					if(players.get(counter).isFolded() || players.get(counter).isAllIn() || !players.get(counter).isInGame()){
+						if(counter==0) counter=Integer.valueOf(numPlayers);
+						lastToBet=(counter-1)%numPlayers;
+					}	
+					else break;
+					counter--;
 					helper++;
-				}	
-				else break;
+				}
 			}
-			lastToBet = (numPlayers+betPlayer-1)%numPlayers;
-			counter = Integer.valueOf(lastToBet);
-			helper = 0;
-			while(helper<numPlayers){
-				if(players.get(counter).isFolded() || players.get(counter).isAllIn() || !players.get(counter).isInGame()){
-					if(counter==0) counter=Integer.valueOf(numPlayers);
-					lastToBet=(counter-1)%numPlayers;
-				}	
-				else break;
-				counter--;
-				helper++;
-			}
+			else bidingOver = true;
 		}
 	}
 
+	private boolean everybodyAllIn() {
+		for(int i=0; i<players.size();i++){
+			if(!players.get(i).isAllIn()) return false;
+		}
+		return true;
+	}
+
 	private void sendBetResponse(int numberToBet) {
-		response = new SampleResponse("B", numberToBet, maxBetOnTable);
-		server.sendToAllTCP(response);
-		waitingForPlayerResponse = true;
+		if(!players.get(numberToBet).isFolded() && !players.get(numberToBet).isAllIn() && players.get(numberToBet).isInGame()){
+			response = new SampleResponse("B", numberToBet, maxBetOnTable);
+			server.sendToAllTCP(response);
+			waitingForPlayerResponse = true;
+		}
 	}
 
     
@@ -317,6 +345,7 @@ public class KryoServer implements Runnable {
 	    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-request.getBetAmount());
 	    				  table.setPot(table.getPot()+request.getBetAmount());
 	    				  if(request.getBetAmount()>maxBetOnTable) maxBetOnTable = Integer.valueOf(request.getBetAmount());
+	    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
 					  }
 				  }
 				  else if(request.getTAG().equals("CALL")){
@@ -324,6 +353,7 @@ public class KryoServer implements Runnable {
     				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-
     						  (maxBetOnTable-players.get(request.getNumber()).getBetAmount()));
 					  players.get(request.getNumber()).setBetAmount(maxBetOnTable);
+					  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
 				  }
 				  else if(request.getTAG().equals("FOLD")){
 					  players.get(request.getNumber()).setFolded(true);
@@ -332,12 +362,13 @@ public class KryoServer implements Runnable {
 
 				  }
 				  else if(request.getTAG().equals("ALLIN")){
+    				  if(players.get(request.getNumber()).getChipsAmount()>maxBetOnTable) 
+    					  maxBetOnTable = players.get(request.getNumber()).getChipsAmount()+players.get(request.getNumber()).getBetAmount();
 					  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()
 							  +players.get(request.getNumber()).getChipsAmount());
     				  players.get(request.getNumber()).setChipsAmount(0);
     				  table.setPot(table.getPot()+players.get(request.getNumber()).getBetAmount());
     				  players.get(request.getNumber()).setAllIn(true);
-    				  if(request.getBetAmount()>maxBetOnTable) maxBetOnTable = Integer.valueOf(request.getBetAmount());
 				  }
 				  else if(request.getTAG().equals("RAISE")){
 					  if(players.get(request.getNumber()).getBetAmount()+request.getBetAmount()>maxBetOnTable){
@@ -357,6 +388,7 @@ public class KryoServer implements Runnable {
 						  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+request.getBetAmount());
 	    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-request.getBetAmount());
 	    				  table.setPot(table.getPot()+request.getBetAmount());
+	    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
 					  }
 				  }
 				  if(request.getNumber()==lastToBet){
@@ -384,13 +416,45 @@ public class KryoServer implements Runnable {
 		newHand=false;
 		players.get(turnPlayer%numPlayers).setHasDealerButton(true);	
 		players.get((turnPlayer+1)%numPlayers).setHasSmallBlind(true);
-		players.get((turnPlayer+1)%numPlayers).setChipsAmount(players.get((turnPlayer+1)%numPlayers).getChipsAmount()-smallBlindAmount);
-		players.get((turnPlayer+1)%numPlayers).setBetAmount(smallBlindAmount);
-		table.setPot(table.getPot()+smallBlindAmount);
+		if(players.get((turnPlayer+1)%numPlayers).getChipsAmount()>smallBlindAmount){
+			players.get((turnPlayer+1)%numPlayers).setChipsAmount(players.get((turnPlayer+1)%numPlayers).getChipsAmount()-smallBlindAmount);
+			players.get((turnPlayer+1)%numPlayers).setBetAmount(smallBlindAmount);
+		}
+		else if(players.get((turnPlayer+1)%numPlayers).getChipsAmount()==smallBlindAmount){
+			players.get((turnPlayer+1)%numPlayers).setChipsAmount(0);
+			players.get((turnPlayer+1)%numPlayers).setBetAmount(smallBlindAmount);
+			players.get((turnPlayer+1)%numPlayers).setAllIn(true);
+		}
+		else{
+			players.get((turnPlayer+1)%numPlayers).setBetAmount(players.get((turnPlayer+1)%numPlayers).getChipsAmount());
+			players.get((turnPlayer+1)%numPlayers).setChipsAmount(0);
+			players.get((turnPlayer+1)%numPlayers).setAllIn(true);
+		}
+		table.setPot(table.getPot()+players.get((turnPlayer+1)%numPlayers).getBetAmount());
 		players.get((turnPlayer+2)%numPlayers).setHasBigBlind(true);
-		players.get((turnPlayer+2)%numPlayers).setBetAmount(bigBlindAmount);
-		players.get((turnPlayer+2)%numPlayers).setChipsAmount(players.get((turnPlayer+2)%numPlayers).getChipsAmount()-bigBlindAmount);
-		table.setPot(table.getPot()+bigBlindAmount);
+		if(players.get((turnPlayer+2)%numPlayers).getChipsAmount()>bigBlindAmount){
+			players.get((turnPlayer+2)%numPlayers).setBetAmount(bigBlindAmount);
+			players.get((turnPlayer+2)%numPlayers).setChipsAmount(players.get((turnPlayer+2)%numPlayers).getChipsAmount()-bigBlindAmount);
+		}
+		else if(players.get((turnPlayer+2)%numPlayers).getChipsAmount()==bigBlindAmount)
+		{
+			players.get((turnPlayer+2)%numPlayers).setBetAmount(bigBlindAmount);
+			players.get((turnPlayer+2)%numPlayers).setChipsAmount(0);
+			players.get((turnPlayer+2)%numPlayers).setAllIn(true);
+		}
+		else{
+			players.get((turnPlayer+2)%numPlayers).setBetAmount(players.get((turnPlayer+2)%numPlayers).getChipsAmount());
+			players.get((turnPlayer+2)%numPlayers).setChipsAmount(0);
+			players.get((turnPlayer+2)%numPlayers).setAllIn(true);
+		}
+		table.setPot(table.getPot()+players.get((turnPlayer+2)%numPlayers).getBetAmount());
+		response = new SampleResponse("T", table);
+		server.sendToAllTCP(response);
+		for(int i=0; i<players.size(); i++){
+			playersWithHiddenCards.get(i).setAllProperties(players.get(i));
+		}
+		response = new SampleResponse("R", playersWithHiddenCards);
+		server.sendToAllTCP(response);
 		turnPlayer++;
 		bidingTime = true;
 		bidingOver = false;

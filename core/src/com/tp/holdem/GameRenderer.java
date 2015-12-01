@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class GameRenderer {
 
@@ -31,12 +32,14 @@ public class GameRenderer {
     private int pot = 0;
     private int maxBetOnTable = 0;
     private int yourBetAmount = 0;
+    private boolean gameOver = false;
     private int turnToBet;
     private List<Player> players;
     private List<Card> yourCards;
     private List<Card> cardsOnTable;
     private Texture cards;
     private int yourNumber=0;
+    private List<TextButton> buttons;
     private TextureRegion reverse, bigBlind, smallBlind, dealer, box, smallStack, semiStack, bigStack, spotlight;
     private int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
     private int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
@@ -48,6 +51,7 @@ public class GameRenderer {
     private int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
     private int[] chipsPositionX = {507, 313, 274, 286, 358, 538, 631, 705, 738, 636 };
     private int[] chipsPositionY = {273, 288, 374, 441, 501, 484, 484, 451, 370, 280 };
+    
     public GameRenderer(GameWorld world){
     	bg = new TextureRegion(new Texture("data/pokerTable.jpg"), 0, 0, 1024, 780);
     	dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
@@ -64,6 +68,7 @@ public class GameRenderer {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
         
+        buttons = world.getButtons();
         cards = new Texture(Gdx.files.internal("data/cards.png"));
         box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
@@ -86,18 +91,17 @@ public class GameRenderer {
         batcher.draw(bg, 0, 0, 1024, 780);
         batcher.enableBlending();
         
-        
-        drawWinMessage();
-        font3.draw(batcher, "MB:"+maxBetOnTable+"", 320, 550);
-        if(table!=null){
-        	font3.draw(batcher, "POT:"+table.getPot()+"", 600, 550);
+        if(gameOver){
+        	font3.draw(batcher, "SORRY, NOT ENOUGH PLAYERS", 500, 500);
+        } else {
+        	drawWinMessage();
+        	drawWaitMessage();
         }
-        drawWaitMessage();
         if(players!=null){
 	        drawSpotlight();
 	        for(int i=0; i<players.size();i++){
 	        	drawCards(i);
-	        	drawButtons(i);
+	        	drawDealerAndBlindButtons(i);
         		drawInfoBoxes(i);
 	        	drawChips(i);
 	        }
@@ -141,7 +145,7 @@ public class GameRenderer {
 		}
 	}
 
-	private void drawButtons(int i) {
+	private void drawDealerAndBlindButtons(int i) {
 		if(players.get((i+yourNumber)%players.size()).isHasDealerButton() && players.get((i+yourNumber)%players.size()).isInGame()){
 			batcher.draw(dealer, dealerPositionX[i], dealerPositionY[i]);
 		}
@@ -173,6 +177,7 @@ public class GameRenderer {
 			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet && players.get((i+yourNumber)%players.size()).isInGame()){
 				if(yourNumber == turnToBet){
 					batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
+					font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
 					break;
 				} else {
 					batcher.draw(spotlight, positionX[i]-130, positionY[i]-40);
@@ -246,12 +251,32 @@ public class GameRenderer {
     	else if(TAG.equals("B")){
     		turnToBet = response.getNumber();
     		maxBetOnTable = response.getMaxBetOnTable();
+    		if(turnToBet == yourNumber){
+    			for(TextButton button : buttons){
+		    		if(!button.isVisible()){
+						button.setVisible(true);
+					}
+					if(button.isDisabled()){
+						button.setDisabled(false);
+					}
+    			}
+    			myWorld.getSlider().setValue(smallBlindAmount);
+        		myWorld.getSlider().setStepSize(smallBlindAmount);
+        		myWorld.getSlider().setVisible(true);
+        		myWorld.getSlider().setDisabled(false);
+        		if(players!=null && players.get(yourNumber).getChipsAmount()>=maxBetOnTable+smallBlindAmount){
+        			myWorld.getSlider().setRange(maxBetOnTable+smallBlindAmount, players.get(yourNumber).getChipsAmount());
+        		}
+    		}
     	}
     	else if(TAG.equals("OW")){
     		winnerNumber = response.getNumber();
     	}
     	else if(TAG.equals("MW")){
     		tie = true;
+    	}
+    	else if(TAG.equals("GO")){
+    		gameOver = true;
     	}
     }
 
@@ -269,6 +294,10 @@ public class GameRenderer {
 	
 	public int getMaxBetOnTable() {
 		return maxBetOnTable;
+	}
+	
+	public void setTurnToBet(int turnToBet){
+		this.turnToBet = turnToBet;
 	}
 }
 
