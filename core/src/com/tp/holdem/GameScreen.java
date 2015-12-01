@@ -29,7 +29,6 @@ public class GameScreen implements Screen, InputProcessor {
     private float runTime;
     private Stage stage;
     private KryoClient client;
-    private InputHandler input;
     private Skin skin;
     private List<TextButton> buttons;
     
@@ -47,7 +46,6 @@ public class GameScreen implements Screen, InputProcessor {
     	world.setRenderer(renderer);
     	world.setClient(client);
         Gdx.input.setInputProcessor(this);
-        input = new InputHandler(client,renderer);
         buttons = world.getButtons();
     }
 
