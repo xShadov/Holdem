@@ -114,10 +114,7 @@ public class KryoServer implements Runnable {
 						if(bidingCount-1==1) flopTime = true;
 						else if(bidingCount-1==2) turnTime = true;
 						else if(bidingCount-1==3) riverTime = true;
-						else if(bidingCount-1==4){
-							timeToCheckWinner();
-							break;
-						}
+						else if(bidingCount-1==4) timeToCheckWinner();
 					}
 				}
 				
@@ -203,6 +200,8 @@ public class KryoServer implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("dochodzi do konca check winner");
+		resetAfterRound();
 	}
 
 	private void resetAfterRound() {
@@ -464,7 +463,7 @@ public class KryoServer implements Runnable {
 	
 	public static void main(String[] args) {
 		try {
-			new KryoServer(3, 0, "no-limit");
+			new KryoServer(2, 0, "no-limit");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

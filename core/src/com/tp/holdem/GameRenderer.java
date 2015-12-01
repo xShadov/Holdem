@@ -92,7 +92,7 @@ public class GameRenderer {
         batcher.enableBlending();
         
         if(gameOver){
-        	font3.draw(batcher, "SORRY, NOT ENOUGH PLAYERS", 500, 500);
+        	font3.draw(batcher, "SORRY, NOT ENOUGH PLAYERS", 100, 500);
         } else {
         	drawWinMessage();
         	drawWaitMessage();
