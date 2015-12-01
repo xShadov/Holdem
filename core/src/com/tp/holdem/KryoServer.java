@@ -203,7 +203,14 @@ public class KryoServer implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		resetAfterRound();
+		if(!notEnoughPlayers()){
+			resetAfterRound();
+		}
+		else{
+			gameStarted = false;
+			response = new SampleResponse("GO");
+			server.sendToAllTCP(response);
+		}
 	}
 
 	private void resetAfterRound() {
@@ -223,22 +230,17 @@ public class KryoServer implements Runnable {
 			players.get(i).getHand().remove(1);
 			players.get(i).getHand().remove(0);
 		}
-		if(!notEnoughPlayers()){
-			maxBetOnTable = Integer.valueOf(bigBlindAmount);
-			newHand = true;	
-		}
-		else{
-			gameStarted = false;
-			response = new SampleResponse("GO");
-			server.sendToAllTCP(response);
-		}
+
+		maxBetOnTable = Integer.valueOf(bigBlindAmount);
+		newHand = true;	
 	}
 
 	private boolean notEnoughPlayers() {
+		int playersInGameCount = 0;
 		for(int i=0; i<players.size();i++){
-			if(players.get(i).isInGame()) return false;
+			if(players.get(i).isInGame()) playersInGameCount++;
 		}
-		return true;
+		return playersInGameCount<=1;
 	}
 
 	private void setFirstAndLastToBet() {
