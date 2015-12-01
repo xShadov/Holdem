@@ -33,10 +33,12 @@ public class GameScreen implements Screen, InputProcessor {
     private TextureAtlas atlas;
     private SampleRequest request;
     private KryoClient client;
+    private InputHandler input;
     // This is the constructor, not the class declaration
     public GameScreen() {
     	world = new GameWorld();
     	renderer = new GameRenderer(world);
+    	
     	try{
     		client = new KryoClient(renderer);
     	} catch (Exception e){
@@ -45,6 +47,7 @@ public class GameScreen implements Screen, InputProcessor {
 		}
     	world.setRenderer(renderer);
         Gdx.input.setInputProcessor(this);
+        input = new InputHandler(client,renderer);
     }
 
     @Override

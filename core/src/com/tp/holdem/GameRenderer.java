@@ -63,7 +63,7 @@ public class GameRenderer {
         batcher.setProjectionMatrix(cam.combined);
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(cam.combined);
-
+        
         cards = new Texture(Gdx.files.internal("data/cards.png"));
         box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
@@ -200,6 +200,19 @@ public class GameRenderer {
         else if(tie){
         	font3.draw(batcher, "TIE!", 320, 550);
         }
+	}
+	
+	private void drawActionButtons()
+	{
+		for(int i=0; i<players.size();i++)
+		{
+			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet && players.get((i+yourNumber)%players.size()).isInGame())
+			{
+				
+			}
+		}
+		
+		
 	}
     
     public void findCurrentCardTexture(Card card){
