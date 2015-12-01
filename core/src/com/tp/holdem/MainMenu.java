@@ -292,10 +292,10 @@ public class MainMenu extends JFrame
 	//private static KryoServer kryo;
 	//private static DesktopLauncher client;
 	
-	private int playersC = 3;
+	private int playersC = 2;
 	private int botsC = 0;
 	private String limit = "no-limit";
-	Label playersCount = new Label("3 players");
+	Label playersCount = new Label(String.valueOf(playersC)+ " players");
 	Label botsCount = new Label("0 bots");
 	
 	public static void main(String args[])

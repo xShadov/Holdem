@@ -58,6 +58,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
+    	stage.getViewport().update(width, height);
     }
 
     @Override

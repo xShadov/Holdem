@@ -18,6 +18,9 @@ public class KryoServer implements Runnable {
 	private volatile boolean gameStarted = false;
 	private List<Player> players = new ArrayList<Player>();
 	private List<Player> playersWithHiddenCards;
+	private int playersCount; //ustalona ilosc graczy przy stole
+	private int botsCount;
+	private String limitType; // zasada stolu ("no-limit", "fixed-limit", "pot-limit")
 	private int numPlayers = 0;
 	private int lastToBet = 0;
 	private int turnPlayer = 0;
@@ -38,13 +41,18 @@ public class KryoServer implements Runnable {
 	private int maxBetOnTable = Integer.valueOf(bigBlindAmount);
 	private boolean newHand = false;
 	private SampleResponse response;
-	
+		
 	public KryoServer(int playersCount,int botsCount, String limitType) throws Exception {
+		
+	  this.playersCount=playersCount;
+	  this.botsCount=botsCount;
+	  this.limitType=limitType;
+	      
 
       server = new Server();
 
       Thread gameThread = new Thread(this);
-
+  
       Kryo kryo = server.getKryo();
       kryo.register(SampleResponse.class);
       kryo.register(SampleRequest.class);
@@ -54,6 +62,7 @@ public class KryoServer implements Runnable {
       kryo.register(Card.class);
       kryo.register(Deck.class);
       kryo.register(Table.class);
+      
       
       server.addListener(new Listener() { 
           public synchronized void received (Connection connection, Object object) { 
@@ -273,7 +282,7 @@ public class KryoServer implements Runnable {
     	response = new SampleResponse("N", numPlayers);
     	server.sendToTCP(con.getID(), response);
     	numPlayers++;
-    	if(numPlayers==2){
+    	if(numPlayers==playersCount){
     		playersWithHiddenCards = new ArrayList<Player>(players.size());
     		for(int i=0; i<players.size(); i++){
 				playersWithHiddenCards.add(new Player());
