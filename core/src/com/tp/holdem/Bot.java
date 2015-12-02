@@ -11,7 +11,11 @@ public class Bot extends Player
 		super(number,name);
 		this.strategy = strategy;
 	}
-
+	@Override
+	public Strategy getStrategy()
+	{
+		return strategy;
+	}
 	
 }
 

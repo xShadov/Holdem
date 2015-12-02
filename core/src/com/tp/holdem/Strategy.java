@@ -4,5 +4,5 @@ public interface Strategy
 {
 	public Strategy getStrategy();
 	public String getName();
-	public void whatDoIDo();
+	public void whatDoIDo(KryoServer server,int betPlayer);
 }

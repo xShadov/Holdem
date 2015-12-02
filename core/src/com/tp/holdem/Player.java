@@ -145,6 +145,11 @@ public class Player {
 		this.isAllIn = isAllIn;
 	}
 
+	public Strategy getStrategy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }
 

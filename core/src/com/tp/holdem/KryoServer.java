@@ -17,6 +17,7 @@ public class KryoServer implements Runnable {
 	public boolean running = true;
 	private volatile boolean gameStarted = false;
 	private List<Player> players = new ArrayList<Player>();
+	private List<Bot> bots = new ArrayList<Bot>();
 	private List<Player> playersWithHiddenCards;
 	private int playersCount; //ustalona ilosc graczy przy stole
 	private int botsCount;
@@ -48,7 +49,7 @@ public class KryoServer implements Runnable {
 	  this.playersCount=playersCount;
 	  this.botsCount=botsCount;
 	  this.limitType=limitType;
-	      
+	  this.botStrategy=botStrategy;    
 
       server = new Server();
 
@@ -103,6 +104,15 @@ public class KryoServer implements Runnable {
 				}
 				
 				if(bidingTime){
+					System.out.println("start"+String.valueOf(betPlayer));
+					if(botsCount>0)
+					{
+						if(betPlayer > playersCount-1) // bots turn
+						{
+							System.out.println(String.valueOf(betPlayer));
+							players.get(betPlayer).getStrategy().whatDoIDo(this,betPlayer);
+						}
+					}
 					if(!waitingForPlayerResponse && !bidingOver){
 						sendBetResponse(betPlayer);
 					}
@@ -340,8 +350,8 @@ public class KryoServer implements Runnable {
     	  }
 	}
 	
-
-	private void handleReceived(Object object) {
+	//changed to public for bot to send request
+	public void handleReceived(Object object) {
 		if (object instanceof SampleRequest) {
     	  SampleRequest request = (SampleRequest) object;
 		  if(bidingTime && !bidingOver){
