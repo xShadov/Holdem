@@ -17,7 +17,6 @@ public class KryoServer implements Runnable {
 	public boolean running = true;
 	private volatile boolean gameStarted = false;
 	private List<Player> players = new ArrayList<Player>();
-	private List<Bot> bots = new ArrayList<Bot>();
 	private List<Player> playersWithHiddenCards;
 	private int playersCount; //ustalona ilosc graczy przy stole
 	private int botsCount;
@@ -104,12 +103,10 @@ public class KryoServer implements Runnable {
 				}
 				
 				if(bidingTime){
-					System.out.println("start"+String.valueOf(betPlayer));
 					if(botsCount>0)
 					{
 						if(betPlayer > playersCount-1) // bots turn
 						{
-							System.out.println(String.valueOf(betPlayer));
 							players.get(betPlayer).getStrategy().whatDoIDo(this,betPlayer);
 						}
 					}
