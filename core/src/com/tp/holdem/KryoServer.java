@@ -21,6 +21,7 @@ public class KryoServer implements Runnable {
 	private int playersCount; //ustalona ilosc graczy przy stole
 	private int botsCount;
 	private String limitType; // zasada stolu ("no-limit", "fixed-limit", "pot-limit")
+	private Strategy botStrategy;
 	private int numPlayers = 0;
 	private int lastToBet = 0;
 	private int turnPlayer = 0;
@@ -42,7 +43,7 @@ public class KryoServer implements Runnable {
 	private boolean newHand = false;
 	private SampleResponse response;
 		
-	public KryoServer(int playersCount,int botsCount, String limitType) throws Exception {
+	public KryoServer(int playersCount,int botsCount, String limitType, Strategy botStrategy) throws Exception {
 		
 	  this.playersCount=playersCount;
 	  this.botsCount=botsCount;
@@ -310,10 +311,17 @@ public class KryoServer implements Runnable {
     	server.sendToTCP(con.getID(), response);
     	numPlayers++;
     	if(numPlayers==playersCount){
+    		for(int i=0; i<botsCount;i++)
+    		{
+    			players.add(new Bot(numPlayers,"Bot"+String.valueOf(numPlayers),botStrategy));
+    			players.get(numPlayers).setChipsAmount(1500);
+    			numPlayers++;
+    		}
     		playersWithHiddenCards = new ArrayList<Player>(players.size());
     		for(int i=0; i<players.size(); i++){
 				playersWithHiddenCards.add(new Player());
 			}
+
     		newHand=true;
     		gameStarted=true;
 		}
@@ -463,7 +471,7 @@ public class KryoServer implements Runnable {
 	
 	public static void main(String[] args) {
 		try {
-			new KryoServer(2, 0, "no-limit");
+			new KryoServer(2, 0, "no-limit",null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

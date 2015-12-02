@@ -84,27 +84,39 @@ class ButtonProperties extends JButton
 	
 };
 
-class ButtonClientListener implements ActionListener
+class ButtonStrategyListener implements ActionListener
 {
+	ButtonStrategy button;
 	MainMenu menu;
-	public ButtonClientListener(MainMenu menu)
+	public ButtonStrategyListener(ButtonStrategy button,MainMenu menu)
 	{
+		this.button=button;
 		this.menu=menu;
 	}
 	public void actionPerformed(ActionEvent e)
 	{
-		//menu.startClient();
-		//menu.checkThreads();
+		if(menu.getStrategy().getName().equals("Always All-in") )
+		{
+			menu.setStrategy(new FoldStrategy());
+			button.setText(menu.getStrategy().getName());
+			return;
+		}
+		if(menu.getStrategy().getName().equals("Always Fold") )
+		{
+			menu.setStrategy(new AllInStrategy());
+			button.setText(menu.getStrategy().getName());
+			return;
+		}
 	}
 	
 };
 
-class ButtonClient extends JButton
+class ButtonStrategy extends JButton
 {
-	public ButtonClient(MainMenu menu)
+	public ButtonStrategy(MainMenu menu)
 	{
-		super("START CLIENT");
-		addActionListener(new ButtonClientListener(menu));
+		super("Always All-in");
+		addActionListener(new ButtonStrategyListener(this,menu));
 	}
 	
 };
@@ -294,13 +306,11 @@ public class MainMenu extends JFrame
 {
 	private ExecutorService gameExecutor = Executors.newSingleThreadExecutor();
 	private Future<?> server;
-	private Future<?> clients;
-	//private static KryoServer kryo;
-	//private static DesktopLauncher client;
 	
 	private int playersC = 2;
 	private int botsC = 0;
 	private String limit = "no-limit";
+	private Strategy botStrategy;
 	Label playersCount = new Label(String.valueOf(playersC)+ " players");
 	Label botsCount = new Label("0 bots");
 	
@@ -327,7 +337,7 @@ public class MainMenu extends JFrame
 			public void run()
 			{
 					try {
-						KryoServer kryo = new KryoServer(playersC, botsC, limit);
+						KryoServer kryo = new KryoServer(playersC, botsC, limit,botStrategy);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -335,17 +345,6 @@ public class MainMenu extends JFrame
 			}
 		});
 	}
-	
-	/*public void startClient()
-	{
-		clients = gameExecutor.submit(new Runnable()
-		{
-			public void run()
-			{
-				client.main(new String[0]);
-			}
-		});
-	}*/
 	
 	public void setPlayersCount(int playersC)
 	{
@@ -377,6 +376,16 @@ public class MainMenu extends JFrame
 		return limit;
 	}
 	
+	public void setStrategy(Strategy botStrategy)
+	{
+		this.botStrategy = botStrategy;
+	}
+	
+	public Strategy getStrategy()
+	{
+		return botStrategy;
+	}
+	
 	public MainMenu()
 	{
 		super("Texas Hold'em");
@@ -385,9 +394,10 @@ public class MainMenu extends JFrame
 		addWindowListener(new MyWindowListener());
 		setFont(new Font(Font.SANS_SERIF,Font.PLAIN,20));
 		
+		botStrategy = new AllInStrategy();
+		
 		ButtonServer server = new ButtonServer(this);
 		ButtonProperties properties = new ButtonProperties(this);
-		ButtonClient client = new ButtonClient(this);
 		
 		JPanel masterPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints layout = new GridBagConstraints();
@@ -403,10 +413,6 @@ public class MainMenu extends JFrame
 		layout.gridy = 1;
 		layout.gridwidth = 1;
         masterPanel.add(properties,layout);
-        //layout.gridx = 0;
-        //layout.gridy = 2;
-        //layout.gridwidth = 1;
-        //masterPanel.add(client,layout);
         
         this.getContentPane().add(masterPanel);
         setResizable(false);
@@ -423,7 +429,9 @@ public class MainMenu extends JFrame
 		ButtonPlayersMore playersMore = new ButtonPlayersMore(this);
 		ButtonBotsLess botsLess = new ButtonBotsLess(this);
 		ButtonBotsMore botsMore = new ButtonBotsMore(this);
+		ButtonStrategy strategy = new ButtonStrategy(this);
 		ButtonOK ok = new ButtonOK(properties);
+		
 		
 		JPanel propertiesPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints propertiesLayout = new GridBagConstraints();
@@ -461,6 +469,10 @@ public class MainMenu extends JFrame
 		propertiesPanel.add(botsMore,propertiesLayout);
 		propertiesLayout.gridx = 0;
 		propertiesLayout.gridy = 4;
+		propertiesLayout.gridwidth = 4;
+		propertiesPanel.add(strategy,propertiesLayout);
+		propertiesLayout.gridx = 0;
+		propertiesLayout.gridy = 5;
 		propertiesLayout.gridwidth = 4;
 		propertiesPanel.add(ok,propertiesLayout);
 		

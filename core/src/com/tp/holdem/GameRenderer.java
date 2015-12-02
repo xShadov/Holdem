@@ -206,19 +206,6 @@ public class GameRenderer {
         	font3.draw(batcher, "TIE!", 320, 550);
         }
 	}
-	
-	private void drawActionButtons()
-	{
-		for(int i=0; i<players.size();i++)
-		{
-			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet && players.get((i+yourNumber)%players.size()).isInGame())
-			{
-				
-			}
-		}
-		
-		
-	}
     
     public void findCurrentCardTexture(Card card){
         currentCardTexture = new TextureRegion(cards, card.getxCordination(), card.getyCordination(), 69, 94);
