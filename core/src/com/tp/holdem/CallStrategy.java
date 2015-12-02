@@ -1,6 +1,6 @@
 package com.tp.holdem;
 
-public class AlwaysCallStrategy implements Strategy{
+public class CallStrategy implements Strategy{
 
 	private String name = "Always Call";
 	private SampleRequest request;
@@ -18,7 +18,10 @@ public class AlwaysCallStrategy implements Strategy{
 	@Override
 	public void whatDoIDo(KryoServer server, int betPlayer) 
 	{
-		request = new SampleRequest("CALL", betPlayer);
+		//if(highestBet==0)
+		request = new SampleRequest("CHECK", betPlayer);
+		//else
+		//request = new SampleRequest("CALL", betPlayer);
 		server.handleReceived((Object)request);
 	}
 
