@@ -107,7 +107,7 @@ public class KryoServer implements Runnable {
 					{
 						if(betPlayer > playersCount-1) // bots turn
 						{
-							players.get(betPlayer).getStrategy().whatDoIDo(this,betPlayer);
+							players.get(betPlayer).getStrategy().whatDoIDo(this,players.get(betPlayer).getHand());
 						}
 					}
 					if(!waitingForPlayerResponse && !bidingOver){
@@ -504,6 +504,37 @@ public class KryoServer implements Runnable {
 		bidingCount = 1;
 		setFirstAndLastToBet();
 	}
+    
+    public int getMaxBetOnTable()
+    {
+    	return maxBetOnTable;
+    }
+    
+    public boolean getFlopTime()
+    {
+    	return flopTime;
+    }
+    
+    public boolean getTrunTime()
+    {
+    	return turnTime;
+    }
+    
+    public boolean getRiverTime()
+    {
+    	return riverTime;
+    }
+    
+    public Table getTable()
+    {
+    	return table;
+    }
+    
+    public int getBetPlayer()
+    {
+    	return betPlayer;
+    }
+    
 	
 	public static void main(String[] args) {
 		try {

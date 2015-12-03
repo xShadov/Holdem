@@ -1,5 +1,7 @@
 package com.tp.holdem;
 
+import java.util.List;
+
 public class CallStrategy implements Strategy{
 
 	private String name = "Always Call";
@@ -16,12 +18,12 @@ public class CallStrategy implements Strategy{
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server, int betPlayer) 
+	public void whatDoIDo(KryoServer server,List<Card> hand) 
 	{
-		//if(highestBet==0)
-		request = new SampleRequest("CHECK", betPlayer);
-		//else
-		//request = new SampleRequest("CALL", betPlayer);
+		if(server.getMaxBetOnTable()==0)
+			request = new SampleRequest("CHECK", server.getBetPlayer());
+		else
+			request = new SampleRequest("CALL", server.getBetPlayer());
 		server.handleReceived((Object)request);
 	}
 

@@ -109,11 +109,11 @@ class ButtonStrategyListener implements ActionListener
 		}
 		if(menu.getStrategy().getName().equals("Always Call") )
 		{
-			menu.setStrategy(new EvaluateStrategy());
+			menu.setStrategy(new CheckHandRankStrategy());
 			button.setText(menu.getStrategy().getName());
 			return;
 		}
-		if(menu.getStrategy().getName().equals("Evaluate") )
+		if(menu.getStrategy().getName().equals("Check Hand Rank") )
 		{
 			menu.setStrategy(new AllInStrategy());
 			button.setText(menu.getStrategy().getName());

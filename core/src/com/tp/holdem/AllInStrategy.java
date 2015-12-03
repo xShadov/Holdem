@@ -1,6 +1,7 @@
 package com.tp.holdem;
 
-import com.esotericsoftware.kryonet.Connection;
+import java.util.List;
+
 
 public class AllInStrategy implements Strategy
 {
@@ -14,9 +15,9 @@ public class AllInStrategy implements Strategy
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server, int betPlayer) 
+	public void whatDoIDo(KryoServer server,List<Card> hand) 
 	{		
-		request = new SampleRequest("ALLIN", betPlayer);
+		request = new SampleRequest("ALLIN", server.getBetPlayer());
 		server.handleReceived((Object)request);
 	}
 
