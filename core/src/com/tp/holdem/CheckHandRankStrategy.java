@@ -23,14 +23,14 @@ public class CheckHandRankStrategy implements Strategy
 		rank = HandOperations.findHandRank(0, hand, server.getTable().getCardsOnTable());
 		if(server.getFlopTime())
 		{
-			if(rank.getHand().getValue()>3)
+			if(rank.getHand().getValue()>1)
 			{
-				if(server.getMaxBetOnTable()==0)
+				if(server.getMaxBetOnTable()<101)
 					request = new SampleRequest("RAISE",100, server.getBetPlayer());
 				else
 					request = new SampleRequest("CALL", server.getBetPlayer());
 			}
-			else if(rank.getHand().getValue()>1)
+			else if(rank.getHand().getValue()==1)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -39,7 +39,7 @@ public class CheckHandRankStrategy implements Strategy
 				else
 					request = new SampleRequest("FOLD", server.getBetPlayer());
 			}
-			else
+			else if(rank.getHand().getValue()==0)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -47,25 +47,25 @@ public class CheckHandRankStrategy implements Strategy
 					request = new SampleRequest("FOLD", server.getBetPlayer());
 			}
 		}
-		else if(server.getTrunTime())
+		else if(server.getTurnTime())
 		{
-			if(rank.getHand().getValue()>3)
+			if(rank.getHand().getValue()>1)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("RAISE",100, server.getBetPlayer());
 				else
 					request = new SampleRequest("CALL", server.getBetPlayer());
 			}
-			else if(rank.getHand().getValue()>1)
+			else if(rank.getHand().getValue()==1)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else if(server.getMaxBetOnTable()<100)
+				else if(server.getMaxBetOnTable()<101)
 					request = new SampleRequest("CALL", server.getBetPlayer());
-				else
+				else if(server.getMaxBetOnTable()>100)
 					request = new SampleRequest("FOLD", server.getBetPlayer());
 			}
-			else
+			else if(rank.getHand().getValue()==0)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -75,21 +75,21 @@ public class CheckHandRankStrategy implements Strategy
 		}
 		else if(server.getRiverTime())
 		{
-			if(rank.getHand().getValue()>3)
+			if(rank.getHand().getValue()>1)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("RAISE",200, server.getBetPlayer());
 				else
 					request = new SampleRequest("CALL", server.getBetPlayer());
 			}
-			else if(rank.getHand().getValue()>1)
+			else if(rank.getHand().getValue()==1)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("CHECK", server.getBetPlayer());
 				else
 					request = new SampleRequest("FOLD", server.getBetPlayer());
 			}
-			else
+			else if(rank.getHand().getValue()==0)
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("CHECK", server.getBetPlayer());

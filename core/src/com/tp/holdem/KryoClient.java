@@ -28,7 +28,7 @@ public class KryoClient {
            kryo.register(Player.class);
            kryo.register(Card.class);
            kryo.register(Deck.class);
-           kryo.register(Table.class);
+           kryo.register(PokerTable.class);
            simulationClient.addListener(new Listener() {
               public synchronized void received(Connection connection, Object object) {
             	  if (object instanceof SampleResponse) {

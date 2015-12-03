@@ -22,7 +22,7 @@ public class GameRenderer {
     private TextureRegion bg, currentCardTexture;
     private SpriteBatch batcher;
     private BitmapFont font, font2, font3;
-    private Table table;
+    private PokerTable pokerTable;
     private boolean waitingForAll;
     private String waitingMessage = "Nope";
     private int winnerNumber = -1;
@@ -221,11 +221,11 @@ public class GameRenderer {
     		yourNumber = response.getNumber();
     	}
     	else if(TAG.equals("T")){
-    		table = response.getTable();
-    		cardsOnTable = table.getCardList();
-    		pot = table.getPot();
-    		smallBlindAmount = table.getSmallBlindAmount();
-    		bigBlindAmount = table.getBigBlindAmount();
+    		pokerTable = response.getTable();
+    		cardsOnTable = pokerTable.getCardList();
+    		pot = pokerTable.getPot();
+    		smallBlindAmount = pokerTable.getSmallBlindAmount();
+    		bigBlindAmount = pokerTable.getBigBlindAmount();
     	}
     	else if(TAG.equals("HCD")){
     		waitingForAll = false;
@@ -241,20 +241,13 @@ public class GameRenderer {
     		turnToBet = response.getNumber();
     		maxBetOnTable = response.getMaxBetOnTable();
     		if(turnToBet == yourNumber){
-    			for(TextButton button : buttons){
-		    		if(!button.isVisible()){
-						button.setVisible(true);
-					}
-					if(button.isDisabled()){
-						button.setDisabled(false);
-					}
-    			}
+    			myWorld.manageButtons(maxBetOnTable, yourNumber, players, pokerTable);
     			myWorld.getSlider().setValue(smallBlindAmount);
         		myWorld.getSlider().setStepSize(smallBlindAmount);
         		myWorld.getSlider().setVisible(true);
         		myWorld.getSlider().setDisabled(false);
-        		if(players!=null && players.get(yourNumber).getChipsAmount()>=maxBetOnTable+smallBlindAmount){
-        			myWorld.getSlider().setRange(maxBetOnTable+smallBlindAmount, players.get(yourNumber).getChipsAmount());
+        		if(players!=null && players.get(yourNumber).getChipsAmount()>=smallBlindAmount){
+        			myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount());
         		}
     		}
     	}

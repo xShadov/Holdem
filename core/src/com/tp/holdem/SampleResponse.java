@@ -8,7 +8,7 @@ public class SampleResponse {
 	public String TAG="";
 	public List<Player> players;
 	public List<Card> cards;
-	public Table table;
+	public PokerTable pokerTable;
 	public int number = 0;
 	public int maxBetOnTable = 0;
 	
@@ -53,9 +53,9 @@ public class SampleResponse {
 		this.text=text;
 	}
 	
-	public SampleResponse(String TAG, Table table){
+	public SampleResponse(String TAG, PokerTable pokerTable){
 		this.TAG = TAG;
-		this.table = table;
+		this.pokerTable = pokerTable;
 	}
 	
 	public SampleResponse(String TAG, List<Player> players){
@@ -87,12 +87,12 @@ public class SampleResponse {
 		this.text = text;
 	}
 
-	public Table getTable() {
-		return table;
+	public PokerTable getTable() {
+		return pokerTable;
 	}
 
-	public void setTable(Table table) {
-		this.table = table;
+	public void setTable(PokerTable pokerTable) {
+		this.pokerTable = pokerTable;
 	}
 
 	public int getMaxBetOnTable() {

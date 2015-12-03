@@ -221,4 +221,39 @@ public class GameWorld {
 	public Slider getSlider() {
 		return slider;
 	}
+
+	public void manageButtons(int maxBetOnTable, int yourNumber, List<Player> players, PokerTable pokerTable) {
+		if(maxBetOnTable == players.get(yourNumber).getBetAmountThisRound()){
+			checkButton.setVisible(true);
+			checkButton.setDisabled(false);
+			raiseButton.setVisible(true);
+			raiseButton.setDisabled(false);
+		}
+		else if(maxBetOnTable>players.get(yourNumber).getBetAmountThisRound()){
+			if(maxBetOnTable>=players.get(yourNumber).getChipsAmount())
+			{
+				allInButton.setVisible(true);
+				allInButton.setDisabled(false);
+			} else { 
+				callButton.setVisible(true);
+				callButton.setDisabled(false);
+				raiseButton.setVisible(true);
+				raiseButton.setDisabled(false);
+			}
+		}
+		else if(maxBetOnTable == 0){
+			betButton.setVisible(true);
+			betButton.setDisabled(false);
+			if(pokerTable.getSmallBlindAmount()>=players.get(yourNumber).getChipsAmount())
+			{
+				allInButton.setVisible(true);
+				allInButton.setDisabled(false);
+			} else { 
+				raiseButton.setVisible(true);
+				raiseButton.setDisabled(false);
+			}
+		}
+		foldButton.setVisible(true);
+		foldButton.setDisabled(false);
+	}
 }
