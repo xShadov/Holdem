@@ -3,14 +3,14 @@ package com.tp.holdem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table {
+public class PokerTable {
 
 	private int pot;
 	private List<Card> cardsOnTable;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
 	
-	public Table()
+	public PokerTable()
 	{
 		this.pot = 0;
 		this.cardsOnTable = new ArrayList<Card>();
