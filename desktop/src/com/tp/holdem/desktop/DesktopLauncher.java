@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "HoldemTP";
 		config.width = 1024;
-		config.height = 780;
+		config.height = 700;
 		new LwjglApplication(new Holdem(), config);
 	}
 }

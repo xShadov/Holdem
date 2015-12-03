@@ -36,7 +36,6 @@ public class GameScreen implements Screen, InputProcessor {
     public GameScreen() {
     	world = new GameWorld();
     	renderer = new GameRenderer(world);
-    	
     	try{
     		client = new KryoClient(renderer);
     	} catch (Exception e){
