@@ -150,6 +150,9 @@ public class Player {
 		return null;
 	}
 
+	public void clearHand(){
+		this.hand = new ArrayList<Card>();
+	}
 	
 }
 

@@ -111,7 +111,10 @@ public class KryoServer implements Runnable {
 						}
 					}
 					if(!waitingForPlayerResponse && !bidingOver){
-						sendBetResponse(betPlayer);
+						if(everyoneFoldedExceptBetPlayer()){
+							timeToCheckWinner();
+						}
+						else sendBetResponse(betPlayer);
 					}
 					else{
 						//timer check for timeout gonna be here
@@ -167,6 +170,14 @@ public class KryoServer implements Runnable {
 
 	
 	
+	private boolean everyoneFoldedExceptBetPlayer() {
+		int countFolded = 0;
+		for(int i=0; i<players.size();i++){
+			if(players.get(i).isFolded()) countFolded++;
+		}
+		return countFolded==players.size()-1;
+	}
+
 	private void timeToCheckWinner() {
 		List<HandRank> hands = new ArrayList<HandRank>();
 		List<Player> winners = new ArrayList<Player>();
@@ -177,18 +188,23 @@ public class KryoServer implements Runnable {
 		}
 		HandRankComparator handComparator = new HandRankComparator();
 		Collections.sort(hands, handComparator);
-		if(handComparator.compare(hands.get(hands.size()-1), hands.get(hands.size()-2))==1){
-			winners.add(players.get(hands.get(hands.size()-1).getPlayerNumber()));
-		} else {
-			winners.add(players.get(hands.get(hands.size()-1).getPlayerNumber()));
-			winners.add(players.get(hands.get(hands.size()-2).getPlayerNumber()));
-			if(hands.size()>=3){
-				for(int i=hands.size()-3; i>=0 ; i--){
-					if(handComparator.compare(hands.get(i), hands.get(hands.size()-2))==0){
-						winners.add(players.get(hands.get(i).getPlayerNumber()));
+		if(hands.size()>1){
+			if(handComparator.compare(hands.get(hands.size()-1), hands.get(hands.size()-2))==1){
+				winners.add(players.get(hands.get(hands.size()-1).getPlayerNumber()));
+			} else {
+				winners.add(players.get(hands.get(hands.size()-1).getPlayerNumber()));
+				winners.add(players.get(hands.get(hands.size()-2).getPlayerNumber()));
+				if(hands.size()>=3){
+					for(int i=hands.size()-3; i>=0 ; i--){
+						if(handComparator.compare(hands.get(i), hands.get(hands.size()-2))==0){
+							winners.add(players.get(hands.get(i).getPlayerNumber()));
+						}
 					}
 				}
 			}
+		}
+		else{
+			winners.add(players.get(hands.get(0).getPlayerNumber()));
 		}
 		for(int i=0; i<winners.size(); i++){
 			players.get(winners.get(i).getNumber())
@@ -208,7 +224,6 @@ public class KryoServer implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("dochodzi do konca check winner");
 		resetAfterRound();
 	}
 
@@ -219,15 +234,15 @@ public class KryoServer implements Runnable {
 			bigBlindAmount=smallBlindAmount*2;
 		}
 		for(int i=0; i<players.size();i++){
-			if(players.get(0).getChipsAmount()==0){
-				players.get(0).setInGame(false);
+			if(players.get(i).getChipsAmount()==0){
+				players.get(i).setInGame(false);
 			}
 			players.get(i).setBetAmount(0);
+			players.get(i).setFolded(false);
 			players.get(i).setHasBigBlind(false);
 			players.get(i).setHasDealerButton(false);
 			players.get(i).setHasSmallBlind(false);
-			players.get(i).getHand().remove(1);
-			players.get(i).getHand().remove(0);
+			players.get(i).clearHand();
 		}
 		if(!notEnoughPlayers()){
 			maxBetOnTable = Integer.valueOf(bigBlindAmount);
@@ -255,7 +270,7 @@ public class KryoServer implements Runnable {
 		}
 		else{
 			if(!everybodyAllIn()){
-				betPlayer = Integer.valueOf(turnPlayer);
+				betPlayer = Integer.valueOf(turnPlayer%numPlayers);
 				int counter = Integer.valueOf(betPlayer);
 				int helper = 0;
 				while(helper<numPlayers){
@@ -281,6 +296,8 @@ public class KryoServer implements Runnable {
 			}
 			else bidingOver = true;
 		}
+		System.out.println(betPlayer+" bet");
+		System.out.println(lastToBet+" last");
 	}
 
 	private boolean everybodyAllIn() {
@@ -320,7 +337,7 @@ public class KryoServer implements Runnable {
     	if(numPlayers==playersCount){
     		for(int i=0; i<botsCount;i++)
     		{
-    			players.add(new Bot(numPlayers,"Bot"+String.valueOf(numPlayers),botStrategy));
+    			players.add(new Bot(numPlayers,"Bot"+String.valueOf(i),botStrategy));
     			players.get(numPlayers).setChipsAmount(1500);
     			numPlayers++;
     		}
