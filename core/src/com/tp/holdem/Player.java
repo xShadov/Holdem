@@ -12,6 +12,7 @@ public class Player {
   	private boolean hasBigBlind = false;
   	private boolean hasSmallBlind = false;
   	private int betAmount = 0;
+  	private int betAmountThisRound = 0;
   	private int chipsAmount = 0;
   	private boolean isFolded = false;
   	private int connectionId = 0;
@@ -29,6 +30,7 @@ public class Player {
   	 	this.hasBigBlind = player.isHasBigBlind();
   	 	this.hasSmallBlind = player.isHasSmallBlind();
   		this.betAmount = player.getBetAmount();
+  		this.betAmountThisRound = player.getBetAmountThisRound();
   		this.chipsAmount = player.getChipsAmount();
   		this.isFolded = player.isFolded;
   		this.inGame = player.isInGame();
@@ -152,6 +154,14 @@ public class Player {
 
 	public void clearHand(){
 		this.hand = new ArrayList<Card>();
+	}
+
+	public int getBetAmountThisRound() {
+		return betAmountThisRound;
+	}
+
+	public void setBetAmountThisRound(int betAmountThisRound) {
+		this.betAmountThisRound = betAmountThisRound;
 	}
 	
 }

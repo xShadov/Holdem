@@ -141,7 +141,9 @@ public class GameRenderer {
 			batcher.draw(box, boxPositionX[i], boxPositionY[i]);
 			font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+81);
 			font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+54);
-			font.draw(batcher, "Bet: "+players.get((i+yourNumber)%players.size()).getBetAmount(), boxPositionX[i]+18, boxPositionY[i]+27);
+			font.draw(batcher,
+					"Bet: "+players.get((i+yourNumber)%players.size()).getBetAmountThisRound()+"/"+players.get((i+yourNumber)%players.size()).getBetAmount(),
+					boxPositionX[i]+18, boxPositionY[i]+27);
 		}
 	}
 
