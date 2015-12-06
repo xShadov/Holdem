@@ -39,7 +39,7 @@ public class GameWorld {
     	atlas = new TextureAtlas("data/button.pack");
     	buttonsSkin = new Skin(atlas);
     	table = new Table(buttonsSkin);
-    	table.setBounds(830, 0, 189, 154);
+    	table.setBounds(380, 19, 250, 50);
     	font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
     	skin = new Skin(Gdx.files.internal("data/uiskin.json"));
     	slider = new Slider(0, 1500, 1, false, skin);
@@ -51,7 +51,7 @@ public class GameWorld {
 			}
 		});
 		
-		slider.setPosition(330, 90);
+		slider.setPosition(330, 70);
 		slider.setWidth(400);
 		
     	TextButtonStyle textButtonStyle = new TextButtonStyle();
@@ -70,7 +70,7 @@ public class GameWorld {
     	
     	checkButton.pad(10);
     	checkButton.getLabel().setFontScale(0.45f);
-    	checkButton.setBounds(840, 100, 78, 40);
+    	checkButton.setBounds(460, 19, 78, 40);
 
     	checkButton.addListener(new ClickListener() 
     	{
@@ -87,7 +87,7 @@ public class GameWorld {
     	
     	foldButton.pad(10);
     	foldButton.getLabel().setFontScale(0.45f);
-    	foldButton.setBounds(840, 56, 78, 40);
+    	foldButton.setBounds(380, 19, 78, 40);
 
     	foldButton.addListener(new ClickListener() 
     	{
@@ -104,7 +104,7 @@ public class GameWorld {
     	
     	betButton.pad(10);
     	betButton.getLabel().setFontScale(0.45f);
-    	betButton.setBounds(840, 12, 78, 40);
+    	betButton.setBounds(460, 19, 78, 40);
 
     	betButton.addListener(new ClickListener() 
     	{
@@ -121,7 +121,7 @@ public class GameWorld {
     	
     	callButton.pad(10);
     	callButton.getLabel().setFontScale(0.45f);
-    	callButton.setBounds(924, 100, 78, 40);
+    	callButton.setBounds(460, 19, 78, 40);
 
     	callButton.addListener(new ClickListener() 
     	{
@@ -138,7 +138,7 @@ public class GameWorld {
     	
     	allInButton.pad(10);
     	allInButton.getLabel().setFontScale(0.45f);
-    	allInButton.setBounds(924, 56, 78, 40);
+    	allInButton.setBounds(460, 19, 78, 40);
 
     	allInButton.addListener(new ClickListener() 
     	{
@@ -155,7 +155,7 @@ public class GameWorld {
     	
     	raiseButton.pad(10);
     	raiseButton.getLabel().setFontScale(0.45f);
-    	raiseButton.setBounds(924, 12, 78, 40);
+    	raiseButton.setBounds(540, 19, 78, 40);
     	raiseButton.addListener(new ClickListener() 
     	{
     		@Override
