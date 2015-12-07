@@ -18,6 +18,8 @@ public class Player {
   	private int connectionId = 0;
   	private boolean inGame = true;
   	private boolean isAllIn = false;
+  	private int fromWhichPot = -1;
+  	private HandRank handRank;
   	
   	public Player(){
 
@@ -162,6 +164,22 @@ public class Player {
 
 	public void setBetAmountThisRound(int betAmountThisRound) {
 		this.betAmountThisRound = betAmountThisRound;
+	}
+
+	public int getFromWhichPot() {
+		return fromWhichPot;
+	}
+
+	public void setFromWhichPot(int fromWhichPot) {
+		this.fromWhichPot = fromWhichPot;
+	}
+
+	public HandRank getHandRank() {
+		return handRank;
+	}
+
+	public void setHandRank(HandRank handRank) {
+		this.handRank = handRank;
 	}
 	
 }

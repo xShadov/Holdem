@@ -188,38 +188,68 @@ public class KryoServer implements Runnable {
 		for(int i=0; i<players.size(); i++){
 			if(!players.get(i).isFolded() && players.get(i).isInGame()){
 				hands.add(HandOperations.findHandRank(players.get(i).getNumber(), players.get(i).getHand(), pokerTable.getCardList()));
+				players.get(i).setHandRank(HandOperations.findHandRank(players.get(i).getNumber(), players.get(i).getHand(), pokerTable.getCardList()));
 			}
 		}
 		HandRankComparator handComparator = new HandRankComparator();
 		Collections.sort(hands, handComparator);
 		if(hands.size()>1){
-			if(handComparator.compare(hands.get(hands.size()-1), hands.get(hands.size()-2))==1){
-				winners.add(players.get(hands.get(hands.size()-1).getPlayerNumber()));
-			} else {
-				winners.add(players.get(hands.get(hands.size()-1).getPlayerNumber()));
-				winners.add(players.get(hands.get(hands.size()-2).getPlayerNumber()));
-				if(hands.size()>=3){
-					for(int i=hands.size()-3; i>=0 ; i--){
-						if(handComparator.compare(hands.get(i), hands.get(hands.size()-2))==0){
-							winners.add(players.get(hands.get(i).getPlayerNumber()));
+			for(int i=hands.size()-1; i>0; i--){
+				if(players.get(hands.get(i).getPlayerNumber()).getBetAmountThisRound()==maxBetOnTable){
+					if(handComparator.compare(hands.get(i), hands.get(i-1))==1){
+						for(int j=0; j<i; j++){
+							hands.remove(0);
 						}
+						break;
 					}
 				}
 			}
 		}
-		else{
-			winners.add(players.get(hands.get(0).getPlayerNumber()));
+		int currentPotNumber = 0;
+		for(int i=0; i<hands.size(); i++){
+			winners.add(0, players.get(hands.get(i).getPlayerNumber()));
 		}
+		Collections.sort(winners, new BetComparator());
 		for(int i=0; i<winners.size(); i++){
-			players.get(winners.get(i).getNumber())
-				.setChipsAmount(players.get(winners.get(i).getNumber()).getChipsAmount() + pokerTable.getPot()/winners.size());
+			winners.get(i).setFromWhichPot(currentPotNumber);
+			if(i<winners.size()-1){
+				if(winners.get(i).getBetAmount()!=winners.get(i+1).getBetAmount()) currentPotNumber++;
+			}
 		}
 		if(winners.size()==1){
 			//OW - one winner
+			players.get(winners.get(0).getNumber())
+				.setChipsAmount(players.get(winners.get(0).getNumber()).getChipsAmount() + pokerTable.getPot());
 			response = new SampleResponse("OW", winners.get(0).getNumber());
 		}
 		else{
 			//MW - multiple winners
+			int howManyInPreviousPots = 0;
+			for(int i=0; i<=currentPotNumber; i++){
+				int howManyPeopleInSamePot = howManyPeopleInSamePot(i);
+				howManyInPreviousPots+=howManyPeopleInSamePot;
+				int howToSplit = 0;
+				for(int j=howManyInPreviousPots-howManyPeopleInSamePot; j<howManyInPreviousPots; j++){
+					if(j<winners.size()-1){
+						if(handComparator.compare(winners.get(j).getHandRank(), winners.get(j+1).getHandRank())==1){
+							howToSplit++;
+							break;
+						} else {
+							howToSplit++;
+						}
+					} else {
+						if(handComparator.compare(winners.get(j).getHandRank(), winners.get(j-1).getHandRank())==-1){
+							howToSplit++;
+						}
+					}
+				}
+				int howMuchPerOne = findAmountChipsForAllInPot(i, winners.get(howManyInPreviousPots-1).getBetAmount())/howToSplit;
+				for(int j=howManyInPreviousPots-howManyPeopleInSamePot; j<howManyInPreviousPots-howManyPeopleInSamePot+howToSplit; j++)
+				{
+					players.get(winners.get(j).getNumber())
+						.setChipsAmount(players.get(winners.get(j).getNumber()).getChipsAmount() + howMuchPerOne);
+				}
+			}
 			response = new SampleResponse("MW");
 		}
 		server.sendToAllTCP(response);
@@ -229,6 +259,33 @@ public class KryoServer implements Runnable {
 			e.printStackTrace();
 		}
 		resetAfterRound();
+	}
+
+	private int findAmountChipsForAllInPot(int potNumber, int betAmount) {
+		int wholeAmount = 0;
+		for(int i=0; i<players.size(); i++){
+			if(players.get(i).getFromWhichPot()>=potNumber || players.get(i).getFromWhichPot()==-1)
+			{
+				if(players.get(i).getBetAmount()<betAmount){
+					wholeAmount+=players.get(i).getBetAmount();
+					players.get(i).setBetAmount(0);
+				} else {
+					wholeAmount+=betAmount;
+					players.get(i).setBetAmount(players.get(i).getBetAmount()-betAmount);
+				}
+			}
+		}
+		return wholeAmount;
+	}
+
+	private int howManyPeopleInSamePot(int fromWhichPot) {
+		int amount = 0;
+		for(int i=0; i<players.size();i++){
+			if(players.get(i).isInGame() && !players.get(i).isFolded()){
+				if(players.get(i).getFromWhichPot()==fromWhichPot) amount++;
+			}
+		}
+		return amount;
 	}
 
 	private void resetAfterRound() {
@@ -241,6 +298,7 @@ public class KryoServer implements Runnable {
 			if(players.get(i).getChipsAmount()==0){
 				players.get(i).setInGame(false);
 			}
+			players.get(i).setFromWhichPot(-1);
 			players.get(i).setBetAmount(0);
 			players.get(i).setFolded(false);
 			players.get(i).setAllIn(false);
