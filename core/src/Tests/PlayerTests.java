@@ -9,13 +9,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tp.holdem.AllInStrategy;
 import com.tp.holdem.BetComparator;
+import com.tp.holdem.Bot;
 import com.tp.holdem.Card;
 import com.tp.holdem.Deck;
 import com.tp.holdem.HandRank;
 import com.tp.holdem.HandRankComparator;
 import com.tp.holdem.HandRankingEnum;
 import com.tp.holdem.Player;
+import com.tp.holdem.Strategy;
 
 public class PlayerTests {
 
@@ -47,6 +50,8 @@ public class PlayerTests {
     @Test                                        
     public final void testPlayerGetNumber() {
     	  assertEquals("Player has the wrong number", 6, playerWithName.getNumber() );
+    	  playerWithName.setNumber(15);
+    	  assertEquals("Player has the wrong number", 15, playerWithName.getNumber() );
     } 
     
     @Test                                        
@@ -89,6 +94,22 @@ public class PlayerTests {
     	  player.addCard(new Card("Queen", "Diamond"));
     	  player.clearHand();
     	  assertEquals(0, player.getHand().size());
+    } 
+    
+    @Test                                        
+    public final void testPlayerStrategy() {
+    	  Player player = new Player(15);
+    	  Bot playerBot = new Bot(5, "bot", new AllInStrategy());
+    	  List<Player> players = new ArrayList<Player>();
+    	  players.add(player);
+    	  players.add(playerBot);
+    	  for(Player playerk : players){
+	    	  if(playerk instanceof Bot){
+	    		  assertEquals("Always All-in", playerk.getStrategy().getName());
+	    	  } else {
+	    		  assertEquals(null, playerk.getStrategy());
+	    	  }
+    	  }
     } 
     
     @Test                                        

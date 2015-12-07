@@ -70,6 +70,14 @@ public class DeckTests {
     }
     
     @Test                                        
+    public final void testDeckDrawCard() {
+      	deck.drawCard();
+      	deck.drawCard();
+      	deck.drawCard();
+      	assertEquals(49, deck.getCards().size());
+    }
+    
+    @Test                                        
     public final void testDeckDealingCardsFirstPlayer() {
       	final List<Player> players = new ArrayList<Player>();
       	players.add(new Player(1));
@@ -90,6 +98,7 @@ public class DeckTests {
     @Test                                       
     public final void testDeckEmptyCheck() {
       	final List<Player> players = new ArrayList<Player>();
+      	assertFalse("Deck shouldnt be empty", deck.isEmpty() );
       	players.add(new Player(1));
       	players.add(new Player(2));
       	deck.dealCards(26, players);

@@ -20,8 +20,8 @@ public class Card {
   	public Card(final String honour, final String suit){
     		this.suit = suit;
     		this.honour = honour;
-    		if(suit=="Spade" || suit=="Club") this.color="black";
-    		else this.color="red";
+    		if(suit=="Spade" || suit=="Club") this.color = "black";
+    		else this.color = "red";
     		findCordination();
     		findValue();
   	}
@@ -128,6 +128,9 @@ public class Card {
   
   	public void setSuit(final String suit) {
   		  this.suit = suit;
+  		  if(suit=="Spade" || suit=="Club"){
+  			  this.color = "black";
+  		  } else this.color = "red";
   	}
   
   	public String getHonour() {
@@ -136,6 +139,8 @@ public class Card {
   
   	public void setHonour(final String honour) {
   		  this.honour = honour;
+  		  findCordination();
+  		  findValue();
   	}
   	
   	public String getColor() {
