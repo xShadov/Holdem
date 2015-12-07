@@ -150,7 +150,6 @@ public class Player {
 	}
 
 	public Strategy getStrategy() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

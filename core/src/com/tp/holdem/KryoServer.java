@@ -399,6 +399,9 @@ public class KryoServer implements Runnable {
     	players.get(numPlayers).setConnectionId(con.getID());
     	response = new SampleResponse("N", numPlayers);
     	server.sendToTCP(con.getID(), response);
+    	for(int i=0; i<players.size(); i++){
+    		System.out.println(players.get(i).getNumber()+"");
+    	}
     	numPlayers++;
     	if(numPlayers==playersCount){
     		for(int i=0; i<botsCount;i++)

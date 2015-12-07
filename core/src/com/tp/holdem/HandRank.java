@@ -17,7 +17,11 @@ public class HandRank {
 		this.playerNumber = playerNumber;
 		this.cardsThatMakeDeck=cardsThatMakeDeck;
 	}
-
+	
+	public HandRankingEnum getHand() {
+		return hand;
+	}
+	
 	@Override
 	public String toString(){
 		String string = playerNumber+" ";
@@ -28,10 +32,6 @@ public class HandRank {
 		return string;
 	}
 	
-	public HandRankingEnum getHand() {
-		return hand;
-	}
-
 	public void setHand(HandRankingEnum hand) {
 		this.hand = hand;
 	}
