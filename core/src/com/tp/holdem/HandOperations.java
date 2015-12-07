@@ -200,12 +200,13 @@ public class HandOperations {
 	    int cardsInARow = 1;
 	    int mistakes = 0;
 	    boolean isStraight = false;
+	    
+	    if(cards.get(0).getHonour()=="2" && cards.get(cards.size()-1).getHonour()=="Ace"){
+	    	cardsInARow = 2;
+	    }
+	    
 	    for(int i = 0; i<cards.size()-1; i++){
 	    	if(cards.get(i).getValue()+1==cards.get(i+1).getValue()){
-	    		cardsInARow++;
-	    		if(cardsInARow==5) isStraight = true;
-	    	}
-	    	else if(cards.get(i).getHonour()=="Ace" && cards.get(i+1).getHonour()=="2"){
 	    		cardsInARow++;
 	    		if(cardsInARow==5) isStraight = true;
 	    	}
@@ -225,6 +226,7 @@ public class HandOperations {
 	    		}
 	    	}
 	    } 
+
 	    cleanDeck();
 	    if(cardsInARow==6 || cardsInARow==7) trimDeckDown(cardsInARow-6);
 	    cleanDeck();

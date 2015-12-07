@@ -172,8 +172,6 @@ public class KryoServer implements Runnable {
 		}
 	}
 
-	
-	
 	private boolean everyoneFoldedExceptBetPlayer() {
 		int countFolded = 0;
 		for(int i=0; i<players.size();i++){
