@@ -9,10 +9,12 @@ public class HandRankComparator implements Comparator<HandRank> {
 		if(hand1.getHand()==hand2.getHand()){
 			if(hand1.getHand()==HandRankingEnum.ROYAL_FLUSH) return 0;
 			else if(hand1.getHand()==HandRankingEnum.STRAIGHT_FLUSH){
-				if(hand1.getCardsThatMakeDeck().get(4).getValue()>hand2.getCardsThatMakeDeck().get(4).getValue()){
+				if(hand1.getCardsThatMakeDeck().get(hand1.getCardsThatMakeDeck().size()-1).getValue()
+						>hand2.getCardsThatMakeDeck().get(hand2.getCardsThatMakeDeck().size()-1).getValue()){
 					return 1;
 				}
-				else if(hand1.getCardsThatMakeDeck().get(4).getValue()<hand2.getCardsThatMakeDeck().get(4).getValue()){
+				else if(hand1.getCardsThatMakeDeck().get(hand1.getCardsThatMakeDeck().size()-1).getValue()
+						<hand2.getCardsThatMakeDeck().get(hand2.getCardsThatMakeDeck().size()-1).getValue()){
 					return -1;
 				}
 				else{
@@ -72,7 +74,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 					return -1;
 				}
 				else{
-					if(hand1.getCardsThatMakeDeck().get(indexDoubles1).getValue()<hand2.getCardsThatMakeDeck().get(indexDoubles2).getValue()){
+					if(hand1.getCardsThatMakeDeck().get(indexDoubles1).getValue()>hand2.getCardsThatMakeDeck().get(indexDoubles2).getValue()){
 						return 1;
 					}
 					else if(hand1.getCardsThatMakeDeck().get(indexDoubles1).getValue()<hand2.getCardsThatMakeDeck().get(indexDoubles2).getValue()){
@@ -96,10 +98,12 @@ public class HandRankComparator implements Comparator<HandRank> {
 				}
 			}
 			else if(hand1.getHand()==HandRankingEnum.STRAIGHT){
-				if(hand1.getCardsThatMakeDeck().get(0).getValue()>hand2.getCardsThatMakeDeck().get(0).getValue()){
+				if(hand1.getCardsThatMakeDeck().get(hand1.getCardsThatMakeDeck().size()-1).getValue()
+						>hand2.getCardsThatMakeDeck().get(hand2.getCardsThatMakeDeck().size()-1).getValue()){
 					return 1;
 				}
-				else if(hand1.getCardsThatMakeDeck().get(0).getValue()<hand2.getCardsThatMakeDeck().get(0).getValue()){
+				else if(hand1.getCardsThatMakeDeck().get(hand1.getCardsThatMakeDeck().size()-1).getValue()
+						<hand2.getCardsThatMakeDeck().get(hand2.getCardsThatMakeDeck().size()-1).getValue()){
 					return -1;
 				}
 				else{
@@ -127,10 +131,10 @@ public class HandRankComparator implements Comparator<HandRank> {
 					index2 = 1;
 				}
 				else index2 = 2;
-				if(hand1.getCardsThatMakeDeck().get(index1).getValue()>hand1.getCardsThatMakeDeck().get(index2).getValue()){
+				if(hand1.getCardsThatMakeDeck().get(index1).getValue()>hand2.getCardsThatMakeDeck().get(index2).getValue()){
 					return 1;
 				}
-				else if(hand1.getCardsThatMakeDeck().get(index1).getValue()<hand1.getCardsThatMakeDeck().get(index2).getValue()){
+				else if(hand1.getCardsThatMakeDeck().get(index1).getValue()<hand2.getCardsThatMakeDeck().get(index2).getValue()){
 					return -1;
 				}
 				else{
@@ -140,10 +144,10 @@ public class HandRankComparator implements Comparator<HandRank> {
 					else index1kicker=1;
 					if(index2==0 || index2==1) index2kicker=4;
 					else index2kicker=1;
-					if(hand1.getCardsThatMakeDeck().get(index1kicker).getValue()>hand1.getCardsThatMakeDeck().get(index1kicker).getValue()){
+					if(hand1.getCardsThatMakeDeck().get(index1kicker).getValue()>hand2.getCardsThatMakeDeck().get(index1kicker).getValue()){
 						return 1;
 					}
-					else if(hand1.getCardsThatMakeDeck().get(index1kicker).getValue()<hand1.getCardsThatMakeDeck().get(index1kicker).getValue()){
+					else if(hand1.getCardsThatMakeDeck().get(index1kicker).getValue()<hand2.getCardsThatMakeDeck().get(index1kicker).getValue()){
 						return -1;
 					}
 					else{
@@ -151,10 +155,10 @@ public class HandRankComparator implements Comparator<HandRank> {
 						else index1=0;
 						if(index2==0 && index2kicker==4) index2=3;
 						else index2=0;
-						if(hand1.getCardsThatMakeDeck().get(index1).getValue()>hand1.getCardsThatMakeDeck().get(index2).getValue()){
+						if(hand1.getCardsThatMakeDeck().get(index1).getValue()>hand2.getCardsThatMakeDeck().get(index2).getValue()){
 							return 1;
 						}
-						else if(hand1.getCardsThatMakeDeck().get(index1).getValue()<hand1.getCardsThatMakeDeck().get(index2).getValue()){
+						else if(hand1.getCardsThatMakeDeck().get(index1).getValue()<hand2.getCardsThatMakeDeck().get(index2).getValue()){
 							return -1;
 						}
 						else return 0;

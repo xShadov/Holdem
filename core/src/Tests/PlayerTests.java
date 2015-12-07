@@ -139,12 +139,36 @@ public class PlayerTests {
     } 
     
     @Test                                        
-    public final void testPlayerHandRank() {
+    public final void testPlayerHandRankNoCards() {
     	  Player player = new Player(15);
-    	  player.setHandRank(new HandRank(player.getNumber(), HandRankingEnum.ROYAL_FLUSH, new ArrayList<Card>()));
+    	  HandRank handRank = new HandRank();
+    	  handRank.setPlayerNumber(player.getNumber());
+    	  handRank.setHand(HandRankingEnum.ROYAL_FLUSH);
+    	  handRank.setCardsThatMakeDeck(new ArrayList<Card>());
+    	  player.setHandRank(handRank);
     	  assertEquals(HandRankingEnum.ROYAL_FLUSH, player.getHandRank().getHand());
     	  assertEquals(15, player.getHandRank().getPlayerNumber());
     	  assertEquals(0, player.getHandRank().getCardsThatMakeDeck().size());
+    } 
+    
+    @Test                                        
+    public final void testPlayerHandRankWithCards() {
+    	  Player player = new Player(15);
+    	  List<Card> cards = new ArrayList<Card>();
+    	  cards.add(new Card("2", "Club"));
+  		  cards.add(new Card("2", "Heart"));
+  		  cards.add(new Card("5", "Club"));
+  		  cards.add(new Card("5", "Heart"));
+  		  cards.add(new Card("5", "Club"));
+    	  player.setHandRank(new HandRank(player.getNumber(), HandRankingEnum.ROYAL_FLUSH, cards));
+    	  assertEquals(HandRankingEnum.ROYAL_FLUSH, player.getHandRank().getHand());
+    	  assertEquals(15, player.getHandRank().getPlayerNumber());
+    	  assertEquals(5, player.getHandRank().getCardsThatMakeDeck().size());
+    	  String string = player.getNumber()+" "+player.getHandRank().getHand();
+    	  for(Card card : player.getHandRank().getCardsThatMakeDeck()){
+  			string+=" "+card.getHonour()+" "+card.getSuit();
+  		  }
+    	  assertEquals(string, player.getHandRank()+"");
     } 
     
     @Test                                        

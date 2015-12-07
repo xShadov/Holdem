@@ -13,6 +13,7 @@ public class SampleRequest {
 	}
 	
 	public SampleRequest(String TAG, String text){
+		this.TAG=TAG;
 		this.text=text;
 	}
 	

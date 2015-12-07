@@ -12,33 +12,6 @@ public class SampleResponse {
 	public int number = 0;
 	public int maxBetOnTable = 0;
 	
-	public int getNumber() {
-		return number;
-	}
-
-	public void setNumber(int number) {
-		this.number = number;
-	}
-
-	public List<Player> getPlayers() {
-		return players;
-	}
-	
-	public List<Card> getCards()
-	{
-		return cards;
-	}
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
-
-	public String getTAG() {
-		return TAG;
-	}
-
-	public void setTAG(String tAG) {
-		TAG = tAG;
-	}
 
 	public SampleResponse(){
 		
@@ -77,6 +50,34 @@ public class SampleResponse {
 		this.TAG = TAG;
 		this.number = number;
 		this.maxBetOnTable = maxBetOnTable;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
+	public List<Card> getCards()
+	{
+		return cards;
+	}
+	public void setPlayers(List<Player> players) {
+		this.players = players;
+	}
+
+	public String getTAG() {
+		return TAG;
+	}
+
+	public void setTAG(String tAG) {
+		TAG = tAG;
 	}
 	
 	public String getText(){
