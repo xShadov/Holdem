@@ -165,7 +165,7 @@ public class GameRenderer {
 	}
 
 	private void drawCards(int i) {
-		if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber){
+		if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber && players.get((i+yourNumber)%players.size()).isInGame()){
 			findCurrentCardTexture(yourCards.get(0));
 			batcher.draw(currentCardTexture, positionX[i], positionY[i]);
 			findCurrentCardTexture(yourCards.get(1));
