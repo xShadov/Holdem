@@ -39,11 +39,11 @@ public class KryoServer implements Runnable {
 	private int startingSmallBlindAmount = 20;
 	private int smallBlindAmount = Integer.valueOf(startingSmallBlindAmount);
 	private int bigBlindAmount = smallBlindAmount*2;
-	private int maxBetOnTable = Integer.valueOf(bigBlindAmount);
+	private int maxBetOnTable = 0;
 	private boolean newHand = false;
 	private SampleResponse response;
 		
-	public KryoServer(int playersCount,int botsCount, String limitType, Strategy botStrategy) throws Exception {
+	public KryoServer(int playersCount, int botsCount, String limitType, Strategy botStrategy) throws Exception {
 		
 	  this.playersCount=playersCount;
 	  this.botsCount=botsCount;
@@ -179,7 +179,7 @@ public class KryoServer implements Runnable {
 		}
 		return countFolded==players.size()-1;
 	}
-
+	
 	private void timeToCheckWinner() {
 		List<HandRank> hands = new ArrayList<HandRank>();
 		List<Player> winners = new ArrayList<Player>();
@@ -236,7 +236,7 @@ public class KryoServer implements Runnable {
 							howToSplit++;
 						}
 					} else {
-						if(handComparator.compare(winners.get(j).getHandRank(), winners.get(j-1).getHandRank())==-1){
+						if(handComparator.compare(winners.get(j).getHandRank(), winners.get(j-1).getHandRank())!=1){
 							howToSplit++;
 						}
 					}
@@ -399,9 +399,6 @@ public class KryoServer implements Runnable {
     	players.get(numPlayers).setConnectionId(con.getID());
     	response = new SampleResponse("N", numPlayers);
     	server.sendToTCP(con.getID(), response);
-    	for(int i=0; i<players.size(); i++){
-    		System.out.println(players.get(i).getNumber()+"");
-    	}
     	numPlayers++;
     	if(numPlayers==playersCount){
     		for(int i=0; i<botsCount;i++)
@@ -427,8 +424,7 @@ public class KryoServer implements Runnable {
 
 	private void handleDisconnected(Connection con) {
 		for(Player player : players){
-			  numPlayers--;
-    		  if(player.getConnectionId()==con.getID()) players.remove(player);
+    		  if(player.getConnectionId()==con.getID()) player.setInGame(false);
     		  break;
     	  }
 	}
@@ -549,6 +545,11 @@ public class KryoServer implements Runnable {
 			players.get((turnPlayer+2)%numPlayers).setBetAmountThisRound(players.get((turnPlayer+2)%numPlayers).getChipsAmount());
 			players.get((turnPlayer+2)%numPlayers).setChipsAmount(0);
 			players.get((turnPlayer+2)%numPlayers).setAllIn(true);
+		}
+		for(int i=0; i<players.size(); i++){
+			if(players.get(i).getBetAmountThisRound()>maxBetOnTable){
+				maxBetOnTable = players.get(i).getBetAmountThisRound();
+			}
 		}
 		pokerTable.setPot(pokerTable.getPot()+players.get((turnPlayer+2)%numPlayers).getBetAmount());
 		response = new SampleResponse("T", pokerTable);
