@@ -571,21 +571,6 @@ public class KryoServer implements Runnable {
 		return maxBetOnTable;
 	}
 	
-	public boolean getFlopTime()
-	{
-		return flopTime;
-	}
-	
-	public boolean getTurnTime()
-	{
-		return turnTime;
-	}
-	
-	public boolean getRiverTime()
-	{
-		return riverTime;
-	}
-	
 	public PokerTable getTable()
 	{
 		return pokerTable;
@@ -596,6 +581,10 @@ public class KryoServer implements Runnable {
 		return betPlayer;
 	}
 	
+	public int getBigBlind()
+	{
+		return bigBlindAmount;
+	}
 	public static void main(String[] args) {
 		try {
 			new KryoServer(2, 0, "no-limit",null);

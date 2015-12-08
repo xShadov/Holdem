@@ -103,17 +103,23 @@ class ButtonStrategyListener implements ActionListener
 		}
 		if(menu.getStrategy().getName().equals("Always Fold") )
 		{
-			menu.setStrategy(new CallStrategy());
+			menu.setStrategy(new Easy());
 			button.setText(menu.getStrategy().getName());
 			return;
 		}
-		if(menu.getStrategy().getName().equals("Always Call") )
+		if(menu.getStrategy().getName().equals("Easy") )
 		{
-			menu.setStrategy(new CheckHandRankStrategy());
+			menu.setStrategy(new Medium());
 			button.setText(menu.getStrategy().getName());
 			return;
 		}
-		if(menu.getStrategy().getName().equals("Check Hand Rank") )
+		if(menu.getStrategy().getName().equals("Medium") )
+		{
+			menu.setStrategy(new Hard());
+			button.setText(menu.getStrategy().getName());
+			return;
+		}
+		if(menu.getStrategy().getName().equals("Hard") )
 		{
 			menu.setStrategy(new AllInStrategy());
 			button.setText(menu.getStrategy().getName());

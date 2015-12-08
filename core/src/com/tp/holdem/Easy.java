@@ -2,9 +2,9 @@ package com.tp.holdem;
 
 import java.util.List;
 
-public class CallStrategy implements Strategy{
+public class Easy implements Strategy{
 
-	private String name = "Always Call";
+	private String name = "Easy";
 	private SampleRequest request;
 	@Override
 	public Strategy getStrategy() {
