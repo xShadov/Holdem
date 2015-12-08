@@ -43,7 +43,7 @@ public class KryoServer implements Runnable {
 	private boolean newHand = false;
 	private SampleResponse response;
 		
-	public KryoServer(int playersCount, int botsCount, String limitType, Strategy botStrategy) throws Exception {
+	public KryoServer(final int playersCount, int botsCount, String limitType, Strategy botStrategy) throws Exception {
 		
 	  this.playersCount=playersCount;
 	  this.botsCount=botsCount;
@@ -71,7 +71,13 @@ public class KryoServer implements Runnable {
           }
           
           public synchronized void connected(Connection con){
-        	  handleConnected(con);
+        	  if(players.size()<playersCount){
+        		  handleConnected(con);
+        	  }
+        	  else
+        	  {
+        		  con.close();
+        	  }
           }
 
           public synchronized void disconnected(Connection con){
@@ -420,13 +426,12 @@ public class KryoServer implements Runnable {
     		server.sendToTCP(con.getID(), response);
 		}
     }
-    
-
+	
 	private void handleDisconnected(Connection con) {
 		for(Player player : players){
     		  if(player.getConnectionId()==con.getID()) player.setInGame(false);
     		  break;
-    	  }
+    	  }		
 	}
 	
 	//changed to public for bot to send request
