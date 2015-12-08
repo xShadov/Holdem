@@ -133,7 +133,7 @@ class ButtonStrategy extends JButton
 {
 	public ButtonStrategy(MainMenu menu)
 	{
-		super("Always All-in");
+		super(menu.getStrategy().getName());
 		addActionListener(new ButtonStrategyListener(this,menu));
 	}
 	
@@ -176,7 +176,7 @@ class ButtonLimit extends JButton
 {
 	public ButtonLimit(MainMenu menu)
 	{
-		super("no-limit");
+		super(menu.getLimit());
 		addActionListener(new ButtonLimitListener(this,menu));
 	}
 }
