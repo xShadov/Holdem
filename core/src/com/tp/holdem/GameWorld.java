@@ -226,6 +226,7 @@ public class GameWorld {
 		if(maxBetOnTable == players.get(yourNumber).getBetAmountThisRound()){
 			checkButton.setVisible(true);
 			checkButton.setDisabled(false);
+			//// POPRAW betbutton
 			if(!pokerTable.getLimitType().equals("fixed-limit") || pokerTable.getRaiseCount()<pokerTable.getFixedRaiseCount()){
 				raiseButton.setVisible(true);
 				raiseButton.setDisabled(false);

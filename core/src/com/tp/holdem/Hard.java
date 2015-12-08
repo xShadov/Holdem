@@ -64,7 +64,7 @@ public class Hard implements Strategy
 			{
 				if(server.getMaxBetOnTable()==0)
 					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else if(server.getMaxBetOnTable()==server.getBigBlind())
+				else if(server.getMaxBetOnTable()>0)
 					request = new SampleRequest("CALL", server.getBetPlayer());
 				else if(server.getMaxBetOnTable()>server.getBigBlind())
 					request = new SampleRequest("FOLD", server.getBetPlayer());
