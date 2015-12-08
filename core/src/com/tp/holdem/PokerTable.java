@@ -9,6 +9,10 @@ public class PokerTable {
 	private List<Card> cardsOnTable;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
+	private String limitType;
+	private int fixedLimit;
+	private int fixedRaiseCount;
+	private int raiseCount;
 	
 	public PokerTable()
 	{
@@ -58,5 +62,37 @@ public class PokerTable {
 
 	public void setBigBlindAmount(int bigBlindAmount) {
 		this.bigBlindAmount = bigBlindAmount;
+	}
+
+	public String getLimitType() {
+		return limitType;
+	}
+
+	public void setLimitType(String limitType) {
+		this.limitType = limitType;
+	}
+
+	public int getFixedLimit() {
+		return fixedLimit;
+	}
+
+	public void setFixedLimit(int fixedLimit) {
+		this.fixedLimit = fixedLimit;
+	}
+
+	public int getFixedRaiseCount() {
+		return fixedRaiseCount;
+	}
+
+	public void setFixedRaiseCount(int fixedRaiseCount) {
+		this.fixedRaiseCount = fixedRaiseCount;
+	}
+
+	public int getRaiseCount() {
+		return raiseCount;
+	}
+
+	public void setRaiseCount(int raiseCount) {
+		this.raiseCount = raiseCount;
 	}
 }

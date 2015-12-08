@@ -32,7 +32,9 @@ public class GameRenderer {
     private int pot = 0;
     private int maxBetOnTable = 0;
     private int yourBetAmount = 0;
+    private int fixedLimit = 0;
     private boolean gameOver = false;
+    private String limitType;
     private int turnToBet;
     private List<Player> players;
     private List<Card> yourCards;
@@ -40,7 +42,7 @@ public class GameRenderer {
     private Texture cards;
     private int yourNumber=0;
     private List<TextButton> buttons;
-    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, smallStack, semiStack, bigStack, spotlight;
+    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, smallStack, semiStack, bigStack, spotlight;
     private int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
     private int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
     private int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
@@ -71,6 +73,7 @@ public class GameRenderer {
         buttons = world.getButtons();
         cards = new Texture(Gdx.files.internal("data/cards.png"));
         box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
+        boxOff = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxOff.png")), 0, 0, 160, 96);
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
         spotlight = new TextureRegion(new Texture(Gdx.files.internal("data/spotlight.png")), 0, 0, 352, 740);
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
@@ -122,7 +125,7 @@ public class GameRenderer {
 	}
 
 	private void drawChips(int i) {
-		if(players.get((i+yourNumber)%players.size()).getBetAmount()>0 && players.get((i+yourNumber)%players.size()).isInGame())
+		if(players.get((i+yourNumber)%players.size()).getBetAmount()>0)
 		{
 			if(players.get((i+yourNumber)%players.size()).getBetAmount()<300){
 				batcher.draw(smallStack, chipsPositionX[i], chipsPositionY[i]);
@@ -139,28 +142,30 @@ public class GameRenderer {
 	private void drawInfoBoxes(int i) {
 		if(players.get((i+yourNumber)%players.size()).isInGame()){
 			batcher.draw(box, boxPositionX[i], boxPositionY[i]);
-			font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+81);
-			font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+54);
-			font.draw(batcher,
-					"Bet: "+players.get((i+yourNumber)%players.size()).getBetAmountThisRound()+"/"+players.get((i+yourNumber)%players.size()).getBetAmount(),
-					boxPositionX[i]+18, boxPositionY[i]+27);
+		} else {
+			batcher.draw(boxOff, boxPositionX[i], boxPositionY[i]);
 		}
+		font.draw(batcher, players.get((i+yourNumber)%players.size()).getName(), boxPositionX[i]+18, boxPositionY[i]+81);
+		font.draw(batcher, "Chips: "+players.get((i+yourNumber)%players.size()).getChipsAmount(), boxPositionX[i]+18, boxPositionY[i]+54);
+		font.draw(batcher,
+				"Bet: "+players.get((i+yourNumber)%players.size()).getBetAmountThisRound()+"/"+players.get((i+yourNumber)%players.size()).getBetAmount(),
+				boxPositionX[i]+18, boxPositionY[i]+27);
 	}
 
 	private void drawDealerAndBlindButtons(int i) {
-		if(players.get((i+yourNumber)%players.size()).isHasDealerButton() && players.get((i+yourNumber)%players.size()).isInGame()){
+		if(players.get((i+yourNumber)%players.size()).isHasDealerButton()){
 			batcher.draw(dealer, dealerPositionX[i], dealerPositionY[i]);
 		}
-		if(players.get((i+yourNumber)%players.size()).isHasSmallBlind() && players.get((i+yourNumber)%players.size()).isInGame()){
+		if(players.get((i+yourNumber)%players.size()).isHasSmallBlind()){
 			batcher.draw(smallBlind, blindPositionX[i], blindPositionY[i]);
 		}
-		else if(players.get((i+yourNumber)%players.size()).isHasBigBlind() && players.get((i+yourNumber)%players.size()).isInGame()){
+		else if(players.get((i+yourNumber)%players.size()).isHasBigBlind()){
 			batcher.draw(bigBlind, blindPositionX[i], blindPositionY[i]);
 		}
 	}
 
 	private void drawCards(int i) {
-		if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber && players.get((i+yourNumber)%players.size()).isInGame()){
+		if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber){
 			findCurrentCardTexture(yourCards.get(0));
 			batcher.draw(currentCardTexture, positionX[i], positionY[i]);
 			findCurrentCardTexture(yourCards.get(1));
@@ -176,7 +181,7 @@ public class GameRenderer {
 	
 	private void drawSpotlight() {
 		for(int i=0; i<players.size();i++){
-			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet && players.get((i+yourNumber)%players.size()).isInGame()){
+			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
 				if(yourNumber == turnToBet){
 					batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
 					font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
@@ -226,6 +231,8 @@ public class GameRenderer {
     		pot = pokerTable.getPot();
     		smallBlindAmount = pokerTable.getSmallBlindAmount();
     		bigBlindAmount = pokerTable.getBigBlindAmount();
+    		limitType = pokerTable.getLimitType();
+    		fixedLimit = pokerTable.getFixedLimit();
     	}
     	else if(TAG.equals("HCD")){
     		waitingForAll = false;
@@ -249,11 +256,30 @@ public class GameRenderer {
         		if(players!=null && players.get(yourNumber).getChipsAmount()>=smallBlindAmount){
         			if(!myWorld.getButtons().get(0).isVisible()){
         				myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount());
-        			} else {
-        				myWorld.getSlider().setRange(smallBlindAmount, 
-        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
-        			}
-        		}
+        			} 
+        			else {
+        				if(limitType.equals("no-limit")){
+	        				myWorld.getSlider().setRange(smallBlindAmount, 
+	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+        				} else if(limitType.equals("pot-limit")){
+        					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())<pot){
+        						myWorld.getSlider().setRange(smallBlindAmount, 
+    	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+        					} else {
+        						myWorld.getSlider().setRange(smallBlindAmount, pot);
+        					}
+        				} 
+        				else{
+        					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())
+        							<fixedLimit){
+        						myWorld.getSlider().setRange(smallBlindAmount, 
+    	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+        					} else{
+        						myWorld.getSlider().setRange(smallBlindAmount, fixedLimit);
+        					}
+    					}
+    				}
+    			}
     		}
     	}
     	else if(TAG.equals("OW")){

@@ -26,7 +26,7 @@ public class Deck {
     		{
       			for(final Player player : players)
       			{
-      					if(!player.isFolded()){
+      					if(!player.isFolded() && player.isInGame()){
 	        				player.addCard(cards.get(0));
 	        				cards.remove(0);
       					}

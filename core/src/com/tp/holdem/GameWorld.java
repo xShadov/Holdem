@@ -226,8 +226,10 @@ public class GameWorld {
 		if(maxBetOnTable == players.get(yourNumber).getBetAmountThisRound()){
 			checkButton.setVisible(true);
 			checkButton.setDisabled(false);
-			raiseButton.setVisible(true);
-			raiseButton.setDisabled(false);
+			if(!pokerTable.getLimitType().equals("fixed-limit") || pokerTable.getRaiseCount()<pokerTable.getFixedRaiseCount()){
+				raiseButton.setVisible(true);
+				raiseButton.setDisabled(false);
+			}
 		}
 		else if(maxBetOnTable>players.get(yourNumber).getBetAmountThisRound()){
 			if(maxBetOnTable>=players.get(yourNumber).getChipsAmount())
@@ -237,8 +239,10 @@ public class GameWorld {
 			} else { 
 				callButton.setVisible(true);
 				callButton.setDisabled(false);
-				raiseButton.setVisible(true);
-				raiseButton.setDisabled(false);
+				if(!pokerTable.getLimitType().equals("fixed-limit") || pokerTable.getRaiseCount()<pokerTable.getFixedRaiseCount()){
+					raiseButton.setVisible(true);
+					raiseButton.setDisabled(false);
+				}
 			}
 		}
 		else if(maxBetOnTable == 0){
