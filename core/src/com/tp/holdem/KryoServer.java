@@ -389,7 +389,7 @@ public class KryoServer implements Runnable {
 	private boolean everybodyAllIn() {
 		int countAllIn = 0;
 		for(int i=0; i<players.size();i++){
-			if(players.get(i).isAllIn()) countAllIn++;
+			if(players.get(i).isAllIn() || players.get(i).isFolded()) countAllIn++;
 		}
 		return countAllIn==players.size();
 	}
