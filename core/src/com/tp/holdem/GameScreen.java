@@ -31,7 +31,7 @@ public class GameScreen implements Screen, InputProcessor {
     private KryoClient client;
     private Skin skin;
     private List<TextButton> buttons;
-    
+   
     // This is the constructor, not the class declaration
     public GameScreen() {
     	world = new GameWorld();

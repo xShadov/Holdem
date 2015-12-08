@@ -247,7 +247,12 @@ public class GameRenderer {
         		myWorld.getSlider().setVisible(true);
         		myWorld.getSlider().setDisabled(false);
         		if(players!=null && players.get(yourNumber).getChipsAmount()>=smallBlindAmount){
-        			myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount());
+        			if(!myWorld.getButtons().get(0).isVisible()){
+        				myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount());
+        			} else {
+        				myWorld.getSlider().setRange(smallBlindAmount, 
+        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+        			}
         		}
     		}
     	}

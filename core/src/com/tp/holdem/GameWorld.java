@@ -51,7 +51,7 @@ public class GameWorld {
 			}
 		});
 		
-		slider.setPosition(330, 70);
+		slider.setPosition(300, 80);
 		slider.setWidth(400);
 		
     	TextButtonStyle textButtonStyle = new TextButtonStyle();
@@ -244,14 +244,6 @@ public class GameWorld {
 		else if(maxBetOnTable == 0){
 			betButton.setVisible(true);
 			betButton.setDisabled(false);
-			if(pokerTable.getSmallBlindAmount()>=players.get(yourNumber).getChipsAmount())
-			{
-				allInButton.setVisible(true);
-				allInButton.setDisabled(false);
-			} else { 
-				raiseButton.setVisible(true);
-				raiseButton.setDisabled(false);
-			}
 		}
 		foldButton.setVisible(true);
 		foldButton.setDisabled(false);
