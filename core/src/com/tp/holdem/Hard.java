@@ -73,7 +73,7 @@ public class Hard implements Strategy
 			{
 				a = random.nextInt(10);
 				System.out.println(String.valueOf(a));
-				if(a>0)
+				if(a<4)
 				{
 					request = new SampleRequest("RAISE",server.getBigBlind()*3, server.getBetPlayer());
 				}
@@ -114,7 +114,7 @@ public class Hard implements Strategy
 			{
 				a = random.nextInt(10);
 				System.out.println(String.valueOf(a));
-				if(a>0)
+				if(a<2)
 				{
 					request = new SampleRequest("RAISE",server.getBigBlind()*3, server.getBetPlayer());
 				}
