@@ -81,7 +81,7 @@ public class GameWorld {
 	    			request = new SampleRequest("CHECK", renderer.getYourNumber());
 					client.getSimulationClient().sendTCP(request);
     			}
-				setButtonsInvisible();
+				setButtonsInvisible(true);
     		}
     	} );
     	
@@ -98,7 +98,7 @@ public class GameWorld {
 	    			request = new SampleRequest("FOLD", renderer.getYourNumber());
 					client.getSimulationClient().sendTCP(request);
     			}
-				setButtonsInvisible();
+				setButtonsInvisible(true);
     		}
     	} );
     	
@@ -115,7 +115,7 @@ public class GameWorld {
     				request = new SampleRequest("BET", betValue, renderer.getYourNumber());
     				client.getSimulationClient().sendTCP(request);
     			}
-				setButtonsInvisible();
+				setButtonsInvisible(true);
     		}
     	} );
     	
@@ -132,7 +132,7 @@ public class GameWorld {
 	    			request = new SampleRequest("CALL", renderer.getYourNumber());
 					client.getSimulationClient().sendTCP(request);
     			}
-				setButtonsInvisible();
+				setButtonsInvisible(true);
     		}
     	} );
     	
@@ -149,7 +149,7 @@ public class GameWorld {
 	    			request = new SampleRequest("ALLIN", renderer.getYourNumber());
 					client.getSimulationClient().sendTCP(request);
     			}
-				setButtonsInvisible();
+				setButtonsInvisible(true);
     		}
     	} );
     	
@@ -165,11 +165,11 @@ public class GameWorld {
 	    			request = new SampleRequest("RAISE", betValue, renderer.getYourNumber());
 					client.getSimulationClient().sendTCP(request);
     			}
-				setButtonsInvisible();
+				setButtonsInvisible(true);
     		}
     	} );
     	
-    	setButtonsInvisible();
+    	setButtonsInvisible(true);
     	buttons.add(raiseButton);
     	buttons.add(foldButton);
     	buttons.add(checkButton);
@@ -178,8 +178,8 @@ public class GameWorld {
     	buttons.add(betButton);
     }
     
-	protected void setButtonsInvisible() {
-		if(renderer!=null){
+	protected void setButtonsInvisible(boolean dummy) {
+		if(renderer!=null && dummy){
 			renderer.setTurnToBet(-1);
 		}
     	raiseButton.setDisabled(true);

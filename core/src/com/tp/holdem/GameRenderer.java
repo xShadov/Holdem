@@ -281,7 +281,7 @@ public class GameRenderer {
     				}
     			}
     		} else {
-    			myWorld.setButtonsInvisible();
+    			myWorld.setButtonsInvisible(false);
     		}
     	}
     	else if(TAG.equals("OW")){
