@@ -19,7 +19,7 @@ public class Medium implements Strategy
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand) 
+	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) 
 	{
 		rank = HandOperations.findHandRank(0, hand, server.getTable().getCardsOnTable());
 		if(server.getTable().getCardsOnTable().size()==3)

@@ -15,7 +15,7 @@ public class AllInStrategy implements Strategy
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand) 
+	public void whatDoIDo(KryoServer server,List<Card> hand, int betAmount,int chips) 
 	{		
 		request = new SampleRequest("ALLIN", server.getBetPlayer());
 		server.handleReceived((Object)request);

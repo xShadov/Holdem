@@ -17,7 +17,7 @@ public class FoldStrategy implements Strategy
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand) {
+	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) {
 		request = new SampleRequest("FOLD", server.getBetPlayer());
 		server.handleReceived((Object)request);
 	}

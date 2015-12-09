@@ -22,52 +22,73 @@ public class Hard implements Strategy
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand) 
+	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) 
 	{
 		rank = HandOperations.findHandRank(0, hand, server.getTable().getCardsOnTable());
+		
+		//FLOP
 		if(server.getTable().getCardsOnTable().size()==3)
 		{
 			if(rank.getHand().getValue()>3)
 			{
-				if(server.getMaxBetOnTable()<server.getBigBlind())
+				if(server.getMaxBetOnTable()<=server.getBigBlind()){
 					request = new SampleRequest("RAISE",server.getBigBlind(), server.getBetPlayer());
-				else
+				}
+				else{
 					request = new SampleRequest("CALL", server.getBetPlayer());
+				}
 			}
 			else if(rank.getHand().getValue()==3)
 			{
-				if(server.getMaxBetOnTable()==0)
-					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else if(server.getMaxBetOnTable()<server.getBigBlind()*3)
+				if(server.getMaxBetOnTable()<=server.getBigBlind()*3){
 					request = new SampleRequest("CALL", server.getBetPlayer());
-				else
+				}
+				if(server.getMaxBetOnTable()==betAmount){
+					request = new SampleRequest("CHECK", server.getBetPlayer());
+				}
+				else{
 					request = new SampleRequest("FOLD", server.getBetPlayer());
+				}
 			}
 			else if(rank.getHand().getValue()<3)
 			{
-				if(server.getMaxBetOnTable()==0)
+				if(server.getMaxBetOnTable()<=server.getBigBlind()*2){
+					request = new SampleRequest("CALL", server.getBetPlayer());
+				}
+				if(server.getMaxBetOnTable()==betAmount){
 					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else
+				}
+				else{
 					request = new SampleRequest("FOLD", server.getBetPlayer());
+				}
 			}
 		}
+		
+		//TURN
 		else if(server.getTable().getCardsOnTable().size()==4)
 		{
 			if(rank.getHand().getValue()>3)
 			{
-				if(server.getMaxBetOnTable()==0)
-					request = new SampleRequest("RAISE",server.getBigBlind(), server.getBetPlayer());
-				else
+				System.out.println(String.valueOf("bet"+betAmount));
+				if(server.getMaxBetOnTable()==betAmount){
+					request = new SampleRequest("RAISE",server.getBigBlind()*2, server.getBetPlayer());
+				}
+				else{
 					request = new SampleRequest("CALL", server.getBetPlayer());
+				}
 			}
 			else if(rank.getHand().getValue()==3)
 			{
-				if(server.getMaxBetOnTable()==0)
-					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else if(server.getMaxBetOnTable()>0)
+				System.out.println(String.valueOf("bet"+betAmount));
+				if(server.getMaxBetOnTable()<=server.getBigBlind()*2){
 					request = new SampleRequest("CALL", server.getBetPlayer());
-				else if(server.getMaxBetOnTable()>server.getBigBlind())
+				}
+				if(server.getMaxBetOnTable()==betAmount){
+					request = new SampleRequest("CHECK", server.getBetPlayer());
+				}
+				else{
 					request = new SampleRequest("FOLD", server.getBetPlayer());
+				}
 			}
 			else if(rank.getHand().getValue()==1)
 			{
@@ -75,40 +96,62 @@ public class Hard implements Strategy
 				System.out.println(String.valueOf(a));
 				if(a<4)
 				{
-					request = new SampleRequest("RAISE",server.getBigBlind()*3, server.getBetPlayer());
+					System.out.println(String.valueOf("bet"+betAmount));
+					if(server.getMaxBetOnTable()==betAmount){
+						request = new SampleRequest("BET",server.getBigBlind()*3, server.getBetPlayer());
+					}
+					else{
+						request = new SampleRequest("FOLD", server.getBetPlayer());
+					}
 				}
 				else
 				{
-					if(server.getMaxBetOnTable()==0)
+					System.out.println(String.valueOf("bet"+betAmount));
+					if(server.getMaxBetOnTable()==betAmount){
 						request = new SampleRequest("CHECK", server.getBetPlayer());
-					else
+					}
+					else{
 						request = new SampleRequest("FOLD", server.getBetPlayer());
+					}
 				}
 			}
-			else if(rank.getHand().getValue()<3)
+			else if(rank.getHand().getValue()==2)
 			{
-				if(server.getMaxBetOnTable()==0)
+				System.out.println(String.valueOf("bet"+betAmount));
+				if(server.getMaxBetOnTable()==betAmount){
 					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else
+				}
+				else{
 					request = new SampleRequest("FOLD", server.getBetPlayer());
-
+				}
 			}
 		}
+		
+		// RIVER
 		else if(server.getTable().getCardsOnTable().size()==5)
 		{
 			if(rank.getHand().getValue()>3)
 			{
-				if(server.getMaxBetOnTable()==0)
+				System.out.println(String.valueOf("bet"+betAmount));
+				if(server.getMaxBetOnTable()==betAmount){
 					request = new SampleRequest("RAISE",server.getBigBlind()*2, server.getBetPlayer());
-				else
+				}
+				else{
 					request = new SampleRequest("CALL", server.getBetPlayer());
+				}
 			}
 			else if(rank.getHand().getValue()==3)
 			{
-				if(server.getMaxBetOnTable()==0)
+				System.out.println(String.valueOf("bet"+betAmount));
+				if(server.getMaxBetOnTable()<=server.getBigBlind()*2){
+					request = new SampleRequest("CALL", server.getBetPlayer());
+				}
+				if(server.getMaxBetOnTable()==betAmount){
 					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else
+				}
+				else{
 					request = new SampleRequest("FOLD", server.getBetPlayer());
+				}
 			}
 			else if(rank.getHand().getValue()==1)
 			{
@@ -116,32 +159,47 @@ public class Hard implements Strategy
 				System.out.println(String.valueOf(a));
 				if(a<2)
 				{
-					request = new SampleRequest("RAISE",server.getBigBlind()*3, server.getBetPlayer());
+					System.out.println(String.valueOf("bet"+betAmount));
+					if(server.getMaxBetOnTable()==betAmount){
+						request = new SampleRequest("BET",server.getBigBlind()*3, server.getBetPlayer());
+					}
+					else{
+						request = new SampleRequest("FOLD", server.getBetPlayer());
+					}
 				}
 				else
 				{
-					if(server.getMaxBetOnTable()==0)
+					System.out.println(String.valueOf("bet"+betAmount));
+					if(server.getMaxBetOnTable()==betAmount){
 						request = new SampleRequest("CHECK", server.getBetPlayer());
-					else
+					}
+					else{
 						request = new SampleRequest("FOLD", server.getBetPlayer());
+					}
 				}
 			}
-			else if(rank.getHand().getValue()<3)
+			else if(rank.getHand().getValue()==2)
 			{
-				if(server.getMaxBetOnTable()==0)
+				System.out.println(String.valueOf("bet"+betAmount));
+				if(server.getMaxBetOnTable()==betAmount){
 					request = new SampleRequest("CHECK", server.getBetPlayer());
-				else
+				}
+				else{
 					request = new SampleRequest("FOLD", server.getBetPlayer());
+				}
 			}
 		}
 		else
 		{
-			if(server.getMaxBetOnTable()==0)
+			System.out.println(String.valueOf("bet"+betAmount));
+			if(server.getMaxBetOnTable()==betAmount){
 				request = new SampleRequest("CHECK", server.getBetPlayer());
-			else
+			}
+			else{
 				request = new SampleRequest("CALL", server.getBetPlayer());
+			}
 		}
-		System.out.println(String.valueOf("player"+server.getBetPlayer() +" "+ rank.getHand().getValue()));
+		System.out.println("player"+String.valueOf(server.getBetPlayer()) +" "+ rank.getHand().getValue()+" " +request.getTAG()+" "+request.getBetAmount());
 		server.handleReceived((Object)request);
 	}
 }

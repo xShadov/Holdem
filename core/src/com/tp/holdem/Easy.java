@@ -18,12 +18,14 @@ public class Easy implements Strategy{
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand) 
+	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) 
 	{
-		if(server.getMaxBetOnTable()==0)
+		if(server.getMaxBetOnTable()==betAmount)
 			request = new SampleRequest("CHECK", server.getBetPlayer());
-		else
+		else if(server.getMaxBetOnTable()<chips)
 			request = new SampleRequest("CALL", server.getBetPlayer());
+		else
+			request = new SampleRequest("ALLIN",server.getBetPlayer());
 		server.handleReceived((Object)request);
 	}
 

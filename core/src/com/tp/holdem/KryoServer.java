@@ -111,13 +111,7 @@ public class KryoServer implements Runnable {
 				}
 				
 				if(bidingTime){
-					if(botsCount>0)
-					{
-						if(betPlayer > playersCount-1) // bots turn
-						{
-							players.get(betPlayer).getStrategy().whatDoIDo(this,players.get(betPlayer).getHand());
-						}
-					}
+
 					if(!waitingForPlayerResponse && !bidingOver){
 						if(everyoneFoldedExceptBetPlayer()){
 							timeToCheckWinner();
@@ -126,6 +120,16 @@ public class KryoServer implements Runnable {
 							response = new SampleResponse("T", pokerTable);
 							server.sendToAllTCP(response);
 							sendBetResponse(betPlayer);
+							if(botsCount>0)
+							{
+								if(betPlayer > playersCount-1) // bots turn
+								{
+									if(!players.get(betPlayer).isFolded())
+									{
+										players.get(betPlayer).getStrategy().whatDoIDo(this,players.get(betPlayer).getHand(),players.get(betPlayer).getBetAmountThisRound(),players.get(betPlayer).getChipsAmount());		
+									}
+								}
+							}
 						}
 					}
 					else if(waitingForPlayerResponse){
@@ -143,10 +147,10 @@ public class KryoServer implements Runnable {
 						}
 						bidingTime = false;
 						bidingCount++;
-						if(bidingCount-1==1) flopTime = true;
-						else if(bidingCount-1==2) turnTime = true;
-						else if(bidingCount-1==3) riverTime = true;
-						else if(bidingCount-1==4) timeToCheckWinner();
+						if(bidingCount-1==1) {flopTime = true; System.out.println("flop");}
+						else if(bidingCount-1==2) {turnTime = true; System.out.println("turn");}
+						else if(bidingCount-1==3) {riverTime = true; System.out.println("river");}
+						else if(bidingCount-1==4) {timeToCheckWinner(); System.out.println("koniec rundy");}
 					}
 				}
 				
@@ -475,7 +479,11 @@ public class KryoServer implements Runnable {
 	    				  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+request.getBetAmount());
 	    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-request.getBetAmount());
 	    				  pokerTable.setPot(pokerTable.getPot()+request.getBetAmount());
-	    				  if(request.getBetAmount()>maxBetOnTable) maxBetOnTable = Integer.valueOf(request.getBetAmount());
+	    				  setPreviousAsLastToBet();
+	    				  if(request.getBetAmount()>maxBetOnTable){
+	    					  maxBetOnTable = Integer.valueOf(request.getBetAmount());
+	    					  setPreviousAsLastToBet();
+	    				  }
 	    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
 					  }
 				  }
