@@ -426,7 +426,7 @@ public class KryoServer implements Runnable {
     
     private void handleConnected(Connection con) {
     	players.add(new Player(numPlayers));
-    	players.get(numPlayers).setChipsAmount(1500);
+    	players.get(numPlayers).setChipsAmount(playersChips);
     	players.get(numPlayers).setConnectionId(con.getID());
     	players.get(numPlayers).setInGame(true);
     	response = new SampleResponse("N", numPlayers);
@@ -436,7 +436,8 @@ public class KryoServer implements Runnable {
     		for(int i=0; i<botsCount;i++)
     		{
     			players.add(new Bot(numPlayers,"Bot"+String.valueOf(i),botStrategy));
-    			players.get(numPlayers).setChipsAmount(1500);
+    			players.get(numPlayers).setChipsAmount(playersChips);
+    			players.get(numPlayers).setInGame(true);
     			numPlayers++;
     		}
     		playersWithHiddenCards = new ArrayList<Player>(players.size());
