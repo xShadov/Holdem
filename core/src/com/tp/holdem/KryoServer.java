@@ -38,19 +38,24 @@ public class KryoServer implements Runnable {
 	private Deck deck = null;
 	private PokerTable pokerTable = null;
 	private boolean bidingTime = false;
-	private int startingSmallBlindAmount = 20;
-	private int smallBlindAmount = Integer.valueOf(startingSmallBlindAmount);
-	private int bigBlindAmount = smallBlindAmount*2;
+	private int startingSmallBlindAmount;
+	private int smallBlindAmount;
+	private int bigBlindAmount;
 	private int maxBetOnTable = 0;
+	private int playersChips;
 	private boolean newHand = false;
 	private SampleResponse response;
 		
-	public KryoServer(final int playersCount, int botsCount, String limitType, Strategy botStrategy) throws Exception {
+	public KryoServer(final int playersCount, int botsCount, String limitType, Strategy botStrategy,int blindA,int playersChips) throws Exception {
 		
 	  this.playersCount=playersCount;
 	  this.botsCount=botsCount;
 	  this.limitType=limitType;
-	  this.botStrategy=botStrategy;    
+	  this.botStrategy=botStrategy;
+	  this.startingSmallBlindAmount=blindA;
+	  this.playersChips=playersChips;
+	  this.smallBlindAmount = Integer.valueOf(startingSmallBlindAmount);
+	  this.bigBlindAmount = smallBlindAmount*2;
 
       server = new Server();
 
@@ -641,7 +646,7 @@ public class KryoServer implements Runnable {
 	}
 	public static void main(String[] args) {
 		try {
-			new KryoServer(2, 0, "no-limit",null);
+			new KryoServer(2, 0, "no-limit",null,20,1500);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

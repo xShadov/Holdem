@@ -181,6 +181,114 @@ class ButtonLimit extends JButton
 	}
 }
 
+class ButtonChipsLessListener implements ActionListener
+{
+	private MainMenu menu;
+	public ButtonChipsLessListener(MainMenu menu)
+	{
+		this.menu=menu;
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		if(menu.getPotAmount()>1000)
+		{
+			menu.setPotAmount(menu.getPotAmount()-250);
+			menu.chipsAmount.setText("Starting chips: "+String.valueOf(menu.getPotAmount()));
+		}
+	}
+	
+};
+
+class ButtonChipsLess extends JButton
+{
+	public ButtonChipsLess(MainMenu menu)
+	{
+		super("<");
+		addActionListener(new ButtonChipsLessListener(menu));
+	}
+}
+
+class ButtonBlindLessListener implements ActionListener
+{
+	private MainMenu menu;
+	public ButtonBlindLessListener(MainMenu menu)
+	{
+		this.menu=menu;
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		if(menu.getBlindAmount()>20)
+		{
+			menu.setBlindAmount(menu.getBlindAmount()-5);
+			menu.blindAmount.setText(String.valueOf("Small blind: "+menu.getBlindAmount()));
+		}
+	}
+	
+};
+
+class ButtonBlindLess extends JButton
+{
+	public ButtonBlindLess(MainMenu menu)
+	{
+		super("<");
+		addActionListener(new ButtonBlindLessListener(menu));
+	}
+}
+
+class ButtonBlindMoreListener implements ActionListener
+{
+	private MainMenu menu;
+	public ButtonBlindMoreListener(MainMenu menu)
+	{
+		this.menu=menu;
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		if(menu.getBlindAmount()<200)
+		{
+			menu.setBlindAmount(menu.getBlindAmount()+5);
+			menu.blindAmount.setText(String.valueOf("Small blind: "+menu.getBlindAmount()));
+		}
+	}
+	
+};
+
+class ButtonBlindMore extends JButton
+{
+	public ButtonBlindMore(MainMenu menu)
+	{
+		super(">");
+		addActionListener(new ButtonBlindMoreListener(menu));
+	}
+}
+
+class ButtonChipsMoreListener implements ActionListener
+{
+	private MainMenu menu;
+	public ButtonChipsMoreListener(MainMenu menu)
+	{
+		this.menu=menu;
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		if(menu.getPotAmount()<50000)
+		{
+			menu.setPotAmount(menu.getPotAmount()+250);
+			menu.chipsAmount.setText("Starting chips: "+String.valueOf(menu.getPotAmount()));
+		}
+	}
+	
+};
+
+class ButtonChipsMore extends JButton
+{
+	public ButtonChipsMore(MainMenu menu)
+	{
+		super(">");
+		addActionListener(new ButtonChipsMoreListener(menu));
+	}
+}
+
 class ButtonPlayersLessListener implements ActionListener
 {
 	private MainMenu menu;
@@ -192,8 +300,11 @@ class ButtonPlayersLessListener implements ActionListener
 	{
 		if(menu.getPlayersCount()>0)
 		{
-			menu.setPlayersCount(menu.getPlayersCount()-1);
-			menu.playersCount.setText(String.valueOf(menu.getPlayersCount()) + " players");
+			if(menu.getPlayersCount()+menu.getBotsCount()>2)
+			{
+				menu.setPlayersCount(menu.getPlayersCount()-1);
+				menu.playersCount.setText(String.valueOf(menu.getPlayersCount()) + " players");
+			}
 		}
 	}
 	
@@ -247,10 +358,14 @@ class ButtonBotsLessListener implements ActionListener
 	}
 	public void actionPerformed(ActionEvent e)
 	{
+		
 		if(menu.getBotsCount()>0)
 		{
-			menu.setBotsCount(menu.getBotsCount()-1);
-			menu.botsCount.setText(String.valueOf(menu.getBotsCount())+" bots");
+			if(menu.getPlayersCount()+menu.getBotsCount()>2)
+			{
+				menu.setBotsCount(menu.getBotsCount()-1);
+				menu.botsCount.setText(String.valueOf(menu.getBotsCount())+" bots");
+			}
 		}
 	}
 	
@@ -329,8 +444,12 @@ public class MainMenu extends JFrame
 	private int botsC = 0;
 	private String limit = "no-limit";
 	private Strategy botStrategy;
+	private int blindA = 20;
+	private int playersChips = 1500;
 	Label playersCount = new Label(String.valueOf(playersC)+ " players");
-	Label botsCount = new Label("0 bots");
+	Label botsCount = new Label(String.valueOf(botsC)+" bots");
+	Label blindAmount = new Label(String.valueOf("Small blind: "+blindA));
+	Label chipsAmount = new Label(String.valueOf("Starting chips: "+playersChips));
 	
 	public static void main(String args[])
 	{
@@ -355,13 +474,33 @@ public class MainMenu extends JFrame
 			public void run()
 			{
 					try {
-						KryoServer kryo = new KryoServer(playersC, botsC, limit,botStrategy);
+						KryoServer kryo = new KryoServer(playersC, botsC, limit,botStrategy,blindA,playersChips);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 
 			}
 		});
+	}
+	
+	public int getBlindAmount()
+	{
+		return blindA;
+	}
+	
+	public void setBlindAmount(int blindA)
+	{
+		this.blindA=blindA;
+	}
+	
+	public int getPotAmount()
+	{
+		return playersChips;
+	}
+	
+	public void setPotAmount(int playersChips)
+	{
+		this.playersChips=playersChips;
 	}
 	
 	public void setPlayersCount(int playersC)
@@ -439,10 +578,14 @@ public class MainMenu extends JFrame
 	public void properties()
 	{		
 		JFrame properties = new JFrame("Properties");
-		properties.setBounds(520,300,220,244);
+		properties.setBounds(520,300,240,244);
 		properties.addWindowListener(new PropertiesWindowListener(properties));
 
 		ButtonLimit limit = new ButtonLimit(this);
+		ButtonBlindLess blindLess = new ButtonBlindLess(this);
+		ButtonBlindMore blindMore = new ButtonBlindMore(this);
+		ButtonChipsLess chipsLess = new ButtonChipsLess(this);
+		ButtonChipsMore chipsMore = new ButtonChipsMore(this);
 		ButtonPlayersLess playersLess = new ButtonPlayersLess(this);
 		ButtonPlayersMore playersMore = new ButtonPlayersMore(this);
 		ButtonBotsLess botsLess = new ButtonBotsLess(this);
@@ -464,33 +607,57 @@ public class MainMenu extends JFrame
 		propertiesLayout.gridx = 0;
 		propertiesLayout.gridy = 1;
 		propertiesLayout.gridwidth = 1;
-		propertiesPanel.add(playersLess,propertiesLayout);
+		propertiesPanel.add(chipsLess,propertiesLayout);
 		propertiesLayout.gridx = 2;
         propertiesLayout.gridy = 1;
         propertiesLayout.gridwidth = 1;
-        propertiesPanel.add(playersCount,propertiesLayout);
+        propertiesPanel.add(chipsAmount,propertiesLayout);
         propertiesLayout.gridx = 3;
 		propertiesLayout.gridy = 1;
 		propertiesLayout.gridwidth = 1;
-		propertiesPanel.add(playersMore,propertiesLayout);
+		propertiesPanel.add(chipsMore,propertiesLayout);
 		propertiesLayout.gridx = 0;
 		propertiesLayout.gridy = 2;
 		propertiesLayout.gridwidth = 1;
-		propertiesPanel.add(botsLess,propertiesLayout);
+		propertiesPanel.add(blindLess,propertiesLayout);
 		propertiesLayout.gridx = 2;
         propertiesLayout.gridy = 2;
         propertiesLayout.gridwidth = 1;
-        propertiesPanel.add(botsCount,propertiesLayout);
+        propertiesPanel.add(blindAmount,propertiesLayout);
         propertiesLayout.gridx = 3;
 		propertiesLayout.gridy = 2;
 		propertiesLayout.gridwidth = 1;
-		propertiesPanel.add(botsMore,propertiesLayout);
+		propertiesPanel.add(blindMore,propertiesLayout);
+		propertiesLayout.gridx = 0;
+		propertiesLayout.gridy = 3;
+		propertiesLayout.gridwidth = 1;
+		propertiesPanel.add(playersLess,propertiesLayout);
+		propertiesLayout.gridx = 2;
+        propertiesLayout.gridy = 3;
+        propertiesLayout.gridwidth = 1;
+        propertiesPanel.add(playersCount,propertiesLayout);
+        propertiesLayout.gridx = 3;
+		propertiesLayout.gridy = 3;
+		propertiesLayout.gridwidth = 1;
+		propertiesPanel.add(playersMore,propertiesLayout);
 		propertiesLayout.gridx = 0;
 		propertiesLayout.gridy = 4;
+		propertiesLayout.gridwidth = 1;
+		propertiesPanel.add(botsLess,propertiesLayout);
+		propertiesLayout.gridx = 2;
+        propertiesLayout.gridy = 4;
+        propertiesLayout.gridwidth = 1;
+        propertiesPanel.add(botsCount,propertiesLayout);
+        propertiesLayout.gridx = 3;
+		propertiesLayout.gridy = 4;
+		propertiesLayout.gridwidth = 1;
+		propertiesPanel.add(botsMore,propertiesLayout);
+		propertiesLayout.gridx = 0;
+		propertiesLayout.gridy = 5;
 		propertiesLayout.gridwidth = 4;
 		propertiesPanel.add(strategy,propertiesLayout);
 		propertiesLayout.gridx = 0;
-		propertiesLayout.gridy = 5;
+		propertiesLayout.gridy = 6;
 		propertiesLayout.gridwidth = 4;
 		propertiesPanel.add(ok,propertiesLayout);
 		
