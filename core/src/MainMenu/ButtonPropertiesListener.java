@@ -1,0 +1,18 @@
+package MainMenu;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class ButtonPropertiesListener implements ActionListener
+{
+	private MainMenu menu;
+	public ButtonPropertiesListener(MainMenu menu)
+	{
+		this.menu=menu;
+	}
+	public void actionPerformed(ActionEvent e)
+	{
+		menu.properties();
+	}
+	
+};
