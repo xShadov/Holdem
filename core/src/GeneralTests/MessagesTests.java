@@ -106,16 +106,23 @@ public class MessagesTests {
     
     @Test                                        
     public final void testResponseTAGWithNumberAndMaxBetOnTable() {
-    	  response = new SampleResponse("TAG", 155, 500);
+          List<String> options = new ArrayList<String>();
+          options.add("CALL");
+    	  response = new SampleResponse("TAG", 155, 500, options);
     	  assertEquals("TAG", response.getTAG());
     	  assertEquals(155, response.getNumber());
     	  assertEquals(500, response.getMaxBetOnTable());
+    	  assertEquals("CALL", response.getPossibleOptions().get(0));
     	  response.setTAG("TAG2");
    	      response.setNumber(333);
    	      response.setMaxBetOnTable(2221);
+   	      options.remove(0);
+   	      options.add("CHECK");
+   	      response.setPossibleOptions(options);
     	  assertEquals("TAG2", response.getTAG());
     	  assertEquals(333, response.getNumber());
     	  assertEquals(2221, response.getMaxBetOnTable());
+    	  assertEquals("CHECK", response.getPossibleOptions().get(0));
     }
     
     @Test                                        

@@ -222,35 +222,27 @@ public class GameWorld {
 		return slider;
 	}
 
-	public void manageButtons(int maxBetOnTable, int yourNumber, List<Player> players, PokerTable pokerTable) {
-		if(maxBetOnTable == players.get(yourNumber).getBetAmountThisRound()){
-			checkButton.setVisible(true);
-			checkButton.setDisabled(false);
-			//// POPRAW betbutton
-			if(!pokerTable.getLimitType().equals("fixed-limit") || pokerTable.getRaiseCount()<pokerTable.getFixedRaiseCount()){
-				raiseButton.setVisible(true);
-				raiseButton.setDisabled(false);
-			}
-		}
-		else if(maxBetOnTable>players.get(yourNumber).getBetAmountThisRound()){
-			if(maxBetOnTable>=players.get(yourNumber).getChipsAmount())
-			{
-				allInButton.setVisible(true);
-				allInButton.setDisabled(false);
-			} else { 
+	public void manageButtons(List<String> possibleOptions) {
+		for(int i=0; i<possibleOptions.size(); i++){
+			if(possibleOptions.get(i).equals("CALL")){
 				callButton.setVisible(true);
 				callButton.setDisabled(false);
-				if(!pokerTable.getLimitType().equals("fixed-limit") || pokerTable.getRaiseCount()<pokerTable.getFixedRaiseCount()){
-					raiseButton.setVisible(true);
-					raiseButton.setDisabled(false);
-				}
+			} else if(possibleOptions.get(i).equals("FOLD")){
+				foldButton.setVisible(true);
+				foldButton.setDisabled(false);
+			} else if(possibleOptions.get(i).equals("ALLIN")){
+				allInButton.setVisible(true);
+				allInButton.setDisabled(false);
+			} else if(possibleOptions.get(i).equals("RAISE")){
+				raiseButton.setVisible(true);
+				raiseButton.setDisabled(false);
+			} else if(possibleOptions.get(i).equals("CHECK")){
+				checkButton.setVisible(true);
+				checkButton.setDisabled(false);
+			} else if(possibleOptions.get(i).equals("BET")){
+				betButton.setVisible(true);
+				betButton.setDisabled(false);
 			}
 		}
-		else if(maxBetOnTable == 0){
-			betButton.setVisible(true);
-			betButton.setDisabled(false);
-		}
-		foldButton.setVisible(true);
-		foldButton.setDisabled(false);
 	}
 }

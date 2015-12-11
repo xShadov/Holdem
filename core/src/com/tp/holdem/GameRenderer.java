@@ -34,6 +34,7 @@ public class GameRenderer {
     private int yourBetAmount = 0;
     private int fixedLimit = 0;
     private boolean gameOver = false;
+    private List<String> possibleOptions;
     private String limitType;
     private int turnToBet;
     private List<Player> players;
@@ -220,9 +221,11 @@ public class GameRenderer {
     
     public void changesOccurred(String TAG, SampleResponse response){
     	if(TAG.equals("R")){
+    		gameOver = false;
     		players = response.getPlayers();
     	}
     	else if(TAG.equals("N")){
+    		gameOver = false;
     		yourNumber = response.getNumber();
     	}
     	else if(TAG.equals("T")){
@@ -235,6 +238,7 @@ public class GameRenderer {
     		fixedLimit = pokerTable.getFixedLimit();
     	}
     	else if(TAG.equals("HCD")){
+    		gameOver = false;
     		waitingForAll = false;
     		tie = false;
     		winnerNumber = -1;
@@ -246,9 +250,10 @@ public class GameRenderer {
     	}
     	else if(TAG.equals("B")){
     		turnToBet = response.getNumber();
+    		possibleOptions = response.getPossibleOptions();
     		maxBetOnTable = response.getMaxBetOnTable();
     		if(turnToBet == yourNumber){
-    			myWorld.manageButtons(maxBetOnTable, yourNumber, players, pokerTable);
+    			myWorld.manageButtons(possibleOptions);
     			myWorld.getSlider().setValue(smallBlindAmount);
         		myWorld.getSlider().setStepSize(smallBlindAmount);
         		myWorld.getSlider().setVisible(true);
@@ -313,6 +318,10 @@ public class GameRenderer {
 	
 	public void setTurnToBet(int turnToBet){
 		this.turnToBet = turnToBet;
+	}
+
+	public List<String> getPossibleOptions() {
+		return possibleOptions;
 	}
 }
 

@@ -11,7 +11,7 @@ public class SampleResponse {
 	public PokerTable pokerTable;
 	public int number = 0;
 	public int maxBetOnTable = 0;
-	
+	public List<String> possibleOptions;
 
 	public SampleResponse(){
 		
@@ -46,10 +46,11 @@ public class SampleResponse {
 		this.number = number;
 	}
 	
-	public SampleResponse(String TAG, int number, int maxBetOnTable){
+	public SampleResponse(String TAG, int number, int maxBetOnTable, List<String> possibleOptions){
 		this.TAG = TAG;
 		this.number = number;
 		this.maxBetOnTable = maxBetOnTable;
+		this.possibleOptions = possibleOptions;
 	}
 
 	public int getNumber() {
@@ -102,6 +103,14 @@ public class SampleResponse {
 
 	public void setMaxBetOnTable(int maxBetOnTable) {
 		this.maxBetOnTable = maxBetOnTable;
+	}
+
+	public List<String> getPossibleOptions() {
+		return possibleOptions;
+	}
+
+	public void setPossibleOptions(List<String> possibleOptions) {
+		this.possibleOptions = possibleOptions;
 	}
 }
 

@@ -29,6 +29,7 @@ public class KryoServer implements Runnable {
 	private int smallBlindPlayer = 0;
 	private int bigBlindPlayer = 0;
 	private int betPlayer = 0;
+	private List<String> possibleOptions;
 	private boolean bidingOver = false;
 	private SampleRequest request;
 	private boolean flopTime = false;
@@ -126,6 +127,7 @@ public class KryoServer implements Runnable {
 						else{
 							response = new SampleResponse("T", pokerTable);
 							server.sendToAllTCP(response);
+							checkPossibleOptions(betPlayer);
 							sendBetResponse(betPlayer);
 							if(botsCount>0)
 							{
@@ -407,7 +409,7 @@ public class KryoServer implements Runnable {
 
 	private void sendBetResponse(int numberToBet) {
 		if(!players.get(numberToBet).isFolded() && !players.get(numberToBet).isAllIn() && players.get(numberToBet).isInGame()){
-			response = new SampleResponse("B", numberToBet, maxBetOnTable);
+			response = new SampleResponse("B", numberToBet, maxBetOnTable, possibleOptions);
 			server.sendToAllTCP(response);
 			waitingForPlayerResponse = true;
 			startTimer = System.nanoTime();
@@ -427,6 +429,7 @@ public class KryoServer implements Runnable {
 	}
     
     private void handleConnected(Connection con) {
+    	System.out.println(con.getID()+"");
     	players.add(new Player(numPlayers));
     	players.get(numPlayers).setChipsAmount(playersChips);
     	players.get(numPlayers).setConnectionId(con.getID());
@@ -467,11 +470,6 @@ public class KryoServer implements Runnable {
 			gameStarted = false;
 			response = new SampleResponse("GO");
 			server.sendToAllTCP(response);
-			for(int i=0; i<players.size(); i++){
-				playersWithHiddenCards.get(i).setAllProperties(players.get(i));
-			}
-			response = new SampleResponse("R", playersWithHiddenCards);
-			server.sendToAllTCP(response);
 		}
 	}
 	
@@ -482,25 +480,29 @@ public class KryoServer implements Runnable {
 		  if(bidingTime && !bidingOver){
 			  if(request.getNumber()==betPlayer){
 				  if(request.getTAG().equals("BET")){
-					  if(request.getBetAmount()>=maxBetOnTable){
-						  players.get(request.getNumber()).setBetAmountThisRound(players.get(request.getNumber()).getBetAmountThisRound()+request.getBetAmount());
-	    				  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+request.getBetAmount());
-	    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-request.getBetAmount());
-	    				  pokerTable.setPot(pokerTable.getPot()+request.getBetAmount());
-	    				  if(request.getBetAmount()>maxBetOnTable){
-	    					  maxBetOnTable = Integer.valueOf(request.getBetAmount());
-	    				  }
-	    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
-	    				  setPreviousAsLastToBet();
+					  if(optionPossible("BET")){
+						  if(request.getBetAmount()>=maxBetOnTable){
+							  players.get(request.getNumber()).setBetAmountThisRound(players.get(request.getNumber()).getBetAmountThisRound()+request.getBetAmount());
+		    				  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+request.getBetAmount());
+		    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-request.getBetAmount());
+		    				  pokerTable.setPot(pokerTable.getPot()+request.getBetAmount());
+		    				  if(request.getBetAmount()>maxBetOnTable){
+		    					  maxBetOnTable = Integer.valueOf(request.getBetAmount());
+		    				  }
+		    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
+		    				  setPreviousAsLastToBet();
+						  }
 					  }
 				  }
 				  else if(request.getTAG().equals("CALL")){
-					  int requestBetAmount = maxBetOnTable - players.get(request.getNumber()).getBetAmountThisRound();
-    				  pokerTable.setPot(pokerTable.getPot()+requestBetAmount);
-					  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+requestBetAmount);
-					  players.get(request.getNumber()).setBetAmountThisRound(maxBetOnTable);
-    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-requestBetAmount);
-					  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
+					  if(optionPossible("CALL")){
+						  int requestBetAmount = maxBetOnTable - players.get(request.getNumber()).getBetAmountThisRound();
+	    				  pokerTable.setPot(pokerTable.getPot()+requestBetAmount);
+						  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+requestBetAmount);
+						  players.get(request.getNumber()).setBetAmountThisRound(maxBetOnTable);
+	    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-requestBetAmount);
+						  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
+					  }
 				  }
 				  else if(request.getTAG().equals("FOLD")){
 					  players.get(request.getNumber()).setFolded(true);
@@ -509,43 +511,76 @@ public class KryoServer implements Runnable {
 
 				  }
 				  else if(request.getTAG().equals("ALLIN")){
-    				  if(players.get(request.getNumber()).getChipsAmount()>maxBetOnTable){
-    					  maxBetOnTable = players.get(request.getNumber()).getChipsAmount()+players.get(request.getNumber()).getBetAmount();
-    					  setPreviousAsLastToBet();
-    				  }
-					  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()
-							  +players.get(request.getNumber()).getChipsAmount());
-					  players.get(request.getNumber()).setBetAmountThisRound(players.get(request.getNumber()).getBetAmountThisRound()
-							  +players.get(request.getNumber()).getChipsAmount());
-    				  pokerTable.setPot(pokerTable.getPot()+players.get(request.getNumber()).getChipsAmount());
-    				  players.get(request.getNumber()).setChipsAmount(0);
-    				  players.get(request.getNumber()).setAllIn(true);
-				  }
-				  else if(request.getTAG().equals("RAISE")){
-					  pokerTable.setRaiseCount(pokerTable.getRaiseCount()+1);
-					  int requestBetAmount = maxBetOnTable - players.get(request.getNumber()).getBetAmountThisRound() + request.getBetAmount();
-					  if(players.get(request.getNumber()).getBetAmountThisRound()+requestBetAmount>maxBetOnTable){
-						  maxBetOnTable = Integer.valueOf(players.get(request.getNumber()).getBetAmountThisRound()+requestBetAmount);
-						  setPreviousAsLastToBet();
-						  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+requestBetAmount);
-						  players.get(request.getNumber()).setBetAmountThisRound(players.get(request.getNumber()).getBetAmountThisRound()+requestBetAmount);
-	    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-requestBetAmount);
-	    				  pokerTable.setPot(pokerTable.getPot()+requestBetAmount);
-	    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
+					  if(optionPossible("ALLIN")){
+	    				  if(players.get(request.getNumber()).getChipsAmount()>maxBetOnTable){
+	    					  maxBetOnTable = players.get(request.getNumber()).getChipsAmount()+players.get(request.getNumber()).getBetAmount();
+	    					  setPreviousAsLastToBet();
+	    				  }
+						  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()
+								  +players.get(request.getNumber()).getChipsAmount());
+						  players.get(request.getNumber()).setBetAmountThisRound(players.get(request.getNumber()).getBetAmountThisRound()
+								  +players.get(request.getNumber()).getChipsAmount());
+	    				  pokerTable.setPot(pokerTable.getPot()+players.get(request.getNumber()).getChipsAmount());
+	    				  players.get(request.getNumber()).setChipsAmount(0);
+	    				  players.get(request.getNumber()).setAllIn(true);
 					  }
 				  }
-				  if(request.getNumber()==lastToBet){
-					  bidingOver = true;
-					  waitingForPlayerResponse = false;
-				  } else{
-    				  setNextAsBetPlayer();
+				  else if(request.getTAG().equals("RAISE")){
+					  if(optionPossible("RAISE")){
+						  pokerTable.setRaiseCount(pokerTable.getRaiseCount()+1);
+						  int requestBetAmount = maxBetOnTable - players.get(request.getNumber()).getBetAmountThisRound() + request.getBetAmount();
+						  if(players.get(request.getNumber()).getBetAmountThisRound()+requestBetAmount>maxBetOnTable){
+							  maxBetOnTable = Integer.valueOf(players.get(request.getNumber()).getBetAmountThisRound()+requestBetAmount);
+							  setPreviousAsLastToBet();
+							  players.get(request.getNumber()).setBetAmount(players.get(request.getNumber()).getBetAmount()+requestBetAmount);
+							  players.get(request.getNumber()).setBetAmountThisRound(players.get(request.getNumber()).getBetAmountThisRound()+requestBetAmount);
+		    				  players.get(request.getNumber()).setChipsAmount(players.get(request.getNumber()).getChipsAmount()-requestBetAmount);
+		    				  pokerTable.setPot(pokerTable.getPot()+requestBetAmount);
+		    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
+						  }
+					  }
+				  }
+				  if(optionPossible(request.getTAG())){
+					  if(request.getNumber()==lastToBet){
+						  bidingOver = true;
+						  waitingForPlayerResponse = false;
+					  } else{
+	    				  setNextAsBetPlayer();
+					  }
 				  }
 			  }
 		  }
       }
 	}
 	
-    private void initiateNewHand() {
+    private boolean optionPossible(String string) {
+		for(int i=0; i<possibleOptions.size(); i++){
+			if(possibleOptions.get(i).equals(string)) return true;
+		}
+		return false;
+	}
+    
+    private void checkPossibleOptions(int playerToBet){
+    	possibleOptions = new ArrayList<String>();
+    	if(players.get(playerToBet).getBetAmountThisRound()==maxBetOnTable){
+    		if(maxBetOnTable==0) possibleOptions.add("BET");
+    		else possibleOptions.add("RAISE");
+    		possibleOptions.add("CHECK");
+    	} else if(players.get(playerToBet).getBetAmountThisRound()<maxBetOnTable){
+    		if(maxBetOnTable>=players.get(playerToBet).getChipsAmount())
+			{
+    			possibleOptions.add("ALLIN");
+			} else { 
+				possibleOptions.add("CALL");
+				if(!pokerTable.getLimitType().equals("fixed-limit") || pokerTable.getRaiseCount()<pokerTable.getFixedRaiseCount()){
+					possibleOptions.add("RAISE");
+				}
+			}
+    	}
+    	possibleOptions.add("FOLD");
+    }
+
+	private void initiateNewHand() {
 		deck = new Deck();
 		pokerTable = new PokerTable();
 		pokerTable.setLimitType(limitType);
