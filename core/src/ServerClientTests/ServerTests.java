@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.tp.holdem.Card;
@@ -932,5 +933,103 @@ public class ServerTests {
 		assertEquals("BET", options.get(0));
 		assertEquals("CHECK", options.get(1));
 		assertEquals("FOLD", options.get(2));
+	}
+	
+	@Test                                       
+	public final void testHandleConnected() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException{
+		Server server = Mockito.mock(Server.class);
+		Connection conn = Mockito.mock(Connection.class);
+		Method method = null;
+		for(Method methodz : allMethods){
+			if(methodz.getName().equals("handleConnected")){
+				method = methodz;
+				method.setAccessible(true);
+			}
+		}
+		Object t = c.newInstance();
+		Field chap = c.getDeclaredField("server");
+		chap.setAccessible(true);
+		chap.set(t, server);
+		Field chap1 = c.getDeclaredField("numPlayers");
+		chap1.setAccessible(true);
+		chap1.set(t, 0);
+		Field chap2 = c.getDeclaredField("playersCount");
+		chap2.setAccessible(true);
+		chap2.set(t, 1);
+		Field chap3 = c.getDeclaredField("botsCount");
+		chap3.setAccessible(true);
+		chap3.set(t, 1);
+		Object o = method.invoke(t, conn);
+		Field po = c.getDeclaredField("players");
+		po.setAccessible(true);
+		List<Player> players = (List<Player>) po.get(t);
+		assertEquals(2, players.size());
+		o = method.invoke(t, conn);
+		chap2.set(t, 5);
+		players = (List<Player>) po.get(t);
+		assertEquals(3, players.size());
+	}
+	
+	@Test                                       
+	public final void testHandleDisconnected() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException{
+		Server server = Mockito.mock(Server.class);
+		List<Player> players = new ArrayList<Player>();
+		Player player1 = new Player(0);
+		Connection conn = Mockito.mock(Connection.class);
+		player1.setConnectionId(conn.getID());
+		players.add(player1);
+		Method method = null;
+		for(Method methodz : allMethods){
+			if(methodz.getName().equals("handleDisconnected")){
+				method = methodz;
+				method.setAccessible(true);
+			}
+		}
+		Object t = c.newInstance();
+		Field chap = c.getDeclaredField("server");
+		chap.setAccessible(true);
+		chap.set(t, server);
+		Object o = method.invoke(t, conn);
+		Field po = c.getDeclaredField("gameStarted");
+		po.setAccessible(true);
+		assertFalse((Boolean)po.get(t));
+	}
+	
+	@Test                                       
+	public final void testSendBetResponse() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException{
+		Server server = Mockito.mock(Server.class);
+		List<Player> players = new ArrayList<Player>();
+		Player player1 = new Player(0);
+		player1.setBetAmountThisRound(50);
+		players.add(player1);
+		Method method = null;
+		for(Method methodz : allMethods){
+			if(methodz.getName().equals("sendBetResponse")){
+				method = methodz;
+				method.setAccessible(true);
+			}
+		}
+		Object t = c.newInstance();
+		Field chap = c.getDeclaredField("server");
+		chap.setAccessible(true);
+		chap.set(t, server);
+		PokerTable table = new PokerTable();
+		table.setLimitType("no-limit");
+		Field chap2 = c.getDeclaredField("pokerTable");
+		chap2.setAccessible(true);
+		chap2.set(t, table);
+		List<String> options = new ArrayList<String>();
+		options.add("CALL");
+		options.add("FOLD");
+		Field chap3 = c.getDeclaredField("possibleOptions");
+		chap3.setAccessible(true);
+		chap3.set(t, options);
+		Field chap4 = c.getDeclaredField("betPlayer");
+		chap4.setAccessible(true);
+		chap4.set(t, 0);
+		Field chap5 = c.getDeclaredField("maxBetOnTable");
+		chap5.setAccessible(true);
+		chap5.set(t, 100);
+		Object o = method.invoke(t, 0, players);
 	}
 }

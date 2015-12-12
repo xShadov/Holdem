@@ -710,4 +710,8 @@ public class KryoServer implements Runnable {
 			e.printStackTrace();
 		}
 	}
+
+	public Server getServer() {
+		return server;
+	}
 }
