@@ -258,26 +258,30 @@ public class GameRenderer {
         		myWorld.getSlider().setVisible(true);
         		myWorld.getSlider().setDisabled(false);
         		if(players!=null && players.get(yourNumber).getChipsAmount()>=smallBlindAmount){
-    				if(limitType.equals("no-limit")){
-        				myWorld.getSlider().setRange(smallBlindAmount, 
-        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
-    				} else if(limitType.equals("pot-limit")){
-    					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())<pot){
-    						myWorld.getSlider().setRange(smallBlindAmount, 
+        			if(!myWorld.getButtons().get(0).isVisible()){
+        				myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount());
+        			} else {
+	    				if(limitType.equals("no-limit")){
+	        				myWorld.getSlider().setRange(smallBlindAmount, 
 	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
-    					} else {
-    						myWorld.getSlider().setRange(smallBlindAmount, pot);
-    					}
-    				} 
-    				else{
-    					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())
-    							<fixedLimit){
-    						myWorld.getSlider().setRange(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()), 
-	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
-    					} else{
-    						myWorld.getSlider().setRange(fixedLimit, fixedLimit);
-    					}
-					}
+	    				} else if(limitType.equals("pot-limit")){
+	    					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())<pot){
+	    						myWorld.getSlider().setRange(smallBlindAmount, 
+		        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+	    					} else {
+	    						myWorld.getSlider().setRange(smallBlindAmount, pot);
+	    					}
+	    				} 
+	    				else{
+	    					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())
+	    							<fixedLimit){
+	    						myWorld.getSlider().setRange(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()), 
+		        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+	    					} else{
+	    						myWorld.getSlider().setRange(fixedLimit, fixedLimit);
+	    					}
+						}
+        			}
     			}
     		} else {
     			myWorld.setButtonsInvisible(false);
