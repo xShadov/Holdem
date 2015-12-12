@@ -184,13 +184,13 @@ public class GameRenderer {
 		for(int i=0; i<players.size();i++){
 			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
 				if(yourNumber == turnToBet){
-					batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
+					batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
 					if(myWorld.getSlider().isVisible()){
 						font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
 					}
 					break;
 				} else {
-					batcher.draw(spotlight, positionX[i]-130, positionY[i]-40);
+					batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
 					break;
 				}
 			}
