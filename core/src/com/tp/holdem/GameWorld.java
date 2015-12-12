@@ -223,16 +223,17 @@ public class GameWorld {
 	}
 
 	public void manageButtons(List<String> possibleOptions) {
-		for(int i=0; i<possibleOptions.size(); i++){
-			if(possibleOptions.get(i).equals("CALL")){
+		for(int i=0; i<possibleOptions.size()-2; i++){
+			if(possibleOptions.get(i).equals("ALLIN")){
+				allInButton.setVisible(true);
+				allInButton.setDisabled(false);
+			}
+			else if(possibleOptions.get(i).equals("CALL")){
 				callButton.setVisible(true);
 				callButton.setDisabled(false);
 			} else if(possibleOptions.get(i).equals("FOLD")){
 				foldButton.setVisible(true);
 				foldButton.setDisabled(false);
-			} else if(possibleOptions.get(i).equals("ALLIN")){
-				allInButton.setVisible(true);
-				allInButton.setDisabled(false);
 			} else if(possibleOptions.get(i).equals("RAISE")){
 				raiseButton.setVisible(true);
 				raiseButton.setDisabled(false);

@@ -127,6 +127,7 @@ public class KryoServer implements Runnable {
 					if(!waitingForPlayerResponse && !bidingOver){
 						if(everyoneFoldedExceptBetPlayer(players)){
 							timeToCheckWinner(players, pokerTable);
+							resetAfterRound(players);
 						}
 						else{
 							response = new SampleResponse("T", pokerTable);
@@ -586,6 +587,7 @@ public class KryoServer implements Runnable {
 			}
     	}
     	possibleOptions.add("FOLD");
+    	possibleOptions.add("ALLIN");
     }
 
 	private void initiateNewHand(List<Player> players) {
