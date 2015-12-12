@@ -282,6 +282,150 @@ public class ComparatorsTests {
     }
 	
 	@Test                                        
+    public final void testCompareOnePairsByCardsMakingDeckSecond() {     
+		hand1.setHand(HandRankingEnum.PAIR);
+		hand2.setHand(HandRankingEnum.PAIR);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("2", "Spade"));
+		cards1.add(new Card("5", "Heart"));
+		cards1.add(new Card("8", "Club"));
+		cards1.add(new Card("8", "Spade"));
+		cards1.add(new Card("Jack", "Spade"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("2", "Spade"));
+		cards2.add(new Card("5", "Heart"));
+		cards2.add(new Card("8", "Club"));
+		cards2.add(new Card("8", "Spade"));
+		cards2.add(new Card("Jack", "Spade"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("9");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("9");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(3).setHonour("9");
+		hand1.getCardsThatMakeDeck().get(2).setHonour("9");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(1).setHonour("6");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(1).setHonour("6");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("4");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(0).setHonour("4");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("Queen");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("Queen");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
+    public final void testCompareOnePairsByCardsMakingDeckThird() {     
+		hand1.setHand(HandRankingEnum.PAIR);
+		hand2.setHand(HandRankingEnum.PAIR);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("2", "Spade"));
+		cards1.add(new Card("5", "Heart"));
+		cards1.add(new Card("5", "Club"));
+		cards1.add(new Card("8", "Spade"));
+		cards1.add(new Card("Jack", "Spade"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("2", "Spade"));
+		cards2.add(new Card("5", "Heart"));
+		cards2.add(new Card("5", "Club"));
+		cards2.add(new Card("8", "Spade"));
+		cards2.add(new Card("Jack", "Spade"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(2).setHonour("6");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("6");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(2).setHonour("6");
+		hand1.getCardsThatMakeDeck().get(1).setHonour("6");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("4");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(0).setHonour("4");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("9");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(3).setHonour("9");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("Queen");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("Queen");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
+    public final void testCompareOnePairsByCardsMakingDeckFourth() {     
+		hand1.setHand(HandRankingEnum.PAIR);
+		hand2.setHand(HandRankingEnum.PAIR);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("2", "Spade"));
+		cards1.add(new Card("2", "Heart"));
+		cards1.add(new Card("5", "Club"));
+		cards1.add(new Card("8", "Spade"));
+		cards1.add(new Card("Jack", "Spade"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("2", "Spade"));
+		cards2.add(new Card("2", "Heart"));
+		cards2.add(new Card("5", "Club"));
+		cards2.add(new Card("8", "Spade"));
+		cards2.add(new Card("Jack", "Spade"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("4");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("4");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(0).setHonour("4");
+		hand1.getCardsThatMakeDeck().get(1).setHonour("4");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(2).setHonour("7");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(2).setHonour("7");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("9");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(3).setHonour("9");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("Queen");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("Queen");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
     public final void testCompareTwoPairsByCardsMakingDeck() {     
 		hand1.setHand(HandRankingEnum.TWO_PAIR);
 		hand2.setHand(HandRankingEnum.TWO_PAIR);
@@ -332,6 +476,106 @@ public class ComparatorsTests {
     }
 	
 	@Test                                        
+    public final void testCompareTwoPairsByCardsMakingDeckSecond() {     
+		hand1.setHand(HandRankingEnum.TWO_PAIR);
+		hand2.setHand(HandRankingEnum.TWO_PAIR);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("3", "Spade"));
+		cards1.add(new Card("3", "Heart"));
+		cards1.add(new Card("8", "Club"));
+		cards1.add(new Card("Jack", "Spade"));
+		cards1.add(new Card("Jack", "Spade"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("3", "Spade"));
+		cards2.add(new Card("3", "Heart"));
+		cards2.add(new Card("8", "Club"));
+		cards2.add(new Card("Jack", "Spade"));
+		cards2.add(new Card("Jack", "Spade"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("Ace");
+		hand2.getCardsThatMakeDeck().get(3).setHonour("Ace");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("Ace");
+		hand1.getCardsThatMakeDeck().get(3).setHonour("Ace");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("5");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("5");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("King");
+		hand2.getCardsThatMakeDeck().get(3).setHonour("King");
+		assertEquals(1, comp.compare(hand1, hand2));
+		assertEquals(-1, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("Ace");
+		hand2.getCardsThatMakeDeck().get(3).setHonour("Ace");
+		hand2.getCardsThatMakeDeck().get(0).setHonour("3");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("3");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(2).setHonour("9");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(2).setHonour("9");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
+    public final void testCompareTwoPairsByCardsMakingDeckThird() {     
+		hand1.setHand(HandRankingEnum.TWO_PAIR);
+		hand2.setHand(HandRankingEnum.TWO_PAIR);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("3", "Spade"));
+		cards1.add(new Card("3", "Heart"));
+		cards1.add(new Card("5", "Club"));
+		cards1.add(new Card("5", "Spade"));
+		cards1.add(new Card("Jack", "Spade"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("3", "Spade"));
+		cards2.add(new Card("3", "Heart"));
+		cards2.add(new Card("5", "Club"));
+		cards2.add(new Card("5", "Spade"));
+		cards2.add(new Card("Jack", "Spade"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("7");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("7");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(3).setHonour("7");
+		hand1.getCardsThatMakeDeck().get(2).setHonour("7");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("4");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("4");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("6");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("6");
+		assertEquals(1, comp.compare(hand1, hand2));
+		assertEquals(-1, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("7");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("7");
+		hand2.getCardsThatMakeDeck().get(0).setHonour("3");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("3");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("King");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("King");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
     public final void testCompareThreeOfAKindByCardsMakingDeck() {     
 		hand1.setHand(HandRankingEnum.THREE_OF_A_KIND);
 		hand2.setHand(HandRankingEnum.THREE_OF_A_KIND);
@@ -371,6 +615,94 @@ public class ComparatorsTests {
 		assertEquals(-1, comp.compare(hand1, hand2));
 		assertEquals(1, comp.compare(hand2, hand1));
 		hand1.getCardsThatMakeDeck().get(0).setHonour("3");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
+    public final void testCompareThreeOfAKindByCardsMakingDeckSecond() {     
+		hand1.setHand(HandRankingEnum.THREE_OF_A_KIND);
+		hand2.setHand(HandRankingEnum.THREE_OF_A_KIND);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("4", "Spade"));
+		cards1.add(new Card("4", "Heart"));
+		cards1.add(new Card("4", "Club"));
+		cards1.add(new Card("10", "Spade"));
+		cards1.add(new Card("Queen", "Heart"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("4", "Spade"));
+		cards2.add(new Card("4", "Heart"));
+		cards2.add(new Card("4", "Club"));
+		cards2.add(new Card("10", "Spade"));
+		cards2.add(new Card("Queen", "Heart"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("6");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("6");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("6");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(0).setHonour("6");
+		hand1.getCardsThatMakeDeck().get(1).setHonour("6");
+		hand1.getCardsThatMakeDeck().get(2).setHonour("6");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("Jack");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(3).setHonour("Jack");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("King");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("King");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
+    public final void testCompareThreeOfAKindByCardsMakingDeckThird() {     
+		hand1.setHand(HandRankingEnum.THREE_OF_A_KIND);
+		hand2.setHand(HandRankingEnum.THREE_OF_A_KIND);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("4", "Spade"));
+		cards1.add(new Card("7", "Heart"));
+		cards1.add(new Card("7", "Club"));
+		cards1.add(new Card("7", "Spade"));
+		cards1.add(new Card("Queen", "Heart"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("4", "Spade"));
+		cards2.add(new Card("7", "Heart"));
+		cards2.add(new Card("7", "Club"));
+		cards2.add(new Card("7", "Spade"));
+		cards2.add(new Card("Queen", "Heart"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(1).setHonour("8");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("8");
+		hand2.getCardsThatMakeDeck().get(3).setHonour("8");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(1).setHonour("8");
+		hand1.getCardsThatMakeDeck().get(2).setHonour("8");
+		hand1.getCardsThatMakeDeck().get(3).setHonour("8");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("5");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(0).setHonour("5");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("King");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("King");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
     }
@@ -531,6 +863,60 @@ public class ComparatorsTests {
     }
 	
 	@Test                                        
+    public final void testCompareFullHouseByCardsMakingDeckSecond() {     
+		hand1.setHand(HandRankingEnum.FULL_HOUSE);
+		hand2.setHand(HandRankingEnum.FULL_HOUSE);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("2", "Club"));
+		cards1.add(new Card("2", "Spade"));
+		cards1.add(new Card("2", "Club"));
+		cards1.add(new Card("Queen", "Spade"));
+		cards1.add(new Card("Queen", "Club"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("2", "Club"));
+		cards2.add(new Card("2", "Heart"));
+		cards2.add(new Card("2", "Club"));
+		cards2.add(new Card("Queen", "Heart"));
+		cards2.add(new Card("Queen", "Club"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("Jack");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("Jack");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("Jack");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(0).setHonour("Jack");
+		hand1.getCardsThatMakeDeck().get(1).setHonour("Jack");
+		hand1.getCardsThatMakeDeck().get(2).setHonour("Jack");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(0).setHonour("10");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("10");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("10");
+		hand2.getCardsThatMakeDeck().get(3).setHonour("King");
+		hand2.getCardsThatMakeDeck().get(4).setHonour("King");
+		assertEquals(1, comp.compare(hand1, hand2));
+		assertEquals(-1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(0).setHonour("10");
+		hand1.getCardsThatMakeDeck().get(1).setHonour("10");
+		hand1.getCardsThatMakeDeck().get(2).setHonour("10");
+		hand1.getCardsThatMakeDeck().get(3).setHonour("King");
+		hand1.getCardsThatMakeDeck().get(4).setHonour("King");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(1).setHonour("Ace");
+		hand2.getCardsThatMakeDeck().get(0).setHonour("Ace");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(1).setHonour("Ace");
+		hand1.getCardsThatMakeDeck().get(0).setHonour("Ace");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
     public final void testCompareFourOfAKindByCardsMakingDeck() {     
 		hand1.setHand(HandRankingEnum.FOUR_OF_A_KIND);
 		hand2.setHand(HandRankingEnum.FOUR_OF_A_KIND);
@@ -566,6 +952,46 @@ public class ComparatorsTests {
 		assertEquals(-1, comp.compare(hand1, hand2));
 		assertEquals(1, comp.compare(hand2, hand1));
 		hand1.getCardsThatMakeDeck().get(0).setHonour("4");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+    }
+	
+	@Test                                        
+    public final void testCompareFourOfAKindByCardsMakingDeckSecond() {     
+		hand1.setHand(HandRankingEnum.FOUR_OF_A_KIND);
+		hand2.setHand(HandRankingEnum.FOUR_OF_A_KIND);
+		List<Card> cards1 = new ArrayList<Card>();
+		cards1.add(new Card("5", "Club"));
+		cards1.add(new Card("5", "Spade"));
+		cards1.add(new Card("5", "Club"));
+		cards1.add(new Card("5", "Spade"));
+		cards1.add(new Card("King", "Club"));
+		List<Card> cards2 = new ArrayList<Card>();
+		cards2.add(new Card("5", "Club"));
+		cards2.add(new Card("5", "Heart"));
+		cards2.add(new Card("5", "Club"));
+		cards2.add(new Card("5", "Heart"));
+		cards2.add(new Card("King", "Club"));
+		hand1.setCardsThatMakeDeck(cards1);
+		hand2.setCardsThatMakeDeck(cards2);
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(3).setHonour("Jack");
+		hand2.getCardsThatMakeDeck().get(2).setHonour("Jack");
+		hand2.getCardsThatMakeDeck().get(1).setHonour("Jack");
+		hand2.getCardsThatMakeDeck().get(0).setHonour("Jack");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(3).setHonour("Jack");
+		hand1.getCardsThatMakeDeck().get(2).setHonour("Jack");
+		hand1.getCardsThatMakeDeck().get(1).setHonour("Jack");
+		hand1.getCardsThatMakeDeck().get(0).setHonour("Jack");
+		assertEquals(0, comp.compare(hand1, hand2));
+		assertEquals(0, comp.compare(hand2, hand1));
+		hand2.getCardsThatMakeDeck().get(4).setHonour("Ace");
+		assertEquals(-1, comp.compare(hand1, hand2));
+		assertEquals(1, comp.compare(hand2, hand1));
+		hand1.getCardsThatMakeDeck().get(4).setHonour("Ace");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
     }

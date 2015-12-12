@@ -185,7 +185,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 				else{
 					int index1second;
 					int index2second;
-					if(hand1.getCardsThatMakeDeck().get(0).getValue()==hand1.getCardsThatMakeDeck().get(2).getValue()){
+					if(hand1.getCardsThatMakeDeck().get(0).getValue()==hand1.getCardsThatMakeDeck().get(1).getValue()){
 						index1second=0;
 					}
 					else index1second=1;
