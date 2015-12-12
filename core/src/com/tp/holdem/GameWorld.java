@@ -104,7 +104,7 @@ public class GameWorld {
     	
     	betButton.pad(10);
     	betButton.getLabel().setFontScale(0.45f);
-    	betButton.setBounds(460, 19, 78, 40);
+    	betButton.setBounds(540, 19, 78, 40);
 
     	betButton.addListener(new ClickListener() 
     	{

@@ -37,6 +37,7 @@ public class Player {
   		this.isFolded = player.isFolded;
   		this.inGame = player.isInGame();
   		this.isAllIn = player.isAllIn;
+  		this.fromWhichPot= player.getFromWhichPot();
   	}
   	
 	public Player(final int number){
