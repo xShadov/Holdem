@@ -184,11 +184,13 @@ public class GameRenderer {
 		for(int i=0; i<players.size();i++){
 			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
 				if(yourNumber == turnToBet){
-					batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
-					font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
+					batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
+					if(myWorld.getSlider().isVisible()){
+						font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
+					}
 					break;
 				} else {
-					batcher.draw(spotlight, positionX[i]-130, positionY[i]-40);
+					batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
 					break;
 				}
 			}
@@ -221,7 +223,6 @@ public class GameRenderer {
     
     public void changesOccurred(String TAG, SampleResponse response){
     	if(TAG.equals("R")){
-    		gameOver = false;
     		players = response.getPlayers();
     	}
     	else if(TAG.equals("N")){
@@ -259,31 +260,31 @@ public class GameRenderer {
         		myWorld.getSlider().setVisible(true);
         		myWorld.getSlider().setDisabled(false);
         		if(players!=null && players.get(yourNumber).getChipsAmount()>=smallBlindAmount){
-        			if(!myWorld.getButtons().get(0).isVisible()){
-        				myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount());
-        			} 
-        			else {
-        				if(limitType.equals("no-limit")){
+        			if(!myWorld.getButtons().get(0).isVisible() && !myWorld.getButtons().get(5).isVisible()){
+        				myWorld.getSlider().setVisible(false);
+                		myWorld.getSlider().setDisabled(true);
+        			} else {
+	    				if(limitType.equals("no-limit")){
 	        				myWorld.getSlider().setRange(smallBlindAmount, 
 	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
-        				} else if(limitType.equals("pot-limit")){
-        					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())<pot){
-        						myWorld.getSlider().setRange(smallBlindAmount, 
-    	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
-        					} else {
-        						myWorld.getSlider().setRange(smallBlindAmount, pot);
-        					}
-        				} 
-        				else{
-        					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())
-        							<fixedLimit){
-        						myWorld.getSlider().setRange(smallBlindAmount, 
-    	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
-        					} else{
-        						myWorld.getSlider().setRange(smallBlindAmount, fixedLimit);
-        					}
-    					}
-    				}
+	    				} else if(limitType.equals("pot-limit")){
+	    					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())<pot){
+	    						myWorld.getSlider().setRange(smallBlindAmount, 
+		        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+	    					} else {
+	    						myWorld.getSlider().setRange(smallBlindAmount, pot);
+	    					}
+	    				} 
+	    				else{
+	    					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())
+	    							<fixedLimit){
+	    						myWorld.getSlider().setRange(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()), 
+		        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
+	    					} else{
+	    						myWorld.getSlider().setRange(fixedLimit, fixedLimit);
+	    					}
+						}
+        			}
     			}
     		} else {
     			myWorld.setButtonsInvisible(false);
