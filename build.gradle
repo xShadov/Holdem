@@ -7,11 +7,11 @@ buildscript {
     dependencies {
     }
 }
-
+ 
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
-
+ 
     version = '1.0'
     ext {
         appName = "HoldemTP"
@@ -21,36 +21,36 @@ allprojects {
         ashleyVersion = '1.6.0'
         aiVersion = '1.6.0'
     }
-
+ 
     repositories {
-    	jcenter()
+        jcenter()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 }
-
+ 
 project(":desktop") {
     apply plugin: "java"
-
-
+ 
+ 
     dependencies {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }
-
+ 
 project(":core") {
     apply plugin: "java"
-
-
+ 
+ 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        testCompile "org.mockito:mockito-core:1.+" 
+        testCompile "org.mockito:mockito-core:1.+"
     }
 }
-
+ 
 tasks.eclipse.doLast {
     delete ".project"
 }
