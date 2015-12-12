@@ -185,7 +185,9 @@ public class GameRenderer {
 			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
 				if(yourNumber == turnToBet){
 					batcher.draw(spotlight, positionX[i]-250, positionY[i]-45);
-					font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
+					if(myWorld.getSlider().isVisible()){
+						font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
+					}
 					break;
 				} else {
 					batcher.draw(spotlight, positionX[i]-130, positionY[i]-40);
@@ -258,8 +260,9 @@ public class GameRenderer {
         		myWorld.getSlider().setVisible(true);
         		myWorld.getSlider().setDisabled(false);
         		if(players!=null && players.get(yourNumber).getChipsAmount()>=smallBlindAmount){
-        			if(!myWorld.getButtons().get(0).isVisible()){
-        				myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount());
+        			if(!myWorld.getButtons().get(0).isVisible() && !myWorld.getButtons().get(5).isVisible()){
+        				myWorld.getSlider().setVisible(false);
+                		myWorld.getSlider().setDisabled(true);
         			} else {
 	    				if(limitType.equals("no-limit")){
 	        				myWorld.getSlider().setRange(smallBlindAmount, 
