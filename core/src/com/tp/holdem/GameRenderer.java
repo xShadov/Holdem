@@ -272,10 +272,10 @@ public class GameRenderer {
     				else{
     					if(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound())
     							<fixedLimit){
-    						myWorld.getSlider().setRange(smallBlindAmount, 
+    						myWorld.getSlider().setRange(players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()), 
 	        						players.get(yourNumber).getChipsAmount()-(maxBetOnTable-players.get(yourNumber).getBetAmountThisRound()));
     					} else{
-    						myWorld.getSlider().setRange(smallBlindAmount, fixedLimit);
+    						myWorld.getSlider().setRange(fixedLimit, fixedLimit);
     					}
 					}
     			}

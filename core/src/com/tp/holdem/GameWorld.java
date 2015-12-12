@@ -223,7 +223,7 @@ public class GameWorld {
 	}
 
 	public void manageButtons(List<String> possibleOptions) {
-		for(int i=0; i<possibleOptions.size()-2; i++){
+		for(int i=0; i<possibleOptions.size()-1; i++){
 			if(possibleOptions.get(i).equals("ALLIN")){
 				allInButton.setVisible(true);
 				allInButton.setDisabled(false);
