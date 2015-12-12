@@ -36,7 +36,9 @@ public class MainMenuTests
 		ButtonLimit buttonLimit = new ButtonLimit(menu);
 		String a = menu.getLimit();
 		buttonLimit.doClick();
-		assertFalse(a.equals(menu.getLimit()));
+		buttonLimit.doClick();
+		buttonLimit.doClick();
+		assertTrue(a.equals(menu.getLimit()));
 	}
 	
 	@Test
@@ -123,14 +125,20 @@ public class MainMenuTests
 		assertTrue(a<menu.getPlayersCount());
 	}
 	
-	@Ignore
+	@Test
 	public void testButtonServer()
 	{
 		ButtonServer button = new ButtonServer(menu);
 		button.doClick();
-		assertEquals(menu.done,true);
+		assertNotNull(menu.getKryoServer());
 	}
-	
+	@Test
+	public void testMainMenu()
+	{
+		MainMenu.main(null);
+		
+		assertNotNull(menu);
+	}
 	@Test
 	public void testButtonStrategy()
 	{
@@ -138,5 +146,18 @@ public class MainMenuTests
 		Strategy a = menu.getStrategy();
 		button.doClick();
 		assertFalse(a.equals(menu.getStrategy()));
+		a = menu.getStrategy();
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
+		a = menu.getStrategy();
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
+		a = menu.getStrategy();
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
+		a = menu.getStrategy();
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
 	}
+
 }

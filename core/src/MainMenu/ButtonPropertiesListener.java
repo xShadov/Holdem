@@ -3,7 +3,7 @@ package MainMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class ButtonPropertiesListener implements ActionListener
+public class ButtonPropertiesListener implements ActionListener
 {
 	private MainMenu menu;
 	public ButtonPropertiesListener(MainMenu menu)

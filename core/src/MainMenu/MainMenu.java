@@ -52,7 +52,7 @@ public class MainMenu extends JFrame
 		checkThreads();
 		menu.setVisible(true);
 	}
-	
+
 	public static void checkThreads()
 	{
 		ThreadGroup mainThreadGroup = Thread.currentThread().getThreadGroup();
@@ -68,8 +68,9 @@ public class MainMenu extends JFrame
 			public void run()
 			{
 					try {
-						kryo = new KryoServer(playersC, botsC, limit,botStrategy,blindA,playersChips);
 						done = true;
+						kryo = new KryoServer(playersC, botsC, limit,botStrategy,blindA,playersChips);
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -78,9 +79,9 @@ public class MainMenu extends JFrame
 		});
 	}
 	
-	public KryoServer getKryoServer()
+	public Future<?> getKryoServer()
 	{
-		return kryo;
+		return server;
 	}
 	
 	public int getBlindAmount()
