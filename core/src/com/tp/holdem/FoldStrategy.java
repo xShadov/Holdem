@@ -15,6 +15,11 @@ public class FoldStrategy implements Strategy
 	public String getName() {
 		return name;
 	}
+	
+	public String getTag()
+	{
+		return request.getTAG();
+	}
 
 	@Override
 	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) {

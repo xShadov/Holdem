@@ -13,6 +13,11 @@ public class AllInStrategy implements Strategy
 	{
 		return this;
 	}
+	
+	public String getTag()
+	{
+		return request.getTAG();
+	}
 
 	@Override
 	public void whatDoIDo(KryoServer server,List<Card> hand, int betAmount,int chips) 

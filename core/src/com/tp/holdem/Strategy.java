@@ -2,6 +2,8 @@ package com.tp.holdem;
 
 import java.util.List;
 
+import ServerClientTests.FakeServer;
+
 public interface Strategy 
 {
 	public Strategy getStrategy();
