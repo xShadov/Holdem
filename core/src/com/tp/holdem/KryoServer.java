@@ -331,9 +331,6 @@ public class KryoServer implements Runnable {
 			bigBlindAmount=smallBlindAmount*2;
 		}
 		for(int i=0; i<players.size();i++){
-			if(players.get(i).getChipsAmount()==0){
-				players.get(i).setInGame(false);
-			}
 			players.get(i).setFromWhichPot(-1);
 			players.get(i).setBetAmount(0);
 			players.get(i).setFolded(false);
@@ -342,6 +339,10 @@ public class KryoServer implements Runnable {
 			players.get(i).setHasDealerButton(false);
 			players.get(i).setHasSmallBlind(false);
 			players.get(i).clearHand();
+			if(players.get(i).getChipsAmount()==0){
+				players.get(i).setInGame(false);
+				players.get(i).setFolded(true);
+			}
 		}
 		if(!notEnoughPlayers(players)){
 			maxBetOnTable = Integer.valueOf(bigBlindAmount);
@@ -423,6 +424,11 @@ public class KryoServer implements Runnable {
 			server.sendToAllTCP(response);
 			waitingForPlayerResponse = true;
 			startTimer = System.nanoTime();
+		} else {
+			if(!players.get(numberToBet).isInGame()){
+				request = new SampleRequest("FOLD", betPlayer);
+				handleReceived(request);
+			}
 		}
 	}
 
@@ -472,6 +478,8 @@ public class KryoServer implements Runnable {
 		for(Player player : players){
 			if(player.getConnectionId()==con.getID()){ 
 				player.setInGame(false);
+				request = new SampleRequest("FOLD", player.getNumber());
+				handleReceived(request);
 				break;
     		}
 	    }
