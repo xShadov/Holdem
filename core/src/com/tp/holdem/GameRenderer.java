@@ -43,7 +43,7 @@ public class GameRenderer {
     private Texture cards;
     private int yourNumber=0;
     private List<TextButton> buttons;
-    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, smallStack, semiStack, bigStack, spotlight;
+    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
     private int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
     private int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
     private int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
@@ -75,6 +75,7 @@ public class GameRenderer {
         cards = new Texture(Gdx.files.internal("data/cards.png"));
         box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
         boxOff = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxOff.png")), 0, 0, 160, 96);
+        boxFold = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxFold.png")), 0, 0, 160, 96);
         reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
         spotlight = new TextureRegion(new Texture(Gdx.files.internal("data/spotlight.png")), 0, 0, 352, 740);
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
@@ -141,8 +142,10 @@ public class GameRenderer {
 	}
 
 	private void drawInfoBoxes(int i) {
-		if(players.get((i+yourNumber)%players.size()).isInGame()){
+		if(players.get((i+yourNumber)%players.size()).isInGame() && !players.get((i+yourNumber)%players.size()).isFolded()){
 			batcher.draw(box, boxPositionX[i], boxPositionY[i]);
+		}else if(players.get((i+yourNumber)%players.size()).isFolded()){
+			batcher.draw(boxFold, boxPositionX[i], boxPositionY[i]);
 		} else {
 			batcher.draw(boxOff, boxPositionX[i], boxPositionY[i]);
 		}
@@ -151,6 +154,7 @@ public class GameRenderer {
 		font.draw(batcher,
 				"Bet: "+players.get((i+yourNumber)%players.size()).getBetAmountThisRound()+"/"+players.get((i+yourNumber)%players.size()).getBetAmount(),
 				boxPositionX[i]+18, boxPositionY[i]+27);
+		
 	}
 
 	private void drawDealerAndBlindButtons(int i) {
