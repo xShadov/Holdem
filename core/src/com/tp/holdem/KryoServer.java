@@ -147,7 +147,7 @@ public class KryoServer implements Runnable {
 					}
 					else if(waitingForPlayerResponse){
 						endTimer = System.nanoTime();
-						if((endTimer-startTimer)/1000000000>10){
+						if((endTimer-startTimer)/1000000000>25){
 							request = new SampleRequest("FOLD", betPlayer);
 							handleReceived(request);
 						}
@@ -497,10 +497,9 @@ public class KryoServer implements Runnable {
 		    				  pokerTable.setPot(pokerTable.getPot()+request.getBetAmount());
 		    				  if(request.getBetAmount()>maxBetOnTable){
 		    					  maxBetOnTable = Integer.valueOf(request.getBetAmount());
-		    					  setPreviousAsLastToBet(players);
 		    				  }
 		    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
-		    				  
+		    				  setPreviousAsLastToBet(players);
 						  }
 					  }
 				  }
@@ -554,6 +553,10 @@ public class KryoServer implements Runnable {
 					  if(request.getNumber()==lastToBet){
 						  bidingOver = true;
 						  waitingForPlayerResponse = false;
+						  if(everyoneFoldedExceptBetPlayer(players)){
+							timeToCheckWinner(players, pokerTable);
+							resetAfterRound(players);
+						  }
 					  } else{
 	    				  setNextAsBetPlayer(players);
 					  }
@@ -702,14 +705,14 @@ public class KryoServer implements Runnable {
 		return betPlayer;
 	}
 	
-	public List<String> getPossibleOpitions()
-	{
-		return possibleOptions;
-	}
-	
 	public int getBigBlind()
 	{
 		return bigBlindAmount;
+	}
+	
+	public List<String> getPossibleOpitions()
+	{
+		return possibleOptions;
 	}
 	public static void main(String[] args) {
 		try {
