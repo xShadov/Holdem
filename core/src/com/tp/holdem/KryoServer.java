@@ -497,9 +497,10 @@ public class KryoServer implements Runnable {
 		    				  pokerTable.setPot(pokerTable.getPot()+request.getBetAmount());
 		    				  if(request.getBetAmount()>maxBetOnTable){
 		    					  maxBetOnTable = Integer.valueOf(request.getBetAmount());
+		    					  setPreviousAsLastToBet(players);
 		    				  }
 		    				  if(players.get(request.getNumber()).getChipsAmount()==0) players.get(request.getNumber()).setAllIn(true);
-		    				  setPreviousAsLastToBet(players);
+		    				  
 						  }
 					  }
 				  }
@@ -699,6 +700,11 @@ public class KryoServer implements Runnable {
 	public int getBetPlayer()
 	{
 		return betPlayer;
+	}
+	
+	public List<String> getPossibleOpitions()
+	{
+		return possibleOptions;
 	}
 	
 	public int getBigBlind()

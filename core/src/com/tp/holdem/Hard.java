@@ -72,7 +72,7 @@ public class Hard implements Strategy
 						if(server.getMaxBetOnTable()==0)
 							request = new SampleRequest("BET",server.getBigBlind(),server.getBetPlayer());
 						else
-							request = new SampleRequest("CHECK",server.getBigBlind(), server.getBetPlayer());
+							request = new SampleRequest("CHECK", server.getBetPlayer());
 					}
 				}
 				else
@@ -97,9 +97,9 @@ public class Hard implements Strategy
 					else
 					{
 						if(server.getMaxBetOnTable()==0)
-							request = new SampleRequest("CHECK",server.getBigBlind(),server.getBetPlayer());
+							request = new SampleRequest("CHECK",server.getBetPlayer());
 						else
-							request = new SampleRequest("CHECK",server.getBigBlind(), server.getBetPlayer());
+							request = new SampleRequest("CHECK", server.getBetPlayer());
 					}
 				}
 				else
@@ -156,7 +156,7 @@ public class Hard implements Strategy
 						if(server.getMaxBetOnTable()==0)
 							request = new SampleRequest("BET",server.getBigBlind(),server.getBetPlayer());
 						else
-							request = new SampleRequest("CHECK",server.getBigBlind(), server.getBetPlayer());
+							request = new SampleRequest("CHECK", server.getBetPlayer());
 					}
 				}
 				else
@@ -263,7 +263,7 @@ public class Hard implements Strategy
 						if(server.getMaxBetOnTable()==0)
 							request = new SampleRequest("BET",server.getBigBlind(),server.getBetPlayer());
 						else
-							request = new SampleRequest("CHECK",server.getBigBlind(), server.getBetPlayer());
+							request = new SampleRequest("CHECK", server.getBetPlayer());
 					}
 				}
 				else
@@ -345,6 +345,8 @@ public class Hard implements Strategy
 			}
 		}
 		System.out.println("player"+String.valueOf(server.getBetPlayer()) +" "+ rank.getHand().getValue()+" " +request.getTAG()+" "+request.getBetAmount());
+		for(int i = 0;server.getPossibleOpitions().size()>i;i++)
+			System.out.println(" "+server.getPossibleOpitions().get(i));
 		server.handleReceived((Object)request);
 	}
 }
