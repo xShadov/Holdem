@@ -147,7 +147,7 @@ public class KryoServer implements Runnable {
 					}
 					else if(waitingForPlayerResponse){
 						endTimer = System.nanoTime();
-						if((endTimer-startTimer)/1000000000>10){
+						if((endTimer-startTimer)/1000000000>25){
 							request = new SampleRequest("FOLD", betPlayer);
 							handleReceived(request);
 						}
@@ -553,6 +553,10 @@ public class KryoServer implements Runnable {
 					  if(request.getNumber()==lastToBet){
 						  bidingOver = true;
 						  waitingForPlayerResponse = false;
+						  if(everyoneFoldedExceptBetPlayer(players)){
+							timeToCheckWinner(players, pokerTable);
+							resetAfterRound(players);
+						  }
 					  } else{
 	    				  setNextAsBetPlayer(players);
 					  }

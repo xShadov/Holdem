@@ -44,6 +44,7 @@ public class KryoClient {
         new Thread("Connect") {
            public synchronized void run() {
               try {
+				  //Inet4Address.getLocalHost().getHostAddress() if you want your local IP
                  simulationClient.connect(5000, "127.0.0.1", 54555);
                  while(true){
                 	 try {
