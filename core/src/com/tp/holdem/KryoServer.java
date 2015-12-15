@@ -339,7 +339,7 @@ public class KryoServer implements Runnable {
 			players.get(i).setHasDealerButton(false);
 			players.get(i).setHasSmallBlind(false);
 			players.get(i).clearHand();
-			if(players.get(i).getChipsAmount()==0){
+			if(players.get(i).getChipsAmount()==0 || !players.get(i).isInGame()){
 				players.get(i).setInGame(false);
 				players.get(i).setFolded(true);
 			}
@@ -412,7 +412,7 @@ public class KryoServer implements Runnable {
 	private boolean everybodyAllIn(List<Player> players) {
 		int countAllIn = 0;
 		for(int i=0; i<players.size();i++){
-			if(players.get(i).isAllIn() || players.get(i).isFolded()) countAllIn++;
+			if(players.get(i).isAllIn() || players.get(i).isFolded() || !players.get(i).isInGame()) countAllIn++;
 		}
 		return countAllIn==players.size();
 	}

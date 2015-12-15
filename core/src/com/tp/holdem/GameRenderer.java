@@ -144,7 +144,7 @@ public class GameRenderer {
 	private void drawInfoBoxes(int i) {
 		if(players.get((i+yourNumber)%players.size()).isInGame() && !players.get((i+yourNumber)%players.size()).isFolded()){
 			batcher.draw(box, boxPositionX[i], boxPositionY[i]);
-		}else if(players.get((i+yourNumber)%players.size()).isFolded()){
+		}else if(players.get((i+yourNumber)%players.size()).isInGame() && players.get((i+yourNumber)%players.size()).isFolded()){
 			batcher.draw(boxFold, boxPositionX[i], boxPositionY[i]);
 		} else {
 			batcher.draw(boxOff, boxPositionX[i], boxPositionY[i]);
