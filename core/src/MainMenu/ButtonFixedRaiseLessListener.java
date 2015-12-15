@@ -16,7 +16,7 @@ public class ButtonFixedRaiseLessListener implements ActionListener
 		if(menu.getFixedRaise()>2)
 		{
 			menu.setFixedRaise(menu.getFixedRaise()-1);
-			menu.fixedRaiseLabel.setText(String.valueOf("Max number of raises: "+menu.getFixedRaise()));
+			menu.getFixedRaiseLabel().setText(String.valueOf("Max number of raises: "+menu.getFixedRaise()));
 		}
 	}
 

@@ -15,7 +15,7 @@ class ButtonBlindLessListener implements ActionListener
 		if(menu.getBlindAmount()>20)
 		{
 			menu.setBlindAmount(menu.getBlindAmount()-5);
-			menu.blindAmount.setText(String.valueOf("Small blind: "+menu.getBlindAmount()));
+			menu.getBlindAmountLabel().setText(String.valueOf("Small blind: "+menu.getBlindAmount()));
 		}
 	}
 	

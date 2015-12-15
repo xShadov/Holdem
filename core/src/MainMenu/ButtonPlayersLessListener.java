@@ -13,11 +13,11 @@ class ButtonPlayersLessListener implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		if(menu.getPlayersCount()>0)
-		{
-			if(menu.getPlayersCount()+menu.getBotsCount()>2)
+		{ 
+			if(menu.getPlayersCount()+menu.getBotsCount()>2 && menu.getPlayersCount()>1)
 			{
 				menu.setPlayersCount(menu.getPlayersCount()-1);
-				menu.playersCount.setText(String.valueOf(menu.getPlayersCount()) + " players");
+				menu.getPlayersCountLabel().setText(String.valueOf(menu.getPlayersCount()) + " players");
 			}
 		}
 	}

@@ -17,7 +17,7 @@ class ButtonChipsLessListener implements ActionListener
 			if(menu.getChipsAmount()>1000)
 			{
 				menu.setChipsAmount(menu.getChipsAmount()-250);
-				menu.chipsAmount.setText("Starting chips: "+String.valueOf(menu.getChipsAmount()));
+				menu.getChipsAmountLabel().setText("Starting chips: "+String.valueOf(menu.getChipsAmount()));
 			}
 		}
 	}

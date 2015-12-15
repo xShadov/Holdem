@@ -15,7 +15,7 @@ public class ButtonFixedLessListener implements ActionListener
 		if(menu.getFixedChips()>menu.getBlindAmount())
 		{
 			menu.setFixedChips(menu.getFixedChips()-5);
-			menu.fixedAmount.setText(String.valueOf("FixedLimit bets: "+menu.getFixedChips()));
+			menu.getFixedAmount().setText(String.valueOf("FixedLimit bets: "+menu.getFixedChips()));
 		}
 	}
 }

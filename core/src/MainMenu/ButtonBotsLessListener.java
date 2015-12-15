@@ -18,7 +18,7 @@ class ButtonBotsLessListener implements ActionListener
 			if(menu.getPlayersCount()+menu.getBotsCount()>2)
 			{
 				menu.setBotsCount(menu.getBotsCount()-1);
-				menu.botsCount.setText(String.valueOf(menu.getBotsCount())+" bots");
+				menu.getBotsCountLabel().setText(String.valueOf(menu.getBotsCount())+" bots");
 			}
 		}
 	}

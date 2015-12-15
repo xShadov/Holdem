@@ -17,7 +17,7 @@ class ButtonPlayersMoreListener implements ActionListener
 			if(menu.getPlayersCount()+menu.getBotsCount()<10)
 			{
 				menu.setPlayersCount(menu.getPlayersCount()+1);
-				menu.playersCount.setText(String.valueOf(menu.getPlayersCount())+ " players");
+				menu.getPlayersCountLabel().setText(String.valueOf(menu.getPlayersCount())+ " players");
 			}
 		}
 	}

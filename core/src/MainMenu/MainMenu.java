@@ -34,29 +34,46 @@ public class MainMenu extends JFrame
 	private JFrame properties;
 	private JPanel propertiesPanel;
 	
+	private ButtonServer server1;
+	private ButtonProperties properties1;
+	
+	private JPanel masterPanel1;
+	private GridBagConstraints layout1;
+	
 	private ButtonFixedLess fixedLess;
 	private ButtonFixedMore fixedMore;
 	private ButtonFixedRaiseLess raiseLess;
 	private ButtonFixedRaiseMore raiseMore;
 	private GridBagConstraints propertiesLayout;
 	
+	private ButtonBlindLess blindLess;
+	private ButtonBlindMore blindMore;
+	private ButtonChipsLess chipsLess;
+	private ButtonChipsMore chipsMore;
+	private ButtonPlayersLess playersLess;
+	private ButtonPlayersMore playersMore;
+	private ButtonBotsLess botsLess;
+	private ButtonBotsMore botsMore;
+	private ButtonStrategy strategy;
+	private ButtonOK ok;
+	private ButtonLimit limit;
+	
 	private boolean layout = false;
 	
 	private int playersC = 2;
 	private int botsC = 0;
-	private String limit = "no-limit";
+	private String limitt = "no-limit";
 	private Strategy botStrategy;
 	private int blindA = 20;
 	private int playersChips = 1500;
 	private int fixedChips = 40;
 	private int fixedRaise = 5;
-	public boolean done = false;
-	Label playersCount = new Label(String.valueOf(playersC)+ " players");
-	Label botsCount = new Label(String.valueOf(botsC)+" bots");
-	Label blindAmount = new Label(String.valueOf("Small blind: "+blindA));
-	Label chipsAmount = new Label(String.valueOf("Starting chips: "+playersChips));
-	Label fixedAmount = new Label(String.valueOf("FixedLimit bets: "+fixedChips));
-	Label fixedRaiseLabel = new Label(String.valueOf("Max number of raises: "+fixedRaise));
+	private Label playersCount = new Label(String.valueOf(playersC)+ " players");
+	private Label botsCount = new Label(String.valueOf(botsC)+" bots");
+	private Label blindAmount = new Label(String.valueOf("Small blind: "+blindA));
+	private Label chipsAmount = new Label(String.valueOf("Starting chips: "+playersChips));
+	private Label fixedAmount = new Label(String.valueOf("FixedLimit bets: "+fixedChips));
+	private Label fixedRaiseLabel = new Label(String.valueOf("Max number of raises: "+fixedRaise));
 	
 	public static void main(String args[])
 	{
@@ -81,7 +98,7 @@ public class MainMenu extends JFrame
 			public void run()
 			{
 					try {
-						kryo = new KryoServer(playersC, botsC, limit,botStrategy,blindA,playersChips,fixedChips,fixedRaise);
+						kryo = new KryoServer(playersC, botsC, limitt,botStrategy,blindA,playersChips,fixedChips,fixedRaise);
 						
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -91,9 +108,29 @@ public class MainMenu extends JFrame
 		});
 	}
 	
+	public Label getPlayersCountLabel()
+	{
+		return playersCount;
+	}
+	
+	public Label getBotsCountLabel()
+	{
+		return botsCount;
+	}
+	
+	public Label getBlindAmountLabel()
+	{
+		return blindAmount;
+	}
+	
 	public Label getFixedAmount()
 	{
 		return fixedAmount;
+	}
+	
+	public Label getChipsAmountLabel()
+	{
+		return chipsAmount;
 	}
 	
 	public Label getFixedRaiseLabel()
@@ -208,12 +245,12 @@ public class MainMenu extends JFrame
 	
 	public void setLimit(String limit)
 	{
-		this.limit = limit;
+		this.limitt = limit;
 	}
 	
 	public String getLimit()
 	{
-		return limit;
+		return limitt;
 	}
 	
 	public void setStrategy(Strategy botStrategy)
@@ -231,6 +268,8 @@ public class MainMenu extends JFrame
 		return properties;
 	}
 	
+	
+	
 	public MainMenu()
 	{
 		super("Texas Hold'em");
@@ -241,29 +280,29 @@ public class MainMenu extends JFrame
 		
 		botStrategy = new AllInStrategy();
 		
-		ButtonServer server = new ButtonServer(this);
-		ButtonProperties properties = new ButtonProperties(this);
+		server1 = new ButtonServer(this);
+		properties1 = new ButtonProperties(this);
 		
-		JPanel masterPanel = new JPanel(new GridBagLayout());
-		GridBagConstraints layout = new GridBagConstraints();
+		masterPanel1 = new JPanel(new GridBagLayout());
+		layout1 = new GridBagConstraints();
 		
-		layout.fill = GridBagConstraints.BOTH;
-		layout.weightx = 1;
-		layout.weighty = 1;
-		layout.gridx = 0;
-		layout.gridy = 0;
-		layout.gridwidth = 1;
-		masterPanel.add(server,layout);
-		layout.gridx = 0;
-		layout.gridy = 1;
-		layout.gridwidth = 1;
-        masterPanel.add(properties,layout);
+		layout1.fill = GridBagConstraints.BOTH;
+		layout1.weightx = 1;
+		layout1.weighty = 1;
+		layout1.gridx = 0;
+		layout1.gridy = 0;
+		layout1.gridwidth = 1;
+		masterPanel1.add(server1,layout1);
+		layout1.gridx = 0;
+		layout1.gridy = 1;
+		layout1.gridwidth = 1;
+        masterPanel1.add(properties1,layout1);
         
-        this.getContentPane().add(masterPanel);
+        this.getContentPane().add(masterPanel1);
         setResizable(false);
 	}
 	
-	
+
 	
 	public void properties()
 	{		
@@ -276,17 +315,17 @@ public class MainMenu extends JFrame
 		fixedMore = new ButtonFixedMore(this);
 		raiseLess = new ButtonFixedRaiseLess(this);
 		raiseMore = new ButtonFixedRaiseMore(this);
-		ButtonBlindLess blindLess = new ButtonBlindLess(this);
-		ButtonBlindMore blindMore = new ButtonBlindMore(this);
-		ButtonChipsLess chipsLess = new ButtonChipsLess(this);
-		ButtonChipsMore chipsMore = new ButtonChipsMore(this);
-		ButtonPlayersLess playersLess = new ButtonPlayersLess(this);
-		ButtonPlayersMore playersMore = new ButtonPlayersMore(this);
-		ButtonBotsLess botsLess = new ButtonBotsLess(this);
-		ButtonBotsMore botsMore = new ButtonBotsMore(this);
-		ButtonStrategy strategy = new ButtonStrategy(this);
-		ButtonOK ok = new ButtonOK(properties,this);
-		ButtonLimit limit = new ButtonLimit(this,strategy);
+		blindLess = new ButtonBlindLess(this);
+		blindMore = new ButtonBlindMore(this);
+		chipsLess = new ButtonChipsLess(this);
+		chipsMore = new ButtonChipsMore(this);
+		playersLess = new ButtonPlayersLess(this);
+		playersMore = new ButtonPlayersMore(this);
+		botsLess = new ButtonBotsLess(this);
+		botsMore = new ButtonBotsMore(this);
+		strategy = new ButtonStrategy(this);
+		ok = new ButtonOK(properties,this);
+		limit = new ButtonLimit(this,strategy);
 		
 		propertiesLayout = new GridBagConstraints();			
 		propertiesPanel = new JPanel(new GridBagLayout());
