@@ -35,7 +35,7 @@ public class Medium implements Strategy
 		
 		
 		rank = HandOperations.findHandRank(0, hand, server.getTable().getCardsOnTable());
-		
+	
 		if(server.getTable().getCardsOnTable().size()>0)
 		{
 			if(rank.getHand().getValue()>3)
@@ -50,8 +50,10 @@ public class Medium implements Strategy
 					{
 						if(server.getMaxBetOnTable()==0)
 							request = new SampleRequest("BET",howMuchToBet,server.getBetPlayer());
-						else
+						else if(server.getLimitType()!="fixed-limit")
 							request = new SampleRequest("RAISE",howMuchToBet, server.getBetPlayer());
+						else
+							request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
 				else

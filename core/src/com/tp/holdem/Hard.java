@@ -52,8 +52,10 @@ public class Hard implements Strategy
 					{
 						if(server.getMaxBetOnTable()==0)
 							request = new SampleRequest("BET",howMuchToBet,server.getBetPlayer());
-						else
+						else if(server.getLimitType()!="fixed-limit")
 							request = new SampleRequest("RAISE",howMuchToBet, server.getBetPlayer());
+						else
+							request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
 				else
@@ -136,8 +138,10 @@ public class Hard implements Strategy
 					{
 						if(server.getMaxBetOnTable()==0)
 							request = new SampleRequest("BET",howMuchToBet,server.getBetPlayer());
-						else
+						else if(server.getLimitType()!="fixed-limit")
 							request = new SampleRequest("RAISE",howMuchToBet, server.getBetPlayer());
+						else
+							request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
 				else
@@ -242,8 +246,10 @@ public class Hard implements Strategy
 					{
 						if(server.getMaxBetOnTable()==0)
 							request = new SampleRequest("BET",howMuchToBet,server.getBetPlayer());
-						else
+						else if(server.getLimitType()!="fixed-limit")
 							request = new SampleRequest("RAISE",howMuchToBet, server.getBetPlayer());
+						else
+							request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
 				else
