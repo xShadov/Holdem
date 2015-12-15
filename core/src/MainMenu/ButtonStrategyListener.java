@@ -20,31 +20,37 @@ class ButtonStrategyListener implements ActionListener
 	}
 	public void actionPerformed(ActionEvent e)
 	{
-		if(menu.getStrategy().getName().equals("Always All-in") )
+		if(button.getText().equals("Always All-in") )
 		{
 			menu.setStrategy(new FoldStrategy());
 			button.setText(menu.getStrategy().getName());
 			return;
 		}
-		if(menu.getStrategy().getName().equals("Always Fold") )
+		if(button.getText().equals("Always Fold") )
+		{
+			menu.setStrategy(null);
+			button.setText("Random");
+			return;
+		}
+		if(button.getText().equals("Random"))
 		{
 			menu.setStrategy(new Easy());
 			button.setText(menu.getStrategy().getName());
 			return;
 		}
-		if(menu.getStrategy().getName().equals("Easy") )
+		if(button.getText().equals("Easy") )
 		{
 			menu.setStrategy(new Medium());
 			button.setText(menu.getStrategy().getName());
 			return;
 		}
-		if(menu.getStrategy().getName().equals("Medium") )
+		if(button.getText().equals("Medium") )
 		{
 			menu.setStrategy(new Hard());
 			button.setText(menu.getStrategy().getName());
 			return;
 		}
-		if(menu.getStrategy().getName().equals("Hard") )
+		if(button.getText().equals("Hard") )
 		{
 			if(menu.getLimit()!="fixed-limit")
 			{
