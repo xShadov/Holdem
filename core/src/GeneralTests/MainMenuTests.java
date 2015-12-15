@@ -188,7 +188,7 @@ public class MainMenuTests
 		
 		assertNotNull(menu);
 	}
-	/*@Test
+	@Test
 	public void testButtonStrategy()
 	{
 		ButtonStrategy button = new ButtonStrategy(menu);
@@ -199,14 +199,16 @@ public class MainMenuTests
 		button.doClick();
 		assertFalse(a.equals(menu.getStrategy()));
 		a = menu.getStrategy();
-		button.doClick();z
-		assertFalse(a.equals(menu.getStrategy()));
+		button.doClick();
+		assertTrue(a==null);
 		a = menu.getStrategy();
 		button.doClick();
 		assertFalse(a.equals(menu.getStrategy()));
 		a = menu.getStrategy();
 		button.doClick();
 		assertFalse(a.equals(menu.getStrategy()));
-	}*/
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
+	}
 
 }
