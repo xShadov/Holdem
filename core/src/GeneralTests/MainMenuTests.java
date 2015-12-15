@@ -193,6 +193,7 @@ public class MainMenuTests
 	{
 		ButtonStrategy button = new ButtonStrategy(menu);
 		Strategy a = menu.getStrategy();
+		menu.setLimit("no-limit");
 		button.doClick();
 		assertFalse(a.equals(menu.getStrategy()));
 		a = menu.getStrategy();
@@ -207,6 +208,15 @@ public class MainMenuTests
 		a = menu.getStrategy();
 		button.doClick();
 		assertFalse(a.equals(menu.getStrategy()));
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
+		button.doClick();
+		assertFalse(a==null);
+		button.doClick();
+		assertFalse(a.equals(menu.getStrategy()));
+		menu.setLimit("fixed-limit");
 		button.doClick();
 		assertFalse(a.equals(menu.getStrategy()));
 	}
