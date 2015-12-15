@@ -46,6 +46,7 @@ public class KryoServer implements Runnable {
 	private int startingSmallBlindAmount;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
+	private Random generator = new Random();
 	private int maxBetOnTable = 0;
 	private int playersChips;
 	private boolean newHand = false;
@@ -67,7 +68,6 @@ public class KryoServer implements Runnable {
 	  this.fixedRaise=fixedRaise;
 	  this.smallBlindAmount = Integer.valueOf(startingSmallBlindAmount);
 	  this.bigBlindAmount = smallBlindAmount*2;
-	  Random generator = new Random();
 	  this.turnPlayer = generator.nextInt(playersCount+botsCount);
       server = new Server();
 
@@ -481,10 +481,22 @@ public class KryoServer implements Runnable {
     	if(numPlayers==playersCount){
     		for(int i=0; i<botsCount;i++)
     		{
-    			players.add(new Bot(numPlayers,"Bot"+String.valueOf(i),botStrategy));
-    			players.get(numPlayers).setChipsAmount(playersChips);
-    			players.get(numPlayers).setInGame(true);
-    			numPlayers++;
+    			if(botStrategy!=null){
+    				players.add(new Bot(numPlayers,"Bot"+String.valueOf(i),botStrategy));
+    				players.get(numPlayers).setChipsAmount(playersChips);
+    				players.get(numPlayers).setInGame(true);
+    				numPlayers++;
+    			} else {
+    				int randomStrategy = generator.nextInt(3);
+    				Strategy newStrategy;
+    				if(randomStrategy==0) newStrategy = new Easy();
+    				else if(randomStrategy==1) newStrategy = new Medium();
+    				else newStrategy = new Hard();
+    				players.add(new Bot(numPlayers, "Bot"+String.valueOf(i), newStrategy));
+    				players.get(numPlayers).setChipsAmount(playersChips);
+    				players.get(numPlayers).setInGame(true);
+    				numPlayers++;
+    			}
     		}
     		playersWithHiddenCards = new ArrayList<Player>(players.size());
     		for(int i=0; i<players.size(); i++){
