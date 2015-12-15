@@ -152,7 +152,7 @@ public class KryoServer implements Runnable {
 					}
 					else if(waitingForPlayerResponse){
 						endTimer = System.nanoTime();
-						if((endTimer-startTimer)/1000000000>10){
+						if((endTimer-startTimer)/1000000000>25){
 							request = new SampleRequest("FOLD", betPlayer);
 							handleReceived(request);
 						}
