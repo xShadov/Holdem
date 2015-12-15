@@ -231,6 +231,18 @@ public class KryoServer implements Runnable {
 	}
 
 	private List<Player> timeToCheckWinner(List<Player> players, PokerTable pokerTable) {
+		List<List<Card>> revealedCards = new ArrayList<List<Card>>();
+		for(int i=0; i<players.size(); i++){
+			if(!players.get(i).isFolded() && players.get(i).isInGame()){
+				List<Card> cards = new ArrayList<Card>();
+				cards.add(players.get(i).getHand().get(0));
+				cards.add(players.get(i).getHand().get(1));
+				revealedCards.add(i, cards);
+			}
+		}
+		response = new SampleResponse("RC", revealedCards, false, false);
+		server.sendToAllTCP(response);
+
 		List<HandRank> hands = new ArrayList<HandRank>();
 		List<Player> winners = new ArrayList<Player>();
 		for(int i=0; i<players.size(); i++){

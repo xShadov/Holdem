@@ -29,7 +29,10 @@ public class GameRenderer {
     private boolean tie = false;
     private int bigBlindAmount = 0;
     private int smallBlindAmount = 0;
+    private int counter = 0;
     private int pot = 0;
+    private boolean revealed = false;
+    private List<List<Card>> revealedCards;
     private int maxBetOnTable = 0;
     private int yourBetAmount = 0;
     private int fixedLimit = 0;
@@ -104,11 +107,13 @@ public class GameRenderer {
         }
         if(players!=null){
 	        drawSpotlight();
+	        counter = 0;
 	        for(int i=0; i<players.size();i++){
 	        	drawCards(i);
 	        	drawDealerAndBlindButtons(i);
         		drawInfoBoxes(i);
 	        	drawChips(i);
+	        	drawRevealedCards(i);
 	        }
         }
         if(cardsOnTable!=null)
@@ -120,6 +125,17 @@ public class GameRenderer {
         }
         batcher.end();
     }
+
+	private void drawRevealedCards(int i) {
+		if(revealed){
+			if(players.get((i+yourNumber)%players.size()).isInGame() && !players.get((i+yourNumber)%players.size()).isFolded()){
+				findCurrentCardTexture(revealedCards.get((i+yourNumber)%players.size()).get(0));
+				batcher.draw(currentCardTexture, positionX[i], positionY[i]);
+				findCurrentCardTexture(revealedCards.get((i+yourNumber)%players.size()).get(1));
+				batcher.draw(currentCardTexture, positionX[i]+20, positionY[i]-15);
+			}
+		}
+	}
 
 	private void drawCardsOnTable(int i) {
 		findCurrentCardTexture(cardsOnTable.get(i));
@@ -244,6 +260,7 @@ public class GameRenderer {
     	}
     	else if(TAG.equals("HCD")){
     		gameOver = false;
+    		revealed = false;
     		waitingForAll = false;
     		tie = false;
     		winnerNumber = -1;
@@ -252,6 +269,10 @@ public class GameRenderer {
     	else if(TAG.equals("W")){
     		waitingForAll = true;
     		waitingMessage = response.getText();
+    	}
+    	else if(TAG.equals("RC")){
+    		revealed = true;
+    		revealedCards = response.getCards2();
     	}
     	else if(TAG.equals("B")){
     		turnToBet = response.getNumber();

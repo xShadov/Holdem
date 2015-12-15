@@ -8,6 +8,7 @@ public class SampleResponse {
 	public String TAG="";
 	public List<Player> players;
 	public List<Card> cards;
+	public List<List<Card>> cards2;
 	public PokerTable pokerTable;
 	public int number = 0;
 	public int maxBetOnTable = 0;
@@ -38,6 +39,11 @@ public class SampleResponse {
 
 	public SampleResponse(String TAG, List<Card> cards, boolean dummy){
 		this.cards = cards;
+		this.TAG = TAG;
+	}
+	
+	public SampleResponse(String TAG, List<List<Card>> cards2, boolean dummy, boolean dummy2){
+		this.cards2 = cards2;
 		this.TAG = TAG;
 	}
 	
@@ -111,6 +117,14 @@ public class SampleResponse {
 
 	public void setPossibleOptions(List<String> possibleOptions) {
 		this.possibleOptions = possibleOptions;
+	}
+
+	public List<List<Card>> getCards2() {
+		return cards2;
+	}
+
+	public void setCards2(List<List<Card>> cards2) {
+		this.cards2 = cards2;
 	}
 }
 
