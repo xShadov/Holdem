@@ -144,6 +144,12 @@ public class KryoServer implements Runnable {
 								{
 									if(!players.get(betPlayer).isFolded())
 									{
+										try {
+											Thread.sleep(50);
+										} catch (InterruptedException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
 										players.get(betPlayer).getStrategy().whatDoIDo(this,players.get(betPlayer).getHand(),players.get(betPlayer).getBetAmountThisRound(),players.get(betPlayer).getChipsAmount());		
 									}
 								}
