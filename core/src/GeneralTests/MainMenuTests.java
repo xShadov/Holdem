@@ -37,9 +37,7 @@ public class MainMenuTests
 		ButtonLimit buttonLimit = new ButtonLimit(menu,strategy);
 		String a = menu.getLimit();
 		buttonLimit.doClick();
-		buttonLimit.doClick();
-		buttonLimit.doClick();
-		assertTrue(a.equals(menu.getLimit()));
+		assertFalse(a.equals(menu.getLimit()));
 	}
 	
 	@Test

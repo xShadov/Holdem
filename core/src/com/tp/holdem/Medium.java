@@ -133,13 +133,13 @@ public class Medium implements Strategy
 				}
 			}
 		}
-		System.out.print("Bot "+String.valueOf(server.getBetPlayer()-server.getPlayersCount()) +", hand value: "+ rank.getHand().getValue()+", action: " +request.getTAG());
+		/*System.out.print("Bot "+String.valueOf(server.getBetPlayer()-server.getPlayersCount()) +", hand value: "+ rank.getHand().getValue()+", action: " +request.getTAG());
 		if(request.getTAG() =="BET" || request.getTAG()=="RAISE")
 			System.out.print(" with "+request.getBetAmount()+" chips");
 		System.out.println(". He had those options:");
 		for(int i = 0;server.getPossibleOpitions().size()>i;i++)
 			System.out.print(" "+server.getPossibleOpitions().get(i));
-		System.out.println("\r");
+		System.out.println("\r");*/
 		server.handleReceived((Object)request);
 	}
 }

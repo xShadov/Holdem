@@ -13,6 +13,8 @@ public class FakeServer extends KryoServer
 	private int betPlayer = 0;
 	private int maxBetOnTable;
 	private int bigBlindAmount;
+	private int fixedChips = 40;
+	private String limit = "no-limit";
 	private PokerTable pokerTable = new PokerTable();
 	private SampleRequest request;
 	
@@ -26,6 +28,16 @@ public class FakeServer extends KryoServer
 	public void setCardsOnTable(List<Card> tableCards)
 	{
 		pokerTable.setCardsOnTable(tableCards);
+	}
+	
+	public int getFixedChips()
+	{
+		return fixedChips;
+	}
+	
+	public String getLimit()
+	{
+		return limit;
 	}
 	
 	public void handleReceived(SampleRequest request)
