@@ -681,7 +681,14 @@ public class ServerTests {
 		Player player1 = new Player(0);
     	player1.setChipsAmount(500);
     	player1.setBetAmountThisRound(200);
+    	player1.setFolded(false);
+    	Player player2 = new Player(1);
+    	player2.setFolded(false);
+    	Player player3 = new Player(2);
+    	player3.setFolded(false);
     	players.add(player1);
+    	players.add(player2);
+    	players.add(player3);
     	Field chap = c.getDeclaredField("server");
 		chap.setAccessible(true);
 		chap.set(t, server);
