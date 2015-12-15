@@ -30,15 +30,21 @@ public class MainMenuTests
 		menu = null;
 	}
 	
+
 	@Test
 	public void testButtonLimit()
 	{
 		ButtonStrategy strategy = new ButtonStrategy(menu);
+		ButtonProperties prop = new ButtonProperties(menu);
 		ButtonLimit buttonLimit = new ButtonLimit(menu,strategy);
 		String a = menu.getLimit();
+		prop.doClick();
 		buttonLimit.doClick();
-		assertFalse(a.equals(menu.getLimit()));
-	}
+		buttonLimit.doClick();
+		buttonLimit.doClick();
+		assertTrue(a.equals(menu.getLimit()));
+		
+	} 
 	
 	@Test
 	public void testButtonChipsLess()
@@ -75,6 +81,44 @@ public class MainMenuTests
 		int a = menu.getBotsCount();
 		button.doClick();
 		assertTrue(a>menu.getBotsCount());
+	}
+	
+	@Test
+	public void testButtonFixedLess()
+	{
+		ButtonFixedLess button = new ButtonFixedLess(menu);
+		int a = menu.getFixedChips();
+		button.doClick();
+		assertTrue(a>menu.getFixedChips());
+	}
+	
+	@Test
+	public void testButtonFixedMore()
+	{
+		ButtonFixedMore button = new ButtonFixedMore(menu);
+		int a = menu.getFixedChips();
+		button.doClick();
+		assertTrue(a<menu.getFixedChips());
+	}
+	
+	@Test
+	public void testButtonFixedRaiseLess()
+	{
+		ButtonFixedRaiseLess button = new ButtonFixedRaiseLess(menu);
+		menu.setFixedRaise(3);
+		int a = menu.getFixedRaise();
+		button.doClick();
+		assertTrue(a>menu.getFixedRaise());
+	}
+	
+	@Test
+	public void testButtonFixedRaiseMore()
+	{
+		ButtonFixedRaiseMore button = new ButtonFixedRaiseMore(menu);
+		menu.setFixedRaise(3);
+		int a = menu.getFixedRaise();
+		button.doClick();
+		assertTrue(a<menu.getFixedRaise());
 	}
 	
 	@Test

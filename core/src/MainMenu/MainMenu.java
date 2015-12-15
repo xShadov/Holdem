@@ -73,7 +73,7 @@ public class MainMenu extends JFrame
         systemThreadGroup.list();
 	}
 	
-	public void startServer()
+	public void startServer() 
 	{
 		if(server !=null) server.cancel(true);
 		server = gameExecutor.submit(new Runnable()
