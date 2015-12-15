@@ -37,7 +37,7 @@ public class KryoServer implements Runnable {
 	private boolean flopTime = false;
 	private int handsCounter = 0;
 	private int bidingCount = 0;
-	private boolean turnTime = false;
+	private boolean turnTime = false; 
 	private boolean riverTime = false;
 	private boolean waitingForPlayerResponse = false;
 	private Deck deck = null;
@@ -164,12 +164,11 @@ public class KryoServer implements Runnable {
 						}
 						bidingTime = false;
 						bidingCount++;
-						if(bidingCount-1==1) {flopTime = true; System.out.println("flop");}
-						else if(bidingCount-1==2) {turnTime = true; System.out.println("turn");}
-						else if(bidingCount-1==3) {riverTime = true; System.out.println("river");}
+						if(bidingCount-1==1) {flopTime = true;}
+						else if(bidingCount-1==2) {turnTime = true;}
+						else if(bidingCount-1==3) {riverTime = true;}
 						else if(bidingCount-1==4) {
 							timeToCheckWinner(players, pokerTable); 
-							System.out.println("koniec rundy");
 							resetAfterRound(players);
 							}
 					}
