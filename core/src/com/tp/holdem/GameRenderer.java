@@ -296,7 +296,6 @@ public class GameRenderer {
     	}
     	else if(TAG.equals("OW")){
     		winnerNumber = response.getNumber();
-    		players = response.getPlayers();
     	}
     	else if(TAG.equals("MW")){
     		tie = true;
