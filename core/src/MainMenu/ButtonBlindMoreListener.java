@@ -12,10 +12,13 @@ class ButtonBlindMoreListener implements ActionListener
 	}
 	public void actionPerformed(ActionEvent e)
 	{
-		if(menu.getBlindAmount()<200)
+		if(menu.getFixedChips()>menu.getBlindAmount())
 		{
-			menu.setBlindAmount(menu.getBlindAmount()+5);
-			menu.blindAmount.setText(String.valueOf("Small blind: "+menu.getBlindAmount()));
+			if(menu.getBlindAmount()<200)
+			{
+				menu.setBlindAmount(menu.getBlindAmount()+5);
+				menu.blindAmount.setText(String.valueOf("Small blind: "+menu.getBlindAmount()));
+			}
 		}
 	}
 	

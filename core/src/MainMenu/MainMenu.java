@@ -32,6 +32,15 @@ public class MainMenu extends JFrame
 	private Future<?> server;
 	private KryoServer kryo;
 	private JFrame properties;
+	private JPanel propertiesPanel;
+	
+	private ButtonFixedLess fixedLess;
+	private ButtonFixedMore fixedMore;
+	private ButtonFixedRaiseLess raiseLess;
+	private ButtonFixedRaiseMore raiseMore;
+	private GridBagConstraints propertiesLayout;
+	
+	private boolean layout = false;
 	
 	private int playersC = 2;
 	private int botsC = 0;
@@ -39,11 +48,15 @@ public class MainMenu extends JFrame
 	private Strategy botStrategy;
 	private int blindA = 20;
 	private int playersChips = 1500;
+	private int fixedChips = 40;
+	private int fixedRaise = 5;
 	public boolean done = false;
 	Label playersCount = new Label(String.valueOf(playersC)+ " players");
 	Label botsCount = new Label(String.valueOf(botsC)+" bots");
 	Label blindAmount = new Label(String.valueOf("Small blind: "+blindA));
 	Label chipsAmount = new Label(String.valueOf("Starting chips: "+playersChips));
+	Label fixedAmount = new Label(String.valueOf("FixedLimit bets: "+fixedChips));
+	Label fixedRaiseLabel = new Label(String.valueOf("Max number of raises: "+fixedRaise));
 	
 	public static void main(String args[])
 	{
@@ -68,8 +81,7 @@ public class MainMenu extends JFrame
 			public void run()
 			{
 					try {
-						done = true;
-						kryo = new KryoServer(playersC, botsC, limit,botStrategy,blindA,playersChips);
+						kryo = new KryoServer(playersC, botsC, limit,botStrategy,blindA,playersChips,fixedChips,fixedRaise);
 						
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -79,9 +91,79 @@ public class MainMenu extends JFrame
 		});
 	}
 	
+	public Label getFixedAmount()
+	{
+		return fixedAmount;
+	}
+	
+	public Label getFixedRaiseLabel()
+	{
+		return fixedRaiseLabel;
+	}
+	
+	public int getFixedRaise()
+	{
+		return fixedRaise;
+	}
+	
+	public void setFixedRaise(int fixedRaise)
+	{
+		this.fixedRaise=fixedRaise;
+	}
+	
+	public boolean getBoolLayout()
+	{
+		return layout;
+	}
+	
+	public void setBoolLayout(boolean layout)
+	{
+		this.layout=layout;
+	}
+	
+	public GridBagConstraints getPropertiesLayout()
+	{
+		return propertiesLayout;
+	}
+	
+	public ButtonFixedLess getFixedLess()
+	{
+		return fixedLess;
+	}
+	
+	public ButtonFixedMore getFixedMore()
+	{
+		return fixedMore;
+	}
+	
+	public ButtonFixedRaiseMore getRaiseMore()
+	{
+		return raiseMore;
+	}
+	
+	public ButtonFixedRaiseLess getRaiseLess()
+	{
+		return raiseLess;
+	}
+	
 	public Future<?> getKryoServer()
 	{
 		return server;
+	}
+	
+	public JPanel getPropPanel()
+	{
+		return propertiesPanel;
+	}
+	
+	public int getFixedChips()
+	{
+		return fixedChips;
+	}
+	
+	public void setFixedChips(int fixedChips)
+	{
+		this.fixedChips=fixedChips;
 	}
 	
 	public int getBlindAmount()
@@ -181,13 +263,19 @@ public class MainMenu extends JFrame
         setResizable(false);
 	}
 	
+	
+	
 	public void properties()
 	{		
 		properties = new JFrame("Properties");
-		properties.setBounds(520,300,240,244);
+		properties.setBounds(520,300,244,260);
 		properties.addWindowListener(new PropertiesWindowListener(properties));
 
-		ButtonLimit limit = new ButtonLimit(this);
+		
+		fixedLess = new ButtonFixedLess(this);
+		fixedMore = new ButtonFixedMore(this);
+		raiseLess = new ButtonFixedRaiseLess(this);
+		raiseMore = new ButtonFixedRaiseMore(this);
 		ButtonBlindLess blindLess = new ButtonBlindLess(this);
 		ButtonBlindMore blindMore = new ButtonBlindMore(this);
 		ButtonChipsLess chipsLess = new ButtonChipsLess(this);
@@ -197,11 +285,11 @@ public class MainMenu extends JFrame
 		ButtonBotsLess botsLess = new ButtonBotsLess(this);
 		ButtonBotsMore botsMore = new ButtonBotsMore(this);
 		ButtonStrategy strategy = new ButtonStrategy(this);
-		ButtonOK ok = new ButtonOK(properties);
+		ButtonOK ok = new ButtonOK(properties,this);
+		ButtonLimit limit = new ButtonLimit(this,strategy);
 		
-		
-		JPanel propertiesPanel = new JPanel(new GridBagLayout());
-		GridBagConstraints propertiesLayout = new GridBagConstraints();
+		propertiesLayout = new GridBagConstraints();			
+		propertiesPanel = new JPanel(new GridBagLayout());
 		
 		propertiesLayout.fill = GridBagConstraints.BOTH;
 		propertiesLayout.weightx = 1;
@@ -210,65 +298,96 @@ public class MainMenu extends JFrame
 		propertiesLayout.gridy = 0;
 		propertiesLayout.gridwidth = 4;
 		propertiesPanel.add(limit,propertiesLayout);
+		
+		if(layout)
+		{
+			propertiesLayout.gridx = 0;
+			propertiesLayout.gridy = 1;
+			propertiesLayout.gridwidth = 1;
+			propertiesPanel.add(fixedLess,propertiesLayout);
+			propertiesLayout.gridx = 1;
+			propertiesLayout.gridy = 1;
+			propertiesLayout.gridwidth = 2;
+			propertiesPanel.add(fixedAmount,propertiesLayout);
+			propertiesLayout.gridx = 3;
+			propertiesLayout.gridy = 1;
+			propertiesLayout.gridwidth = 1;
+			propertiesPanel.add(fixedMore,propertiesLayout);
+			
+			propertiesLayout.gridx = 0;
+			propertiesLayout.gridy = 2;
+			propertiesLayout.gridwidth = 1;
+			propertiesPanel.add(raiseLess,propertiesLayout);
+			propertiesLayout.gridx = 1;
+			propertiesLayout.gridy = 2;
+			propertiesLayout.gridwidth = 2;
+			propertiesPanel.add(fixedRaiseLabel,propertiesLayout);
+			propertiesLayout.gridx = 3;
+			propertiesLayout.gridy = 2;
+			propertiesLayout.gridwidth = 1;
+			propertiesPanel.add(raiseMore,propertiesLayout);
+		}
+		
 		propertiesLayout.gridx = 0;
-		propertiesLayout.gridy = 1;
+		propertiesLayout.gridy = 3;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(chipsLess,propertiesLayout);
 		propertiesLayout.gridx = 2;
-        propertiesLayout.gridy = 1;
+        propertiesLayout.gridy = 3;
         propertiesLayout.gridwidth = 1;
         propertiesPanel.add(chipsAmount,propertiesLayout);
         propertiesLayout.gridx = 3;
-		propertiesLayout.gridy = 1;
+		propertiesLayout.gridy = 3;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(chipsMore,propertiesLayout);
 		propertiesLayout.gridx = 0;
-		propertiesLayout.gridy = 2;
+		propertiesLayout.gridy = 4;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(blindLess,propertiesLayout);
 		propertiesLayout.gridx = 2;
-        propertiesLayout.gridy = 2;
+        propertiesLayout.gridy = 4;
         propertiesLayout.gridwidth = 1;
         propertiesPanel.add(blindAmount,propertiesLayout);
         propertiesLayout.gridx = 3;
-		propertiesLayout.gridy = 2;
+		propertiesLayout.gridy = 4;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(blindMore,propertiesLayout);
 		propertiesLayout.gridx = 0;
-		propertiesLayout.gridy = 3;
+		propertiesLayout.gridy = 5;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(playersLess,propertiesLayout);
 		propertiesLayout.gridx = 2;
-        propertiesLayout.gridy = 3;
+        propertiesLayout.gridy = 5;
         propertiesLayout.gridwidth = 1;
         propertiesPanel.add(playersCount,propertiesLayout);
         propertiesLayout.gridx = 3;
-		propertiesLayout.gridy = 3;
+		propertiesLayout.gridy = 5;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(playersMore,propertiesLayout);
 		propertiesLayout.gridx = 0;
-		propertiesLayout.gridy = 4;
+		propertiesLayout.gridy = 6;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(botsLess,propertiesLayout);
 		propertiesLayout.gridx = 2;
-        propertiesLayout.gridy = 4;
+        propertiesLayout.gridy = 6;
         propertiesLayout.gridwidth = 1;
         propertiesPanel.add(botsCount,propertiesLayout);
         propertiesLayout.gridx = 3;
-		propertiesLayout.gridy = 4;
+		propertiesLayout.gridy = 6;
 		propertiesLayout.gridwidth = 1;
 		propertiesPanel.add(botsMore,propertiesLayout);
 		propertiesLayout.gridx = 0;
-		propertiesLayout.gridy = 5;
+		propertiesLayout.gridy = 7;
 		propertiesLayout.gridwidth = 4;
 		propertiesPanel.add(strategy,propertiesLayout);
 		propertiesLayout.gridx = 0;
-		propertiesLayout.gridy = 6;
+		propertiesLayout.gridy = 8;
 		propertiesLayout.gridwidth = 4;
 		propertiesPanel.add(ok,propertiesLayout);
 		
 		properties.getContentPane().add(propertiesPanel);
         setResizable(false);
+        properties.pack();
         properties.setVisible(true);
 	}
 }

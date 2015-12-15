@@ -20,6 +20,8 @@ public class KryoServer implements Runnable {
 	private List<Player> playersWithHiddenCards;
 	private int playersCount; //ustalona ilosc graczy przy stole
 	private int botsCount;
+	private int fixedChips;
+	private int fixedRaise;
 	private String limitType; // zasada stolu ("no-limit", "fixed-limit", "pot-limit")
 	private Strategy botStrategy;
 	private int numPlayers = 0;
@@ -53,7 +55,7 @@ public class KryoServer implements Runnable {
 		
 	}
 	
-	public KryoServer(final int playersCount, int botsCount, String limitType, Strategy botStrategy,int blindA,int playersChips) throws Exception {
+	public KryoServer(final int playersCount, int botsCount, String limitType, Strategy botStrategy,int blindA,int playersChips, int fixedChips,int fixedRaise) throws Exception {
 		
 	  this.playersCount=playersCount;
 	  this.botsCount=botsCount;
@@ -61,6 +63,8 @@ public class KryoServer implements Runnable {
 	  this.botStrategy=botStrategy;
 	  this.startingSmallBlindAmount=blindA;
 	  this.playersChips=playersChips;
+	  this.fixedChips=fixedChips;
+	  this.fixedRaise=fixedRaise;
 	  this.smallBlindAmount = Integer.valueOf(startingSmallBlindAmount);
 	  this.bigBlindAmount = smallBlindAmount*2;
 
@@ -607,8 +611,8 @@ public class KryoServer implements Runnable {
 		pokerTable = new PokerTable();
 		pokerTable.setLimitType(limitType);
 		if(limitType.equals("fixed-limit")){
-			pokerTable.setFixedLimit(150);
-			pokerTable.setFixedRaiseCount(5);
+			pokerTable.setFixedLimit(fixedChips);
+			pokerTable.setFixedRaiseCount(fixedRaise);
 			pokerTable.setRaiseCount(0);
 		}
 		pokerTable.setBigBlindAmount(bigBlindAmount);
@@ -698,6 +702,16 @@ public class KryoServer implements Runnable {
 		setFirstAndLastToBet(players);
 	}
 	
+	public String getLimitType()
+	{
+		return limitType;
+	}
+	
+	public int getFixedChips()
+	{
+		return fixedChips;
+	}
+	
 	public int getMaxBetOnTable()
 	{
 		return maxBetOnTable;
@@ -718,13 +732,18 @@ public class KryoServer implements Runnable {
 		return bigBlindAmount;
 	}
 	
+	public int getPlayersCount()
+	{
+		return playersCount;
+	}
+	
 	public List<String> getPossibleOpitions()
 	{
 		return possibleOptions;
 	}
 	public static void main(String[] args) {
 		try {
-			new KryoServer(2, 0, "no-limit", null, 20, 1500);
+			new KryoServer(2, 0, "no-limit", null, 20, 1500,40,5);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -5,9 +5,9 @@ import javax.swing.JFrame;
 
 public class ButtonOK extends JButton
 {
-	public ButtonOK(JFrame properties)
+	public ButtonOK(JFrame properties,MainMenu menu)
 	{
 		super("OK");
-		addActionListener(new ButtonOKListener(properties));
+		addActionListener(new ButtonOKListener(properties,menu));
 	}
 }

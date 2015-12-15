@@ -33,7 +33,8 @@ public class MainMenuTests
 	@Test
 	public void testButtonLimit()
 	{
-		ButtonLimit buttonLimit = new ButtonLimit(menu);
+		ButtonStrategy strategy = new ButtonStrategy(menu);
+		ButtonLimit buttonLimit = new ButtonLimit(menu,strategy);
 		String a = menu.getLimit();
 		buttonLimit.doClick();
 		buttonLimit.doClick();

@@ -8,13 +8,15 @@ import javax.swing.JFrame;
 class ButtonOKListener implements ActionListener
 {
 	private JFrame properties;
-	public ButtonOKListener(JFrame properties)
+	private MainMenu menu;
+	public ButtonOKListener(JFrame properties,MainMenu menu)
 	{
 		this.properties=properties;
+		this.menu=menu;
 	}
 	public void actionPerformed(ActionEvent e)
 	{
-		properties.dispose();
+		properties.dispose();	
 	}
 	
 };
