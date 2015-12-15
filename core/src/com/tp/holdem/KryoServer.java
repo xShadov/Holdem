@@ -292,7 +292,7 @@ public class KryoServer implements Runnable {
 						.setChipsAmount(players.get(winners.get(j).getNumber()).getChipsAmount() + howMuchPerOne);
 				}
 			}
-			response = new SampleResponse("MW", players);
+			response = new SampleResponse("MW");
 		}
 		server.sendToAllTCP(response);
 		for(int i=0; i<players.size(); i++){
