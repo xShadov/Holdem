@@ -84,6 +84,9 @@ public class ServerTests {
     	player2.setBetAmount(500);
     	players.add(player1);
     	players.add(player2);
+    	List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
+    	playersWithHiddenCards.add(new Player());
+    	playersWithHiddenCards.add(new Player());
     	PokerTable table = new PokerTable();
     	table.setPot(1000);
     	table.addCard(new Card("10", "Spade"));
@@ -93,6 +96,9 @@ public class ServerTests {
 		Field chap = c.getDeclaredField("server");
 		chap.setAccessible(true);
 		chap.set(t, server);
+		Field chap2 = c.getDeclaredField("playersWithHiddenCards");
+		chap2.setAccessible(true);
+		chap2.set(t, playersWithHiddenCards);
 		Object o = method.invoke(t, players, table);
 		List<Player> oList = (List<Player>) o;
     	assertEquals(1000, oList.get(0).getChipsAmount());
@@ -120,6 +126,9 @@ public class ServerTests {
     	player2.setBetAmount(500);
     	players.add(player1);
     	players.add(player2);
+    	List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
+    	playersWithHiddenCards.add(new Player());
+    	playersWithHiddenCards.add(new Player());
     	PokerTable table = new PokerTable();
     	table.setPot(1000);
     	table.addCard(new Card("10", "Club"));
@@ -132,6 +141,9 @@ public class ServerTests {
 				Field chap = c.getDeclaredField("server");
 				chap.setAccessible(true);
 				chap.set(t, server);
+				Field chap2 = c.getDeclaredField("playersWithHiddenCards");
+				chap2.setAccessible(true);
+				chap2.set(t, playersWithHiddenCards);
 				Object o = methodz.invoke(t, players, table);
 			}
 		}
@@ -166,6 +178,9 @@ public class ServerTests {
     	player2.setInGame(true);
     	players.add(player1);
     	players.add(player2);
+    	List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
+    	playersWithHiddenCards.add(new Player());
+    	playersWithHiddenCards.add(new Player());
     	PokerTable table = new PokerTable();
     	table.setPot(1000);
     	table.addCard(new Card("10", "Club"));
@@ -178,6 +193,9 @@ public class ServerTests {
 				Field chap = c.getDeclaredField("server");
 				chap.setAccessible(true);
 				chap.set(t, server);
+		    	Field chap2 = c.getDeclaredField("playersWithHiddenCards");
+				chap2.setAccessible(true);
+				chap2.set(t, playersWithHiddenCards);
 				Object o = methodz.invoke(t, players, table);
 			}
 		}
@@ -503,6 +521,9 @@ public class ServerTests {
     	player2.setBetAmount(500);
     	players.add(player1);
     	players.add(player2);
+    	List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
+    	playersWithHiddenCards.add(new Player());
+    	playersWithHiddenCards.add(new Player());
     	PokerTable table = new PokerTable();
     	table.setPot(1000);
     	table.addCard(new Card("10", "Club"));
@@ -512,6 +533,9 @@ public class ServerTests {
 		Field chap = c.getDeclaredField("server");
 		chap.setAccessible(true);
 		chap.set(t, server);
+		Field chap2 = c.getDeclaredField("playersWithHiddenCards");
+		chap2.setAccessible(true);
+		chap2.set(t, playersWithHiddenCards);
 		Object o = method.invoke(t, players, table);
 		List<Player> oList = (List<Player>) o;
     	assertEquals(0, player1.getFromWhichPot());
