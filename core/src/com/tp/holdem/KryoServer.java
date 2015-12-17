@@ -671,11 +671,6 @@ public class KryoServer implements Runnable {
     }
 
 	private void initiateNewHand(final List<Player> players) {
-		for(int i=0; i<players.size(); i++){
-			if(players.get(i) instanceof Bot)
-			System.out.println(players.get(i).getStrategy()+"");
-		}
-		System.out.println("---------------------");
 		deck = new Deck();
 		pokerTable = new PokerTable();
 		pokerTable.setLimitType(limitType);
