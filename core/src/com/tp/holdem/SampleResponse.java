@@ -7,9 +7,9 @@ public class SampleResponse {
 	private String text="";
 	private String tag="";
 	private List<Player> players;
-	private transient List<Card> cards;
+	private List<Card> cards;
 	private List<List<Card>> cards2;
-	private transient PokerTable pokerTable;
+	private PokerTable pokerTable;
 	private int number = 0;
 	private int maxBetOnTable = 0;
 	private List<String> possibleOptions;

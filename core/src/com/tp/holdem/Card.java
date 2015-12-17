@@ -4,10 +4,10 @@ public class Card {
 
   	private String suit;
   	private String honour;
-  	private transient int xCordination;
-  	private transient int yCordination;
+  	private int xCordination;
+  	private int yCordination;
   	private int value;
-	private transient String color;
+	private String color;
 
 	public Card(){
 		
