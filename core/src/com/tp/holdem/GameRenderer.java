@@ -183,19 +183,23 @@ public class GameRenderer {
 	}
 	
 	private void drawSpotlight() {
-		for(int i=0; i<players.size();i++){
-			if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
-				if(yourNumber == turnToBet){
-					batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
-					if(myWorld.getSlider().isVisible()){
-						font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
+		if(!revealed || winnerNumber==-1){
+			for(int i=0; i<players.size();i++){
+				if(players.get((i+yourNumber)%players.size()).getNumber() == turnToBet){
+					if(yourNumber == turnToBet){
+						batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
+						if(myWorld.getSlider().isVisible()){
+							font.draw(batcher, myWorld.getSlider().getValue()+"", myWorld.getSlider().getX()+20, myWorld.getSlider().getY());
+						}
+						break;
+					} else {
+						batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
+						break;
 					}
-					break;
-				} else {
-					batcher.draw(spotlight, boxPositionX[i]-90, boxPositionY[i]-28);
-					break;
 				}
-			}
+			} 
+		} else {
+			batcher.draw(spotlight, boxPositionX[winnerNumber]-90, boxPositionY[winnerNumber]-28);
 		}
 	}
 

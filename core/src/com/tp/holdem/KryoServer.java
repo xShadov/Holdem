@@ -377,8 +377,10 @@ public class KryoServer implements Runnable {
 				players.get(i).setInGame(false);
 				players.get(i).setFolded(true);
 			}
-			if(players.get(i) instanceof Bot)
-				((Bot) players.get(i)).setStrategy(findRandomStrategy());
+			if(botStrategy==null){
+				if(players.get(i) instanceof Bot)
+					((Bot) players.get(i)).setStrategy(findRandomStrategy());
+			}
 		}
 		flopTime = false;
 		turnTime = false;
