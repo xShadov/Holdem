@@ -170,14 +170,16 @@ public class GameRenderer {
 	}
 
 	private void drawCards(final int i) {
-		if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber && players.get((i+yourNumber)%players.size()).isInGame()){
-			batcher.draw(findCurrentCardTexture(yourCards.get(0)), positionX[i], positionY[i]);
-			batcher.draw(findCurrentCardTexture(yourCards.get(1)), positionX[i]+20, positionY[i]-15);
-		}
-		else{
-			if(players.get((i+yourNumber)%players.size()).isInGame()){
-				batcher.draw(reverse, positionX[i], positionY[i]);
-				batcher.draw(reverse, positionX[i]+20, positionY[i]-15);
+		if(!revealed){
+			if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber && players.get((i+yourNumber)%players.size()).isInGame()){
+				batcher.draw(findCurrentCardTexture(yourCards.get(0)), positionX[i], positionY[i]);
+				batcher.draw(findCurrentCardTexture(yourCards.get(1)), positionX[i]+20, positionY[i]-15);
+			}
+			else{
+				if(players.get((i+yourNumber)%players.size()).isInGame()){
+					batcher.draw(reverse, positionX[i], positionY[i]);
+					batcher.draw(reverse, positionX[i]+20, positionY[i]-15);
+				}
 			}
 		}
 	}
