@@ -1,6 +1,5 @@
 package ServerClientTests;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.tp.holdem.Card;
@@ -10,22 +9,22 @@ import com.tp.holdem.SampleRequest;
 
 public class FakeServer extends KryoServer
 {
-	private int betPlayer = 0;
-	private int maxBetOnTable;
-	private int bigBlindAmount;
-	private int fixedChips = 40;
-	private String limit = "no-limit";
-	private PokerTable pokerTable = new PokerTable();
-	private SampleRequest request;
+	private final transient int betPlayer = 0;
+	private transient int maxBetOnTable;
+	private transient int bigBlindAmount;
+	private final transient int fixedChips = 40;
+	private transient final String limit = "no-limit";
+	private transient final PokerTable pokerTable = new PokerTable();
+	private transient SampleRequest request;
 	
-	public FakeServer(int maxBetOnTable, int bigBlindAmount)
+	public FakeServer(final int maxBetOnTable, final int bigBlindAmount)
 	{
 
 		this.maxBetOnTable=maxBetOnTable;
 		this.bigBlindAmount=bigBlindAmount;
 	}
 	
-	public void setCardsOnTable(List<Card> tableCards)
+	public void setCardsOnTable(final List<Card> tableCards)
 	{
 		pokerTable.setCardsOnTable(tableCards);
 	}
@@ -40,24 +39,24 @@ public class FakeServer extends KryoServer
 		return limit;
 	}
 	
-	public void handleReceived(SampleRequest request)
+	public void handleReceived(final SampleRequest request)
 	{
 		this.request=request;
 	}
 	
-	public void setMaxBetOnTable(int maxBetOnTable)
+	public void setMaxBetOnTable(final int maxBetOnTable)
 	{
 		this.maxBetOnTable=maxBetOnTable;
 	}
 	
-	public void setbigBlindAmount(int bigBlindAmount)
+	public void setbigBlindAmount(final int bigBlindAmount)
 	{
 		this.bigBlindAmount=bigBlindAmount;
 	}
 	
 	public String getReceived()
 	{
-		return request.getTAG();
+		return request.getTag();
 	}
 	
 	public int getMaxBetOnTable()

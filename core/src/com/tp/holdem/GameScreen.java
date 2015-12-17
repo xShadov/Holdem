@@ -1,35 +1,22 @@
 package com.tp.holdem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
 
 public class GameScreen implements Screen, InputProcessor {
 
-	private GameWorld world;
-    private GameRenderer renderer;
-    private float runTime;
-    private Stage stage;
-    private KryoClient client;
-    private Skin skin;
+	private transient final GameWorld world;
+    private transient final GameRenderer renderer;
+    private transient float runTime;
+    private transient Stage stage;
+    private transient KryoClient client;
     private List<TextButton> buttons;
    
     // This is the constructor, not the class declaration
@@ -49,7 +36,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     @Override
-    public void render(float delta) {
+    public void render(final float delta) {
     	stage.act(delta);
         runTime += delta;
         world.update(delta);
@@ -58,7 +45,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
     	stage.getViewport().update(width, height);
     }
 
@@ -67,7 +54,7 @@ public class GameScreen implements Screen, InputProcessor {
     	
     	stage = new Stage();
     	Gdx.input.setInputProcessor(stage);
-    	for(TextButton button : buttons){
+    	for(final TextButton button : buttons){
     		stage.addActor(button);
     	}
 		stage.addActor(world.getSlider());	
@@ -89,60 +76,60 @@ public class GameScreen implements Screen, InputProcessor {
     public void dispose() {
     }
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	public List<TextButton> getButtons() {
 		return buttons;
 	}
 
-	public void setButtons(List<TextButton> buttons) {
+	public void setButtons(final List<TextButton> buttons) {
 		this.buttons = buttons;
+	}
+
+	@Override
+	public boolean keyDown(final int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(final int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(final char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(final int screenX, final int screenY, final int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(final int screenX, final int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(final int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

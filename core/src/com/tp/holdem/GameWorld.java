@@ -18,21 +18,19 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 public class GameWorld {
-
-	private float runTime = 0;
-	private GameRenderer renderer;
-    private float timeChecker;
-    private TextButton checkButton, betButton, foldButton, raiseButton, callButton, allInButton;
-    private Slider slider;
-    private Skin skin;
-    private Skin buttonsSkin;
-    private BitmapFont font;
-    private Table table;
-    private TextureAtlas atlas;
-    private SampleRequest request;
+	
+	private transient GameRenderer renderer;
+    private final transient TextButton checkButton, betButton, foldButton, raiseButton, callButton, allInButton;
+    private transient final Slider slider;
+    private final transient Skin skin;
+    private final Skin buttonsSkin;
+    private final transient BitmapFont font;
+    private final transient Table table;
+    private final transient TextureAtlas atlas;
+    private transient SampleRequest request;
     private List<TextButton> buttons;
-    private KryoClient client;
-    private int betValue = 0;
+    private transient KryoClient client;
+    private transient int betValue = 0;
     
     public GameWorld(){
     	buttons = new ArrayList<TextButton>();
@@ -46,7 +44,7 @@ public class GameWorld {
 		slider.setAnimateDuration(0.01f);
 		
 		slider.addListener(new ChangeListener() {
-			public void changed (ChangeEvent event, Actor actor) {
+			public void changed (final ChangeEvent event, final Actor actor) {
 				betValue = (int) slider.getValue();
 			}
 		});
@@ -54,7 +52,7 @@ public class GameWorld {
 		slider.setPosition(300, 80);
 		slider.setWidth(400);
 		
-    	TextButtonStyle textButtonStyle = new TextButtonStyle();
+		final TextButtonStyle textButtonStyle = new TextButtonStyle();
     	textButtonStyle.up = buttonsSkin.getDrawable("button_up");
     	textButtonStyle.down = buttonsSkin.getDrawable("button_down");
     	textButtonStyle.pressedOffsetX = 1;
@@ -75,7 +73,7 @@ public class GameWorld {
     	checkButton.addListener(new ClickListener() 
     	{
     		@Override
-    		public void clicked(InputEvent event,float x, float y)
+    		public void clicked(final InputEvent event, final float x, final float y)
     		{
     			if(renderer.getTurnToBet()==renderer.getYourNumber()){
 	    			request = new SampleRequest("CHECK", renderer.getYourNumber());
@@ -92,7 +90,7 @@ public class GameWorld {
     	foldButton.addListener(new ClickListener() 
     	{
     		@Override
-    		public void clicked(InputEvent event,float x, float y)
+    		public void clicked(final InputEvent event, final float x, final float y)
     		{
     			if(renderer.getTurnToBet()==renderer.getYourNumber()){
 	    			request = new SampleRequest("FOLD", renderer.getYourNumber());
@@ -109,7 +107,7 @@ public class GameWorld {
     	betButton.addListener(new ClickListener() 
     	{
     		@Override
-    		public void clicked(InputEvent event,float x, float y)
+    		public void clicked(final InputEvent event, final float x, final float y)
     		{
     			if(renderer.getTurnToBet()==renderer.getYourNumber()){
     				request = new SampleRequest("BET", betValue, renderer.getYourNumber());
@@ -126,7 +124,7 @@ public class GameWorld {
     	callButton.addListener(new ClickListener() 
     	{
     		@Override
-    		public void clicked(InputEvent event,float x, float y)
+    		public void clicked(final InputEvent event, final float x, final float y)
     		{
     			if(renderer.getTurnToBet()==renderer.getYourNumber()){
 	    			request = new SampleRequest("CALL", renderer.getYourNumber());
@@ -143,7 +141,7 @@ public class GameWorld {
     	allInButton.addListener(new ClickListener() 
     	{
     		@Override
-    		public void clicked(InputEvent event,float x, float y)
+    		public void clicked(final InputEvent event, final float x, final float y)
     		{
     			if(renderer.getTurnToBet()==renderer.getYourNumber()){
 	    			request = new SampleRequest("ALLIN", renderer.getYourNumber());
@@ -159,7 +157,7 @@ public class GameWorld {
     	raiseButton.addListener(new ClickListener() 
     	{
     		@Override
-    		public void clicked(InputEvent event,float x, float y)
+    		public void clicked(final InputEvent event, final float x, final float y)
     		{
     			if(renderer.getTurnToBet()==renderer.getYourNumber()){
 	    			request = new SampleRequest("RAISE", betValue, renderer.getYourNumber());
@@ -178,7 +176,7 @@ public class GameWorld {
     	buttons.add(betButton);
     }
     
-	protected void setButtonsInvisible(boolean dummy) {
+	protected void setButtonsInvisible(final boolean dummy) {
 		if(renderer!=null && dummy){
 			renderer.setTurnToBet(-1);
 		}
@@ -198,11 +196,11 @@ public class GameWorld {
     	slider.setDisabled(true);
 	}
 
-	public void update(float delta) {
+	public void update(final float delta) {
 
     }
 	
-	public void setRenderer(GameRenderer renderer) {
+	public void setRenderer(final GameRenderer renderer) {
         this.renderer = renderer;
     }
 
@@ -210,11 +208,11 @@ public class GameWorld {
 		return buttons;
 	}
 
-	public void setButtons(List<TextButton> buttons) {
+	public void setButtons(final List<TextButton> buttons) {
 		this.buttons = buttons;
 	}
 
-	public void setClient(KryoClient client) {
+	public void setClient(final KryoClient client) {
 		this.client = client;
 	}
 
@@ -222,7 +220,7 @@ public class GameWorld {
 		return slider;
 	}
 
-	public void manageButtons(List<String> possibleOptions) {
+	public void manageButtons(final List<String> possibleOptions) {
 		for(int i=0; i<possibleOptions.size()-1; i++){
 			if(possibleOptions.get(i).equals("ALLIN")){
 				allInButton.setVisible(true);

@@ -4,7 +4,7 @@ package com.tp.holdem;
 public class SampleRequest {
 
 	public String text="";
-	public String TAG="";
+	public String tag="";
 	public int betAmount=0;
 	public int number;
 
@@ -12,19 +12,19 @@ public class SampleRequest {
 		
 	}
 	
-	public SampleRequest(String TAG, String text){
-		this.TAG=TAG;
+	public SampleRequest(final String TAG, final String text){
+		this.tag=TAG;
 		this.text=text;
 	}
 	
-	public SampleRequest(String TAG, int betAmount, int number){
-		this.TAG = TAG;
+	public SampleRequest(final String TAG, final int betAmount, final int number){
+		this.tag = TAG;
 		this.betAmount = betAmount;
 		this.number = number;
 	}
 	
-	public SampleRequest(String TAG, int number){
-		this.TAG = TAG;
+	public SampleRequest(final String TAG, final int number){
+		this.tag = TAG;
 		this.number = number;
 	}
 	
@@ -32,23 +32,23 @@ public class SampleRequest {
 		return text;
 	}
 	
-	public void setText(String text){
+	public void setText(final String text){
 		this.text = text;
 	}
 
-	public String getTAG() {
-		return TAG;
+	public String getTag() {
+		return tag;
 	}
 
-	public void setTAG(String tAG) {
-		TAG = tAG;
+	public void setTag(final String tAG) {
+		tag = tAG;
 	}
 
 	public int getBetAmount() {
 		return betAmount;
 	}
 
-	public void setBetAmount(int betAmount) {
+	public void setBetAmount(final int betAmount) {
 		this.betAmount = betAmount;
 	}
 
@@ -56,7 +56,7 @@ public class SampleRequest {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(final int number) {
 		this.number = number;
 	}
 }

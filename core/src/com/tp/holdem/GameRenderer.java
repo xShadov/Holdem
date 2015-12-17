@@ -3,62 +3,53 @@ package com.tp.holdem;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class GameRenderer {
 
-	private GameWorld myWorld;
-    private OrthographicCamera cam;
-    private ShapeRenderer shapeRenderer;
-    private TextureRegion bg, currentCardTexture;
-    private SpriteBatch batcher;
-    private BitmapFont font, font2, font3;
-    private PokerTable pokerTable;
-    private boolean waitingForAll;
-    private String waitingMessage = "Nope";
-    private int winnerNumber = -1;
-    private boolean tie = false;
-    private int bigBlindAmount = 0;
-    private int smallBlindAmount = 0;
-    private int counter = 0;
-    private int pot = 0;
-    private boolean revealed = false;
-    private List<List<Card>> revealedCards;
-    private int maxBetOnTable = 0;
-    private int yourBetAmount = 0;
-    private int fixedLimit = 0;
-    private boolean gameOver = false;
-    private List<String> possibleOptions;
-    private String limitType;
+	private final transient GameWorld myWorld;
+    private transient final OrthographicCamera cam;
+    private final transient TextureRegion bg;
+    private transient final SpriteBatch batcher;
+    private final transient BitmapFont font, font2, font3;
+    private transient PokerTable pokerTable;
+    private transient boolean waitingForAll;
+    private transient String waitingMessage = "Nope";
+    private transient int winnerNumber = -1;
+    private transient boolean tie = false;
+    private transient int smallBlindAmount = 0;
+    private transient int pot = 0;
+    private transient boolean revealed = false;
+    private transient List<List<Card>> revealedCards;
+    private transient int maxBetOnTable = 0;
+    private transient int fixedLimit = 0;
+    private transient boolean gameOver = false;
+    private transient List<String> possibleOptions;
+    private transient String limitType;
     private int turnToBet;
-    private List<Player> players;
-    private List<Card> yourCards;
-    private List<Card> cardsOnTable;
-    private Texture cards;
-    private int yourNumber=0;
-    private List<TextButton> buttons;
-    private TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
-    private int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
-    private int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
-    private int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
-    private int[] dealerPositionY = {237, 243, 330, 442, 502, 499, 516, 429, 313, 244};
-    private int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
-    private int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
-    private int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
-    private int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
-    private int[] chipsPositionX = {507, 313, 274, 286, 358, 538, 631, 705, 738, 636 };
-    private int[] chipsPositionY = {273, 288, 374, 441, 501, 484, 484, 451, 370, 280 };
+    private transient List<Player> players;
+    private transient List<Card> yourCards;
+    private transient List<Card> cardsOnTable;
+    private transient final Texture cards;
+    private transient int yourNumber=0;
+    private transient final TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
+    private transient final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
+    private transient final int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
+    private transient final int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
+    private transient final int[] dealerPositionY = {237, 243, 330, 442, 502, 499, 516, 429, 313, 244};
+    private transient final int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
+    private transient final int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
+    private transient final int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
+    private transient final int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
+    private transient final int[] chipsPositionX = {507, 313, 274, 286, 358, 538, 631, 705, 738, 636 };
+    private transient final int[] chipsPositionY = {273, 288, 374, 441, 501, 484, 484, 451, 370, 280 };
     
-    public GameRenderer(GameWorld world){
+    public GameRenderer(final GameWorld world){
     	bg = new TextureRegion(new Texture("data/pokerTable.jpg"), 0, 0, 1024, 780);
     	dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
     	smallBlind = new TextureRegion(new Texture("data/smallBlind.png"), 0, 0, 35, 32);
@@ -71,10 +62,7 @@ public class GameRenderer {
         cam.setToOrtho(false, 1024, 780);
         batcher = new SpriteBatch();
         batcher.setProjectionMatrix(cam.combined);
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(cam.combined);
         
-        buttons = world.getButtons();
         cards = new Texture(Gdx.files.internal("data/cards.png"));
         box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
         boxOff = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxOff.png")), 0, 0, 160, 96);
@@ -89,7 +77,7 @@ public class GameRenderer {
 		font3.getData().setScale(1.5f);
     }
     
-    public void render(float delta, float runTime) {
+    public void render(final float delta, final float runTime) {
     	
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -107,7 +95,6 @@ public class GameRenderer {
         }
         if(players!=null){
 	        drawSpotlight();
-	        counter = 0;
 	        for(int i=0; i<players.size();i++){
 	        	drawCards(i);
 	        	drawDealerAndBlindButtons(i);
@@ -126,23 +113,20 @@ public class GameRenderer {
         batcher.end();
     }
 
-	private void drawRevealedCards(int i) {
+	private void drawRevealedCards(final int i) {
 		if(revealed){
 			if(players.get((i+yourNumber)%players.size()).isInGame() && !players.get((i+yourNumber)%players.size()).isFolded()){
-				findCurrentCardTexture(revealedCards.get((i+yourNumber)%players.size()).get(0));
-				batcher.draw(currentCardTexture, positionX[i], positionY[i]);
-				findCurrentCardTexture(revealedCards.get((i+yourNumber)%players.size()).get(1));
-				batcher.draw(currentCardTexture, positionX[i]+20, positionY[i]-15);
+				batcher.draw(findCurrentCardTexture(revealedCards.get((i+yourNumber)%players.size()).get(0)), positionX[i], positionY[i]);
+				batcher.draw(findCurrentCardTexture(revealedCards.get((i+yourNumber)%players.size()).get(1)), positionX[i]+20, positionY[i]-15);
 			}
 		}
 	}
 
-	private void drawCardsOnTable(int i) {
-		findCurrentCardTexture(cardsOnTable.get(i));
-		batcher.draw(currentCardTexture, 315+i*82,360);
+	private void drawCardsOnTable(final int i) {
+		batcher.draw(findCurrentCardTexture(cardsOnTable.get(i)), 315+i*82,360);
 	}
 
-	private void drawChips(int i) {
+	private void drawChips(final int i) {
 		if(players.get((i+yourNumber)%players.size()).getBetAmount()>0)
 		{
 			if(players.get((i+yourNumber)%players.size()).getBetAmount()<300){
@@ -157,7 +141,7 @@ public class GameRenderer {
 		}
 	}
 
-	private void drawInfoBoxes(int i) {
+	private void drawInfoBoxes(final int i) {
 		if(players.get((i+yourNumber)%players.size()).isInGame() && !players.get((i+yourNumber)%players.size()).isFolded()){
 			batcher.draw(box, boxPositionX[i], boxPositionY[i]);
 		}else if(players.get((i+yourNumber)%players.size()).isInGame() && players.get((i+yourNumber)%players.size()).isFolded()){
@@ -173,7 +157,7 @@ public class GameRenderer {
 		
 	}
 
-	private void drawDealerAndBlindButtons(int i) {
+	private void drawDealerAndBlindButtons(final int i) {
 		if(players.get((i+yourNumber)%players.size()).isHasDealerButton()){
 			batcher.draw(dealer, dealerPositionX[i], dealerPositionY[i]);
 		}
@@ -185,12 +169,10 @@ public class GameRenderer {
 		}
 	}
 
-	private void drawCards(int i) {
+	private void drawCards(final int i) {
 		if(players.get((i+yourNumber)%players.size()).getNumber()==yourNumber && players.get((i+yourNumber)%players.size()).isInGame()){
-			findCurrentCardTexture(yourCards.get(0));
-			batcher.draw(currentCardTexture, positionX[i], positionY[i]);
-			findCurrentCardTexture(yourCards.get(1));
-			batcher.draw(currentCardTexture, positionX[i]+20, positionY[i]-15);
+			batcher.draw(findCurrentCardTexture(yourCards.get(0)), positionX[i], positionY[i]);
+			batcher.draw(findCurrentCardTexture(yourCards.get(1)), positionX[i]+20, positionY[i]-15);
 		}
 		else{
 			if(players.get((i+yourNumber)%players.size()).isInGame()){
@@ -237,11 +219,11 @@ public class GameRenderer {
         }
 	}
     
-    public void findCurrentCardTexture(Card card){
-        currentCardTexture = new TextureRegion(cards, card.getxCordination(), card.getyCordination(), 69, 94);
+    public TextureRegion findCurrentCardTexture(final Card card){
+        return new TextureRegion(cards, card.getxCordination(), card.getyCordination(), 69, 94);
     }
     
-    public void changesOccurred(String TAG, SampleResponse response){
+    public void changesOccurred(final String TAG, final SampleResponse response){
     	if(TAG.equals("R")){
     		players = response.getPlayers();
     	}
@@ -254,7 +236,6 @@ public class GameRenderer {
     		cardsOnTable = pokerTable.getCardList();
     		pot = pokerTable.getPot();
     		smallBlindAmount = pokerTable.getSmallBlindAmount();
-    		bigBlindAmount = pokerTable.getBigBlindAmount();
     		limitType = pokerTable.getLimitType();
     		fixedLimit = pokerTable.getFixedLimit();
     	}
@@ -334,15 +315,11 @@ public class GameRenderer {
 		return turnToBet;
 	}
 	
-	public int getYourBetAmount() {
-		return yourBetAmount;
-	}
-	
 	public int getMaxBetOnTable() {
 		return maxBetOnTable;
 	}
 	
-	public void setTurnToBet(int turnToBet){
+	public void setTurnToBet(final int turnToBet){
 		this.turnToBet = turnToBet;
 	}
 

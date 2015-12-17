@@ -39,8 +39,7 @@ public class Deck {
   	}
   	
   	public boolean isEmpty(){
-  		  if(cards.size()==0) return true;
-  		  return false;
+  		  return cards.size()==0;
   	}
   	
   	public List<Card> getCards() {
@@ -53,7 +52,7 @@ public class Deck {
   	
   	public Card drawCard()
   	{
-  		Card card = cards.get(0);
+  		final Card card = cards.get(0);
   		cards.remove(0);
   		return card;
   	}

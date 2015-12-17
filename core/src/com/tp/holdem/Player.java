@@ -14,10 +14,10 @@ public class Player {
   	private int betAmount = 0;
   	private int betAmountThisRound = 0;
   	private int chipsAmount = 0;
-  	private boolean isFolded = false;
+  	private transient boolean isFolded = false;
   	private int connectionId = 0;
   	private boolean inGame = true;
-  	private boolean isAllIn = false;
+  	private transient boolean isAllIn = false;
   	private int fromWhichPot = -1;
   	private HandRank handRank;
   	
@@ -25,7 +25,7 @@ public class Player {
 
   	}
 
-  	public void setAllProperties(Player player){
+  	public void setAllProperties(final Player player){
   		this.number = player.getNumber();
   	  	this.name = player.getName();
   	  	this.hasDealerButton = player.isHasDealerButton();
@@ -74,7 +74,7 @@ public class Player {
 		return isFolded;
 	}
 
-	public void setFolded(boolean isFolded) {
+	public void setFolded(final boolean isFolded) {
 		this.isFolded = isFolded;
 	}
 
@@ -82,7 +82,7 @@ public class Player {
 		return hasDealerButton;
 	}
 
-	public void setHasDealerButton(boolean hasDealerButton) {
+	public void setHasDealerButton(final boolean hasDealerButton) {
 		this.hasDealerButton = hasDealerButton;
 	}
 
@@ -90,7 +90,7 @@ public class Player {
 		return hasBigBlind;
 	}
 
-	public void setHasBigBlind(boolean hasBigBlind) {
+	public void setHasBigBlind(final boolean hasBigBlind) {
 		this.hasBigBlind = hasBigBlind;
 	}
 
@@ -98,7 +98,7 @@ public class Player {
 		return hasSmallBlind;
 	}
 
-	public void setHasSmallBlind(boolean hasSmallBlind) {
+	public void setHasSmallBlind(final boolean hasSmallBlind) {
 		this.hasSmallBlind = hasSmallBlind;
 	}
 
@@ -106,7 +106,7 @@ public class Player {
 		return betAmount;
 	}
 
-	public void setBetAmount(int betAmount) {
+	public void setBetAmount(final int betAmount) {
 		this.betAmount = betAmount;
 	}
 
@@ -114,7 +114,7 @@ public class Player {
 		return chipsAmount;
 	}
 
-	public void setChipsAmount(int chipsAmount) {
+	public void setChipsAmount(final int chipsAmount) {
 		this.chipsAmount = chipsAmount;
 	}
 
@@ -122,15 +122,15 @@ public class Player {
 		return connectionId;
 	}
 
-	public void setConnectionId(int connectionId) {
+	public void setConnectionId(final int connectionId) {
 		this.connectionId = connectionId;
 	}
 
-	public void setHand(List<Card> hand) {
+	public void setHand(final List<Card> hand) {
 		this.hand = hand;
 	}
 
-	public void setInGame(boolean inGame) {
+	public void setInGame(final boolean inGame) {
 		this.inGame = inGame;
 	}
 
@@ -138,7 +138,7 @@ public class Player {
 		return inGame;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(final int number) {
 		this.number = number;
 	}
 
@@ -146,7 +146,7 @@ public class Player {
 		return isAllIn;
 	}
 
-	public void setAllIn(boolean isAllIn) {
+	public void setAllIn(final boolean isAllIn) {
 		this.isAllIn = isAllIn;
 	}
 
@@ -162,7 +162,7 @@ public class Player {
 		return betAmountThisRound;
 	}
 
-	public void setBetAmountThisRound(int betAmountThisRound) {
+	public void setBetAmountThisRound(final int betAmountThisRound) {
 		this.betAmountThisRound = betAmountThisRound;
 	}
 
@@ -170,7 +170,7 @@ public class Player {
 		return fromWhichPot;
 	}
 
-	public void setFromWhichPot(int fromWhichPot) {
+	public void setFromWhichPot(final int fromWhichPot) {
 		this.fromWhichPot = fromWhichPot;
 	}
 
@@ -178,7 +178,7 @@ public class Player {
 		return handRank;
 	}
 
-	public void setHandRank(HandRank handRank) {
+	public void setHandRank(final HandRank handRank) {
 		this.handRank = handRank;
 	}
 	

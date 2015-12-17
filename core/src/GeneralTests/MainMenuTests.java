@@ -1,9 +1,7 @@
 package GeneralTests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -17,7 +15,7 @@ import MainMenu.*;
 
 public class MainMenuTests 
 {
-	private MainMenu menu;
+	private transient MainMenu menu;
 	@Before
 	public void construct()
 	{
@@ -34,10 +32,10 @@ public class MainMenuTests
 	@Test
 	public void testButtonLimit()
 	{
-		ButtonStrategy strategy = new ButtonStrategy(menu);
-		ButtonProperties prop = new ButtonProperties(menu);
+		final ButtonStrategy strategy = new ButtonStrategy(menu);
+		final ButtonProperties prop = new ButtonProperties(menu);
 		ButtonLimit buttonLimit = new ButtonLimit(menu,strategy);
-		String a = menu.getLimit();
+		final String a = menu.getLimit();
 		prop.doClick();
 		buttonLimit.doClick();
 		buttonLimit.doClick();
@@ -49,8 +47,8 @@ public class MainMenuTests
 	@Test
 	public void testButtonChipsLess()
 	{
-		ButtonChipsLess button = new ButtonChipsLess(menu);
-		int a = menu.getChipsAmount();
+		final ButtonChipsLess button = new ButtonChipsLess(menu);
+		final int a = menu.getChipsAmount();
 		button.doClick();
 		assertTrue(a>menu.getChipsAmount());
 	}
@@ -58,8 +56,8 @@ public class MainMenuTests
 	@Test
 	public void testButtonChipsMore()
 	{
-		ButtonChipsMore button = new ButtonChipsMore(menu);
-		int a = menu.getChipsAmount();
+		final ButtonChipsMore button = new ButtonChipsMore(menu);
+		final int a = menu.getChipsAmount();
 		button.doClick();
 		assertTrue(a<menu.getChipsAmount());
 	}
@@ -68,7 +66,7 @@ public class MainMenuTests
 	public void testButtonBotsMore()
 	{
 		ButtonBotsMore button = new ButtonBotsMore(menu);
-		int a = menu.getBotsCount();
+		final int a = menu.getBotsCount();
 		button.doClick();
 		assertTrue(a<menu.getBotsCount());
 	}
@@ -76,9 +74,9 @@ public class MainMenuTests
 	@Test
 	public void testButtonBotsLess()
 	{
-		ButtonBotsLess button = new ButtonBotsLess(menu);
+		final ButtonBotsLess button = new ButtonBotsLess(menu);
 		menu.setBotsCount(2);
-		int a = menu.getBotsCount();
+		final int a = menu.getBotsCount();
 		button.doClick();
 		assertTrue(a>menu.getBotsCount());
 	}
@@ -86,8 +84,8 @@ public class MainMenuTests
 	@Test
 	public void testButtonFixedLess()
 	{
-		ButtonFixedLess button = new ButtonFixedLess(menu);
-		int a = menu.getFixedChips();
+		final ButtonFixedLess button = new ButtonFixedLess(menu);
+		final int a = menu.getFixedChips();
 		button.doClick();
 		assertTrue(a>menu.getFixedChips());
 	}
@@ -95,8 +93,8 @@ public class MainMenuTests
 	@Test
 	public void testButtonFixedMore()
 	{
-		ButtonFixedMore button = new ButtonFixedMore(menu);
-		int a = menu.getFixedChips();
+		final ButtonFixedMore button = new ButtonFixedMore(menu);
+		final int a = menu.getFixedChips();
 		button.doClick();
 		assertTrue(a<menu.getFixedChips());
 	}
@@ -104,9 +102,9 @@ public class MainMenuTests
 	@Test
 	public void testButtonFixedRaiseLess()
 	{
-		ButtonFixedRaiseLess button = new ButtonFixedRaiseLess(menu);
+		final ButtonFixedRaiseLess button = new ButtonFixedRaiseLess(menu);
 		menu.setFixedRaise(3);
-		int a = menu.getFixedRaise();
+		final int a = menu.getFixedRaise();
 		button.doClick();
 		assertTrue(a>menu.getFixedRaise());
 	}
@@ -114,9 +112,9 @@ public class MainMenuTests
 	@Test
 	public void testButtonFixedRaiseMore()
 	{
-		ButtonFixedRaiseMore button = new ButtonFixedRaiseMore(menu);
+		final ButtonFixedRaiseMore button = new ButtonFixedRaiseMore(menu);
 		menu.setFixedRaise(3);
-		int a = menu.getFixedRaise();
+		final int a = menu.getFixedRaise();
 		button.doClick();
 		assertTrue(a<menu.getFixedRaise());
 	}
@@ -124,8 +122,8 @@ public class MainMenuTests
 	@Test
 	public void testButtonBlindMore()
 	{
-		ButtonBlindMore button = new ButtonBlindMore(menu);
-		int a = menu.getBlindAmount();
+		final ButtonBlindMore button = new ButtonBlindMore(menu);
+		final int a = menu.getBlindAmount();
 		button.doClick();
 		assertTrue(a<menu.getBlindAmount());
 	}
@@ -133,9 +131,9 @@ public class MainMenuTests
 	@Test
 	public void testButtonBlindLess()
 	{
-		ButtonBlindLess button = new ButtonBlindLess(menu);
+		final ButtonBlindLess button = new ButtonBlindLess(menu);
 		menu.setBlindAmount(50);
-		int a = menu.getBlindAmount();
+		final int a = menu.getBlindAmount();
 		button.doClick();
 		assertTrue(a>menu.getBlindAmount());
 	}
@@ -143,7 +141,7 @@ public class MainMenuTests
 	@Test
 	public void testButtonProperties()
 	{
-		ButtonProperties button = new ButtonProperties(menu);
+		final ButtonProperties button = new ButtonProperties(menu);
 		button.doClick();
 		assertNotNull(menu.getProperties());
 	}
@@ -151,9 +149,9 @@ public class MainMenuTests
 	@Test
 	public void testPlayersLess()
 	{
-		ButtonPlayersLess button = new ButtonPlayersLess(menu);
+		final ButtonPlayersLess button = new ButtonPlayersLess(menu);
 		menu.setPlayersCount(5);
-		int a = menu.getPlayersCount();
+		final int a = menu.getPlayersCount();
 		button.doClick();
 		assertTrue(a>menu.getPlayersCount());
 	}
@@ -161,9 +159,9 @@ public class MainMenuTests
 	@Test
 	public void testButtonPlayersMore()
 	{
-		ButtonPlayersMore button = new ButtonPlayersMore(menu);
+		final ButtonPlayersMore button = new ButtonPlayersMore(menu);
 		menu.setPlayersCount(5);
-		int a = menu.getPlayersCount();
+		final int a = menu.getPlayersCount();
 		button.doClick();
 		assertTrue(a<menu.getPlayersCount());
 	}
@@ -172,9 +170,9 @@ public class MainMenuTests
 	public void testButtonServer()
 	{
 		try{
-		ButtonServer button = new ButtonServer(menu);
-		button.doClick();
-		assertNotNull(menu.getKryoServer());
+			final ButtonServer button = new ButtonServer(menu);
+			button.doClick();
+			assertNotNull(menu.getKryoServer());
 		}
 		catch(Exception e)
 		{
@@ -191,7 +189,7 @@ public class MainMenuTests
 	@Test
 	public void testButtonStrategy()
 	{
-		ButtonStrategy button = new ButtonStrategy(menu);
+		final ButtonStrategy button = new ButtonStrategy(menu);
 		Strategy a = menu.getStrategy();
 		menu.setLimit("no-limit");
 		button.doClick();

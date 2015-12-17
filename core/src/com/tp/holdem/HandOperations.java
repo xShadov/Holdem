@@ -8,8 +8,8 @@ public class HandOperations {
 
 	public static List<Card> cardsThatMakeDeck;
 	
-	public static HandRank findHandRank(int playerNumber, List<Card> hand, List<Card> tableCards){
-		List<Card> cards = new ArrayList<Card>();
+	public static HandRank findHandRank(final int playerNumber, final List<Card> hand, final List<Card> tableCards){
+		final List<Card> cards = new ArrayList<Card>();
 		cards.addAll(hand);
 		cards.addAll(tableCards);
 		Collections.sort(cards, new CardComparator());
@@ -37,9 +37,9 @@ public class HandOperations {
 	    }
 	}
 	
-	public static boolean isAFullHouse(List<Card> cards) {
-		List<Card> three = new ArrayList<Card>();
-		List<Card> two = new ArrayList<Card>();
+	public static boolean isAFullHouse(final List<Card> cards) {
+		final List<Card> three = new ArrayList<Card>();
+		final List<Card> two = new ArrayList<Card>();
 		for(int i=0; i<cards.size()-2; i++){
 			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()
 					&& cards.get(i).getHonour()==cards.get(i+2).getHonour()){
@@ -55,7 +55,7 @@ public class HandOperations {
 				}
 			}
 		}
-		List<Card> cardsLeft = new ArrayList<Card>(cards);
+		final List<Card> cardsLeft = new ArrayList<Card>(cards);
 		cardsLeft.removeAll(three);
 		for(int i=0; i<cardsLeft.size()-1;i++){
 			if(cardsLeft.get(i).getHonour()==cardsLeft.get(i+1).getHonour()){
@@ -76,9 +76,9 @@ public class HandOperations {
 		return cardsThatMakeDeck.size()==5;
 	}
 
-	private static boolean isTwoPair(List<Card> cards) {
-		List<Card> helperList = new ArrayList<Card>();
-		List<Card> cardsLeft = new ArrayList<Card>(cards);
+	private static boolean isTwoPair(final List<Card> cards) {
+		final List<Card> helperList = new ArrayList<Card>();
+		final List<Card> cardsLeft = new ArrayList<Card>(cards);
 		int pairsFound = 0;
 		for(int i=0; i<cards.size()-1;i++){
 			if(cards.get(i).getHonour()==cards.get(i+1).getHonour()){
@@ -108,7 +108,7 @@ public class HandOperations {
 		return pairsFound>=2;
 	}
 
-	private static boolean isPair(List<Card> cards) {
+	private static boolean isPair(final List<Card> cards) {
 		cardsThatMakeDeck = new ArrayList<Card>(cards);
 		boolean isPair = false;
 		for(int i=0; i<cards.size()-1;i++){
@@ -125,7 +125,7 @@ public class HandOperations {
 		return isPair;
 	}
 
-	private static boolean isThreeOfAKind(List<Card> cards) {
+	private static boolean isThreeOfAKind(final List<Card> cards) {
 		cardsThatMakeDeck = new ArrayList<Card>(cards);
 		boolean isThreeOfKind = false;
 		for(int i=0; i<cards.size()-2;i++){
@@ -143,9 +143,9 @@ public class HandOperations {
 		return isThreeOfKind;
 	}
 
-	private static boolean isAFourOfAKind(List<Card> cards) {
-		List<Card> cardsLeft = new ArrayList<Card>(cards);
-		List<Card> helperList = new ArrayList<Card>();
+	private static boolean isAFourOfAKind(final List<Card> cards) {
+		final List<Card> cardsLeft = new ArrayList<Card>(cards);
+		final List<Card> helperList = new ArrayList<Card>();
 		boolean isFourOfKind = false;
 		for(int i=0; i<cards.size()-3;i++){
 			if(cards.get(i).getHonour()==cards.get(i+1).getHonour() 
@@ -169,7 +169,7 @@ public class HandOperations {
 		return isFourOfKind;
 	}
 
-	private static boolean isAStraightFlush(List<Card> cards) {
+	private static boolean isAStraightFlush(final List<Card> cards) {
 		cardsThatMakeDeck = new ArrayList<Card>(cards);
 		boolean isStraightFlush = false;
 		if(isAStraight(cards)){
@@ -181,12 +181,12 @@ public class HandOperations {
 		return isStraightFlush;
 	}
 
-	private static boolean isARoyalFlush(List<Card> cards) {
+	private static boolean isARoyalFlush(final List<Card> cards) {
 		cardsThatMakeDeck = new ArrayList<Card>(cards);
 		boolean isRoyalFlush = false;
 		if(isAStraight(cards)){
 			if(isAFlush(cardsThatMakeDeck)){
-				if(cardsThatMakeDeck.get(4).getHonour()=="Ace"){
+				if(cardsThatMakeDeck.get(4).getHonour().equals("Ace")){
 					isRoyalFlush = true;
 				}
 			}
@@ -195,13 +195,13 @@ public class HandOperations {
 		return isRoyalFlush;
 	}
 
-	public static boolean isAStraight(List<Card> cards) {
+	public static boolean isAStraight(final List<Card> cards) {
 		cardsThatMakeDeck = new ArrayList<Card>(cards);
 	    int cardsInARow = 1;
 	    int mistakes = 0;
 	    boolean isStraight = false;
 	    
-	    if(cards.get(0).getHonour()=="2" && cards.get(cards.size()-1).getHonour()=="Ace"){
+	    if(cards.get(0).getHonour().equals("2") && cards.get(cards.size()-1).getHonour().equals("Ace")){
 	    	cardsInARow = 2;
 	    }
 	    
@@ -233,14 +233,14 @@ public class HandOperations {
 	    return isStraight;
 	}
 
-	public static boolean isAFlush(List<Card> cards) {
+	public static boolean isAFlush(final List<Card> cards) {
 		cardsThatMakeDeck = new ArrayList<Card>(cards);
 	    int noOfClubs = 0;
 	    int noOfSpades = 0;
 	    int noOfHearts = 0;
 	    int noOfDiamonds = 0;
 	    boolean isFlush = false;
-	    for(Card card : cards){
+	    for(final Card card : cards){
 	    	if(card.getSuit().equals("Spade")){
 	    		noOfSpades++;
 	    	}
@@ -288,21 +288,21 @@ public class HandOperations {
 	}
 
 	
-	private static void trimDeckUp(int i) {
+	private static void trimDeckUp(final int i) {
 		for(int a=i+1; a<cardsThatMakeDeck.size(); a++){
 			cardsThatMakeDeck.set(a, null);
 		}
 	}
 	
-	private static void trimDeckDown(int i) {
-		for(int a=i; a>=0;a--){
+	private static void trimDeckDown(final int i) {
+		for(int a=i; a>=0; a--){
 			cardsThatMakeDeck.set(a, null);
 		}
 	}
 	
 	private static void cleanDeck(){
 		for(int i=0; i<cardsThatMakeDeck.size(); i++){
-			Card card = cardsThatMakeDeck.get(i);
+			final Card card = cardsThatMakeDeck.get(i);
 			if(card==null){
 				cardsThatMakeDeck.remove(card);
 				i--;
@@ -310,13 +310,13 @@ public class HandOperations {
 		}
 	}
 	
-	private static Card findMaxCard(List<Card> cardsLeft) {
+	private static Card findMaxCard(final List<Card> cardsLeft) {
 		Collections.sort(cardsLeft, new CardComparator());
 		return cardsLeft.get((cardsLeft.size()-1));
 	}
 
 	private static List<Card> getFiveMaxCards(List<Card> cards){
-		List<Card> fiveTop = new ArrayList<Card>(cards);
+		final List<Card> fiveTop = new ArrayList<Card>(cards);
 		fiveTop.remove(0);
 		fiveTop.remove(0);
 		return fiveTop;

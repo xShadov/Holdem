@@ -16,7 +16,6 @@ import org.junit.Before;
 public class DeckTests {
 
   	private transient Deck deck;
-  	private transient Player playerNoName, playerWithName;
   	
     @Before
     public void setUp(){

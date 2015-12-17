@@ -10,12 +10,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tp.holdem.Card;
-import com.tp.holdem.Player;
 import com.tp.holdem.PokerTable;
 
 public class PokerTableTests {
 
-	 PokerTable table;
+	 transient PokerTable table;
 	 @Before
 	    public void setUp(){
 	    		table = new PokerTable();
@@ -41,7 +40,7 @@ public class PokerTableTests {
     	  table.addCard(new Card("Jack", "Spade"));
     	  table.addCard(new Card("Queen", "Heart"));
     	  assertEquals(2, table.getCardList().size());
-    	  List<Card> cards = new ArrayList<Card>();
+    	  final List<Card> cards = new ArrayList<Card>();
     	  cards.add(new Card("2", "Spade"));
     	  cards.add(new Card("3", "Spade"));
     	  cards.add(new Card("4", "Spade"));

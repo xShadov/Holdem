@@ -5,8 +5,8 @@ import java.util.List;
 
 public class AllInStrategy implements Strategy
 {
-	private String name = "Always All-in";
-	private SampleRequest request;
+	private final transient static String NAME = "Always All-in";
+	private transient SampleRequest request;
 	
 	@Override
 	public Strategy getStrategy() 
@@ -16,11 +16,11 @@ public class AllInStrategy implements Strategy
 	
 	public String getTag()
 	{
-		return request.getTAG();
+		return request.getTag();
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand, int betAmount,int chips) 
+	public void whatDoIDo(final KryoServer server, final List<Card> hand, final int betAmount, final int chips) 
 	{		
 		request = new SampleRequest("ALLIN", server.getBetPlayer());
 		server.handleReceived((Object)request);
@@ -28,7 +28,7 @@ public class AllInStrategy implements Strategy
 
 	@Override
 	public String getName() {
-		return name;
+		return NAME;
 	}
 
 }

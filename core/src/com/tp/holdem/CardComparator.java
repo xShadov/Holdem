@@ -5,7 +5,7 @@ import java.util.Comparator;
 public class CardComparator implements Comparator<Card> {
 
 	@Override
-	public int compare(Card card1, Card card2) {
+	public int compare(final Card card1, final Card card2) {
 		if(card1.getValue()<card2.getValue()){
 			return -1;
 		}

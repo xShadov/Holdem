@@ -1,14 +1,14 @@
 package com.tp.holdem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Medium implements Strategy
 {
-	private String name = "Medium";
-	private SampleRequest request;
-	private HandRank rank;
-	private int howMuchToBet;
+	private transient final String name = "Medium";
+	private transient SampleRequest request;
+	private transient HandRank rank;
+	private transient int howMuchToBet;
+	
 	@Override
 	public Strategy getStrategy() {
 		return this;
@@ -21,12 +21,12 @@ public class Medium implements Strategy
 	
 	public String getTag()
 	{
-		return request.getTAG();
+		return request.getTag();
 	}
 
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) 
+	public void whatDoIDo(final KryoServer server, final List<Card> hand, final int betAmount, final int chips) 
 	{
 		if(server.getLimitType()=="fixed-limit")
 			howMuchToBet=server.getFixedChips();

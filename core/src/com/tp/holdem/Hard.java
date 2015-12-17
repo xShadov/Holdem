@@ -1,17 +1,17 @@
 package com.tp.holdem;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Hard implements Strategy
 {
-	private String name = "Hard";
-	private SampleRequest request;
-	private HandRank rank;
-	private Random random = new Random();
-	private int a; //wylosowana liczba
-	private int howMuchToBet;
+	private transient final String name = "Hard";
+	private transient SampleRequest request;
+	private transient HandRank rank;
+	private transient final Random random = new Random();
+	private transient int a; //wylosowana liczba
+	private transient int howMuchToBet;
+
 	@Override
 	public Strategy getStrategy() {
 		return this;
@@ -19,7 +19,7 @@ public class Hard implements Strategy
 
 	public String getTag()
 	{
-		return request.getTAG();
+		return request.getTag();
 	}
 	@Override
 	public String getName() {
@@ -27,7 +27,7 @@ public class Hard implements Strategy
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) 
+	public void whatDoIDo(final KryoServer server, final List<Card> hand, final int betAmount, final int chips) 
 	{
 		if(server.getLimitType()=="fixed-limit")
 			howMuchToBet=server.getFixedChips();

@@ -1,12 +1,9 @@
 package com.tp.holdem;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Bot extends Player
 {
-	private Strategy strategy;
-	public Bot(int number,String name,Strategy strategy)
+	private final transient Strategy strategy;
+	public Bot(final int number, final String name, final Strategy strategy)
 	{
 		super(number,name);
 		this.strategy = strategy;

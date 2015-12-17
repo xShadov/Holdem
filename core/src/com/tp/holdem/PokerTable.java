@@ -20,7 +20,7 @@ public class PokerTable {
 		this.cardsOnTable = new ArrayList<Card>();
 	}
 	
-	public void setPot(int newPot)
+	public void setPot(final int newPot)
 	{
 		this.pot=newPot;
 	}
@@ -44,7 +44,7 @@ public class PokerTable {
 		return cardsOnTable;
 	}
 
-	public void setCardsOnTable(List<Card> cardsOnTable) {
+	public void setCardsOnTable(final List<Card> cardsOnTable) {
 		this.cardsOnTable = cardsOnTable;
 	}
 
@@ -52,7 +52,7 @@ public class PokerTable {
 		return smallBlindAmount;
 	}
 
-	public void setSmallBlindAmount(int smallBlindAmount) {
+	public void setSmallBlindAmount(final int smallBlindAmount) {
 		this.smallBlindAmount = smallBlindAmount;
 	}
 
@@ -60,7 +60,7 @@ public class PokerTable {
 		return bigBlindAmount;
 	}
 
-	public void setBigBlindAmount(int bigBlindAmount) {
+	public void setBigBlindAmount(final int bigBlindAmount) {
 		this.bigBlindAmount = bigBlindAmount;
 	}
 
@@ -68,7 +68,7 @@ public class PokerTable {
 		return limitType;
 	}
 
-	public void setLimitType(String limitType) {
+	public void setLimitType(final String limitType) {
 		this.limitType = limitType;
 	}
 
@@ -76,7 +76,7 @@ public class PokerTable {
 		return fixedLimit;
 	}
 
-	public void setFixedLimit(int fixedLimit) {
+	public void setFixedLimit(final int fixedLimit) {
 		this.fixedLimit = fixedLimit;
 	}
 
@@ -84,7 +84,7 @@ public class PokerTable {
 		return fixedRaiseCount;
 	}
 
-	public void setFixedRaiseCount(int fixedRaiseCount) {
+	public void setFixedRaiseCount(final int fixedRaiseCount) {
 		this.fixedRaiseCount = fixedRaiseCount;
 	}
 
@@ -92,7 +92,7 @@ public class PokerTable {
 		return raiseCount;
 	}
 
-	public void setRaiseCount(int raiseCount) {
+	public void setRaiseCount(final int raiseCount) {
 		this.raiseCount = raiseCount;
 	}
 }

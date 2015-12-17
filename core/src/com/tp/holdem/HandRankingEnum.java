@@ -15,7 +15,7 @@ public enum HandRankingEnum {
 	
 	private int value;
 	
-	HandRankingEnum(int value){
+	HandRankingEnum(final int value){
 		this.value = value;
 	}
 	

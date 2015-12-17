@@ -4,56 +4,56 @@ import java.util.List;
 
 public class SampleResponse {
 
-	public String text="";
-	public String TAG="";
-	public List<Player> players;
-	public List<Card> cards;
-	public List<List<Card>> cards2;
-	public PokerTable pokerTable;
-	public int number = 0;
-	public int maxBetOnTable = 0;
-	public List<String> possibleOptions;
+	private String text="";
+	private String tag="";
+	private List<Player> players;
+	private transient List<Card> cards;
+	private List<List<Card>> cards2;
+	private transient PokerTable pokerTable;
+	private int number = 0;
+	private int maxBetOnTable = 0;
+	private List<String> possibleOptions;
 
 	public SampleResponse(){
 		
 	}
 	
-	public SampleResponse(String TAG){
-		this.TAG = TAG;
+	public SampleResponse(final String TAG){
+		this.tag = TAG;
 	}
 	
-	public SampleResponse(String TAG, String text){
-		this.TAG = TAG;
+	public SampleResponse(final String TAG, final String text){
+		this.tag = TAG;
 		this.text=text;
 	}
 	
-	public SampleResponse(String TAG, PokerTable pokerTable){
-		this.TAG = TAG;
+	public SampleResponse(final String TAG, final PokerTable pokerTable){
+		this.tag = TAG;
 		this.pokerTable = pokerTable;
 	}
 	
-	public SampleResponse(String TAG, List<Player> players){
+	public SampleResponse(final String TAG, final List<Player> players){
 		this.players = players;
-		this.TAG = TAG;
+		this.tag = TAG;
 	}
 
-	public SampleResponse(String TAG, List<Card> cards, boolean dummy){
+	public SampleResponse(final String TAG, final List<Card> cards, final boolean dummy){
 		this.cards = cards;
-		this.TAG = TAG;
+		this.tag = TAG;
 	}
 	
-	public SampleResponse(String TAG, List<List<Card>> cards2, boolean dummy, boolean dummy2){
+	public SampleResponse(final String TAG, final List<List<Card>> cards2, final boolean dummy, final boolean dummy2){
 		this.cards2 = cards2;
-		this.TAG = TAG;
+		this.tag = TAG;
 	}
 	
-	public SampleResponse(String TAG, int number){
-		this.TAG = TAG;
+	public SampleResponse(final String TAG, final int number){
+		this.tag = TAG;
 		this.number = number;
 	}
 	
-	public SampleResponse(String TAG, int number, int maxBetOnTable, List<String> possibleOptions){
-		this.TAG = TAG;
+	public SampleResponse(final String TAG, final int number, final int maxBetOnTable, final List<String> possibleOptions){
+		this.tag = TAG;
 		this.number = number;
 		this.maxBetOnTable = maxBetOnTable;
 		this.possibleOptions = possibleOptions;
@@ -63,7 +63,7 @@ public class SampleResponse {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(final int number) {
 		this.number = number;
 	}
 
@@ -75,23 +75,23 @@ public class SampleResponse {
 	{
 		return cards;
 	}
-	public void setPlayers(List<Player> players) {
+	public void setPlayers(final List<Player> players) {
 		this.players = players;
 	}
 
-	public String getTAG() {
-		return TAG;
+	public String getTag() {
+		return tag;
 	}
 
-	public void setTAG(String tAG) {
-		TAG = tAG;
+	public void setTag(final String tAG) {
+		tag = tAG;
 	}
 	
 	public String getText(){
 		return text;
 	}
 	
-	public void setText(String text){
+	public void setText(final String text){
 		this.text = text;
 	}
 
@@ -99,7 +99,7 @@ public class SampleResponse {
 		return pokerTable;
 	}
 
-	public void setTable(PokerTable pokerTable) {
+	public void setTable(final PokerTable pokerTable) {
 		this.pokerTable = pokerTable;
 	}
 
@@ -107,7 +107,7 @@ public class SampleResponse {
 		return maxBetOnTable;
 	}
 
-	public void setMaxBetOnTable(int maxBetOnTable) {
+	public void setMaxBetOnTable(final int maxBetOnTable) {
 		this.maxBetOnTable = maxBetOnTable;
 	}
 
@@ -115,7 +115,7 @@ public class SampleResponse {
 		return possibleOptions;
 	}
 
-	public void setPossibleOptions(List<String> possibleOptions) {
+	public void setPossibleOptions(final List<String> possibleOptions) {
 		this.possibleOptions = possibleOptions;
 	}
 
@@ -123,7 +123,7 @@ public class SampleResponse {
 		return cards2;
 	}
 
-	public void setCards2(List<List<Card>> cards2) {
+	public void setCards2(final List<List<Card>> cards2) {
 		this.cards2 = cards2;
 	}
 }

@@ -3,31 +3,34 @@ package GeneralTests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tp.holdem.BetComparator;
 import com.tp.holdem.Card;
-import com.tp.holdem.Deck;
 import com.tp.holdem.HandOperations;
-import com.tp.holdem.HandRank;
-import com.tp.holdem.HandRankComparator;
 import com.tp.holdem.HandRankingEnum;
 import com.tp.holdem.Player;
 
 public class CardTests {
 	
-	List<Card> cards, tableCards;
-	List<Player> players;
-	Card card;
+	private static final String KING = "King";
+	private static final String ACE = "Ace";
+	private static final String QUEEN = "Queen";
+	private static final String JACK = "Jack";
+	private static final String DIAMOND = "Diamond";
+	private static final String CLUB = "Club";
+	private static final String HEART = "Heart";
+	private static final String SPADE = "Spade";
+	transient List<Card> cards, tableCards;
+	transient List<Player> players;
+	transient Card card;
 	
 	 @Before
 	    public void setUp(){
-		 	card = new Card("6", "Spade");
+		 	card = new Card("6", SPADE);
 			cards = new ArrayList<Card>();
 			tableCards = new ArrayList<Card>();
 			players = new ArrayList<Player>();
@@ -44,7 +47,7 @@ public class CardTests {
 	    
     @Test                                       
     public final void testGetCardSuit() {            
-    	  assertEquals("Getting card suit doesnt work", "Spade", card.getSuit() );
+    	  assertEquals("Getting card suit doesnt work", SPADE, card.getSuit() );
     }  
   
     @Test                                       
@@ -54,8 +57,8 @@ public class CardTests {
     
     @Test                                        
     public final void testSetCardSuit() {            
-    	  card.setSuit("Heart");
-    	  assertEquals("Setting card suit doesnt work ", "Heart", card.getSuit() );
+    	  card.setSuit(HEART);
+    	  assertEquals("Setting card suit doesnt work ", HEART, card.getSuit() );
     } 
     
     @Test                                        
@@ -67,14 +70,14 @@ public class CardTests {
 	    
 	@Test                                        
     public final void testCardsValue() {          
-		cards.add(new Card("Jack", "Spade"));
-		cards.add(new Card("Jack", "Heart"));
-		cards.add(new Card("Jack", "Diamond"));
-		cards.add(new Card("Queen", "Spade"));
-		cards.add(new Card("5", "Heart"));
-		cards.add(new Card("Queen", "Diamond"));
-		cards.add(new Card("4", "Spade"));
-		cards.add(new Card("8", "Spade"));
+		cards.add(new Card(JACK, SPADE));
+		cards.add(new Card(JACK, HEART));
+		cards.add(new Card(JACK, DIAMOND));
+		cards.add(new Card(QUEEN, SPADE));
+		cards.add(new Card("5", HEART));
+		cards.add(new Card(QUEEN, DIAMOND));
+		cards.add(new Card("4", SPADE));
+		cards.add(new Card("8", SPADE));
 		assertEquals(11, cards.get(0).getValue());
 		assertEquals(11, cards.get(1).getValue());
 		assertEquals(11, cards.get(2).getValue());
@@ -85,83 +88,83 @@ public class CardTests {
 		assertEquals(8, cards.get(7).getValue());
 		cards.get(7).setValue(5);
 		assertEquals(5, cards.get(7).getValue());
-		cards.get(7).setHonour("Ace");
+		cards.get(7).setHonour(ACE);
 		assertEquals(14, cards.get(7).getValue());
 	} 
 	
 	@Test                                        
     public final void testGetColorCard() {   
-    	  Card card = new Card("Jack", "Spade");
+		  final Card card = new Card(JACK, SPADE);
     	  assertEquals("black", card.getColor());
-    	  Card card2 = new Card("Jack", "Diamond");
+    	  final Card card2 = new Card(JACK, DIAMOND);
     	  assertEquals("red", card2.getColor());
-    	  Card card3 = new Card();
-    	  card3.setSuit("Club");
+    	  final Card card3 = new Card();
+    	  card3.setSuit(CLUB);
     	  assertEquals("black", card3.getColor());
     }  
 	
 	@Test                                        
     public final void testCardCordination() {   
-    	  Card card = new Card("Jack", "Spade");
+		  final Card card = new Card(JACK, SPADE);
     	  assertEquals(732, card.getxCordination());
     	  assertEquals(199, card.getyCordination());
-    	  Card card2 = new Card();
+    	  final Card card2 = new Card();
     	  card2.setxCordination(150);
     	  card2.setyCordination(250);
     	  assertEquals(150, card2.getxCordination());
     	  assertEquals(250, card2.getyCordination());
-    	  Card card3 = new Card("Queen", "Heart");
+    	  final Card card3 = new Card(QUEEN, HEART);
     	  assertEquals(805, card3.getxCordination());
     	  assertEquals(101, card3.getyCordination());
-    	  card3.setHonour("Ace");
+    	  card3.setHonour(ACE);
     	  assertEquals(2, card3.getxCordination());
     }  
 	
 	@Test                                        
     public final void testHighCard() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("Jack", "Spade"));
-		tableCards.add(new Card("6", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("9", "Spade"));
-		tableCards.add(new Card("3", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card(JACK, SPADE));
+		tableCards.add(new Card("6", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("9", SPADE));
+		tableCards.add(new Card("3", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.HIGH_CARD, HandOperations.findHandRank(0, cards, tableCards).getHand());
 		
 		cards = new ArrayList<Card>();
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("4", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("4", SPADE));
 		tableCards = new ArrayList<Card>();
-		tableCards.add(new Card("8", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("8", "Spade"));
-		tableCards.add(new Card("3", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		tableCards.add(new Card("8", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("8", SPADE));
+		tableCards.add(new Card("3", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.FULL_HOUSE, HandOperations.findHandRank(1, cards, tableCards).getHand());
     } 
 	
 	@Test                                        
     public final void testFullHouse() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("8", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("8", "Spade"));
-		tableCards.add(new Card("3", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("4", SPADE));
+		tableCards.add(new Card("8", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("8", SPADE));
+		tableCards.add(new Card("3", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.FULL_HOUSE, HandOperations.findHandRank(1, cards, tableCards).getHand());
 		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(0).getHonour());
 		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
 		
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("4", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("8", "Spade"));
-		tableCards.add(new Card("8", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("4", SPADE));
+		tableCards.add(new Card("4", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("8", SPADE));
+		tableCards.add(new Card("8", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.FULL_HOUSE, HandOperations.findHandRank(1, cards, tableCards).getHand());
 		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(0).getHonour());
 		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
@@ -169,39 +172,39 @@ public class CardTests {
 	
 	@Test                                        
     public final void testOnePair() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("7", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("10", "Spade"));
-		tableCards.add(new Card("3", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("4", SPADE));
+		tableCards.add(new Card("7", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("10", SPADE));
+		tableCards.add(new Card("3", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.PAIR, HandOperations.findHandRank(1, cards, tableCards).getHand());
     } 
 	
 	@Test                                        
     public final void testTwoPair() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("8", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("10", "Spade"));
-		tableCards.add(new Card("3", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("4", SPADE));
+		tableCards.add(new Card("8", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("10", SPADE));
+		tableCards.add(new Card("3", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.TWO_PAIR, HandOperations.findHandRank(1, cards, tableCards).getHand());
 		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getHonour());
 		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
-		assertEquals("King", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(4).getHonour());
+		assertEquals(KING, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(4).getHonour());
 		
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
-		cards.add(new Card("4", "Diamond"));
-		cards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("8", "Diamond"));
-		tableCards.add(new Card("8", "Spade"));
-		tableCards.add(new Card("9", "Diamond"));
-		tableCards.add(new Card("9", "Club"));
-		tableCards.add(new Card("10", "Spade"));
+		cards.add(new Card("4", DIAMOND));
+		cards.add(new Card("4", SPADE));
+		tableCards.add(new Card("8", DIAMOND));
+		tableCards.add(new Card("8", SPADE));
+		tableCards.add(new Card("9", DIAMOND));
+		tableCards.add(new Card("9", CLUB));
+		tableCards.add(new Card("10", SPADE));
 		assertEquals(HandRankingEnum.TWO_PAIR, HandOperations.findHandRank(1, cards, tableCards).getHand());
 		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getHonour());
 		assertEquals("9", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
@@ -210,122 +213,122 @@ public class CardTests {
 	
 	@Test                                        
     public final void testThreeOfAKind() {  
-		cards.add(new Card("4", "Club"));
-		cards.add(new Card("4", "Heart"));
-		tableCards.add(new Card("4", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("10", "Spade"));
-		tableCards.add(new Card("3", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", CLUB));
+		cards.add(new Card("4", HEART));
+		tableCards.add(new Card("4", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("10", SPADE));
+		tableCards.add(new Card("3", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.THREE_OF_A_KIND, HandOperations.findHandRank(1, cards, tableCards).getHand());
 	} 
 	
 	@Test                                        
     public final void testFourOfAKind() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("8", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("8", "Spade"));
-		tableCards.add(new Card("8", "Club"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("4", SPADE));
+		tableCards.add(new Card("8", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("8", SPADE));
+		tableCards.add(new Card("8", CLUB));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.FOUR_OF_A_KIND, HandOperations.findHandRank(1, cards, tableCards).getHand());
     } 
 	
 	@Test                                        
     public final void testFlush() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("4", "Spade"));
-		tableCards.add(new Card("8", "Spade"));
-		tableCards.add(new Card("8", "Spade"));
-		tableCards.add(new Card("10", "Spade"));
-		tableCards.add(new Card("3", "Spade"));
-		tableCards.add(new Card("King", "Spade"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("4", SPADE));
+		tableCards.add(new Card("8", SPADE));
+		tableCards.add(new Card("8", SPADE));
+		tableCards.add(new Card("10", SPADE));
+		tableCards.add(new Card("3", SPADE));
+		tableCards.add(new Card(KING, SPADE));
 		assertEquals(HandRankingEnum.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("Spade", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+		assertEquals(SPADE, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
 		
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
-		cards.add(new Card("4", "Diamond"));
-		cards.add(new Card("5", "Spade"));
-		tableCards.add(new Card("8", "Diamond"));
-		tableCards.add(new Card("8", "Diamond"));
-		tableCards.add(new Card("10", "Diamond"));
-		tableCards.add(new Card("3", "Diamond"));
-		tableCards.add(new Card("9", "Diamond"));
+		cards.add(new Card("4", DIAMOND));
+		cards.add(new Card("5", SPADE));
+		tableCards.add(new Card("8", DIAMOND));
+		tableCards.add(new Card("8", DIAMOND));
+		tableCards.add(new Card("10", DIAMOND));
+		tableCards.add(new Card("3", DIAMOND));
+		tableCards.add(new Card("9", DIAMOND));
 		assertEquals(HandRankingEnum.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("Diamond", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+		assertEquals(DIAMOND, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
 		
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
-		cards.add(new Card("4", "Club"));
-		cards.add(new Card("5", "Club"));
-		tableCards.add(new Card("8", "Diamond"));
-		tableCards.add(new Card("8", "Club"));
-		tableCards.add(new Card("10", "Club"));
-		tableCards.add(new Card("3", "Club"));
-		tableCards.add(new Card("9", "Club"));
+		cards.add(new Card("4", CLUB));
+		cards.add(new Card("5", CLUB));
+		tableCards.add(new Card("8", DIAMOND));
+		tableCards.add(new Card("8", CLUB));
+		tableCards.add(new Card("10", CLUB));
+		tableCards.add(new Card("3", CLUB));
+		tableCards.add(new Card("9", CLUB));
 		assertEquals(HandRankingEnum.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("Club", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+		assertEquals(CLUB, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
 		
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("5", "Club"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("8", "Heart"));
-		tableCards.add(new Card("10", "Heart"));
-		tableCards.add(new Card("3", "Heart"));
-		tableCards.add(new Card("9", "Heart"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card("5", CLUB));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("8", HEART));
+		tableCards.add(new Card("10", HEART));
+		tableCards.add(new Card("3", HEART));
+		tableCards.add(new Card("9", HEART));
 		assertEquals(HandRankingEnum.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("Heart", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+		assertEquals(HEART, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
     } 
 	
 	@Test                                        
     public final void testRoyalFlush() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("Jack", "Club"));
-		tableCards.add(new Card("4", "Club"));
-		tableCards.add(new Card("Queen", "Club"));
-		tableCards.add(new Card("10", "Club"));
-		tableCards.add(new Card("Ace", "Club"));
-		tableCards.add(new Card("King", "Club"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card(JACK, CLUB));
+		tableCards.add(new Card("4", CLUB));
+		tableCards.add(new Card(QUEEN, CLUB));
+		tableCards.add(new Card("10", CLUB));
+		tableCards.add(new Card(ACE, CLUB));
+		tableCards.add(new Card(KING, CLUB));
 		assertEquals(HandRankingEnum.ROYAL_FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
     } 
 	
 	@Test                                        
     public final void testStraight() {          
-		cards.add(new Card("4", "Heart"));
-		cards.add(new Card("Jack", "Club"));
-		tableCards.add(new Card("4", "Club"));
-		tableCards.add(new Card("Queen", "Heart"));
-		tableCards.add(new Card("10", "Club"));
-		tableCards.add(new Card("Ace", "Spade"));
-		tableCards.add(new Card("King", "Heart"));
+		cards.add(new Card("4", HEART));
+		cards.add(new Card(JACK, CLUB));
+		tableCards.add(new Card("4", CLUB));
+		tableCards.add(new Card(QUEEN, HEART));
+		tableCards.add(new Card("10", CLUB));
+		tableCards.add(new Card(ACE, SPADE));
+		tableCards.add(new Card(KING, HEART));
 		assertEquals(HandRankingEnum.STRAIGHT, HandOperations.findHandRank(1, cards, tableCards).getHand());
     } 
 	
 	@Test                                        
     public final void testStraightStartingWithAce() {          
-		cards.add(new Card("Ace", "Heart"));
-		cards.add(new Card("2", "Club"));
-		tableCards.add(new Card("4", "Club"));
-		tableCards.add(new Card("Queen", "Heart"));
-		tableCards.add(new Card("10", "Club"));
-		tableCards.add(new Card("3", "Spade"));
-		tableCards.add(new Card("5", "Heart"));
+		cards.add(new Card(ACE, HEART));
+		cards.add(new Card("2", CLUB));
+		tableCards.add(new Card("4", CLUB));
+		tableCards.add(new Card(QUEEN, HEART));
+		tableCards.add(new Card("10", CLUB));
+		tableCards.add(new Card("3", SPADE));
+		tableCards.add(new Card("5", HEART));
 		assertEquals(HandRankingEnum.STRAIGHT, HandOperations.findHandRank(1, cards, tableCards).getHand());
     } 
 	
 	@Test                                        
     public final void testStraightFlush() {          
-		cards.add(new Card("King", "Club"));
-		cards.add(new Card("2", "Heart"));
-		tableCards.add(new Card("4", "Heart"));
-		tableCards.add(new Card("6", "Heart"));
-		tableCards.add(new Card("10", "Club"));
-		tableCards.add(new Card("3", "Heart"));
-		tableCards.add(new Card("5", "Heart"));
+		cards.add(new Card(KING, CLUB));
+		cards.add(new Card("2", HEART));
+		tableCards.add(new Card("4", HEART));
+		tableCards.add(new Card("6", HEART));
+		tableCards.add(new Card("10", CLUB));
+		tableCards.add(new Card("3", HEART));
+		tableCards.add(new Card("5", HEART));
 		assertEquals(HandRankingEnum.STRAIGHT_FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
     } 
 	

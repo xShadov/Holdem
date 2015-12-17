@@ -4,8 +4,12 @@ import java.util.Comparator;
 
 public class HandRankComparator implements Comparator<HandRank> {
 
+	public HandRankComparator(){
+		
+	}
+	
 	@Override
-	public int compare(HandRank hand1, HandRank hand2) {
+	public int compare(final HandRank hand1, final HandRank hand2) {
 		if(hand1.getHand()==hand2.getHand()){
 			if(hand1.getHand()==HandRankingEnum.ROYAL_FLUSH) return 0;
 			else if(hand1.getHand()==HandRankingEnum.STRAIGHT_FLUSH){

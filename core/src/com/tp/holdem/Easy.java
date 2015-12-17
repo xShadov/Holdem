@@ -4,8 +4,9 @@ import java.util.List;
 
 public class Easy implements Strategy{
 
-	private String name = "Easy";
-	private SampleRequest request;
+	private final transient static String NAME = "Easy";
+	private transient SampleRequest request;
+
 	@Override
 	public Strategy getStrategy() {
 
@@ -14,16 +15,16 @@ public class Easy implements Strategy{
 
 	@Override
 	public String getName() {
-		return name;
+		return NAME;
 	}
 	
 	public String getTag()
 	{
-		return request.getTAG();
+		return request.getTag();
 	}
 
 	@Override
-	public void whatDoIDo(KryoServer server,List<Card> hand,int betAmount,int chips) 
+	public void whatDoIDo(final KryoServer server, final List<Card> hand, final int betAmount, final int chips) 
 	{
 		if(server.getMaxBetOnTable()==betAmount)
 			request = new SampleRequest("CHECK", server.getBetPlayer());
