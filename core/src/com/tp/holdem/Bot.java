@@ -2,7 +2,7 @@ package com.tp.holdem;
 
 public class Bot extends Player
 {
-	private final Strategy strategy;
+	private Strategy strategy;
 	public Bot(final int number, final String name, final Strategy strategy)
 	{
 		super(number,name);
@@ -12,6 +12,9 @@ public class Bot extends Player
 	public Strategy getStrategy()
 	{
 		return strategy;
+	}
+	public void setStrategy(Strategy strategy) {
+		this.strategy = strategy;
 	}
 	
 }

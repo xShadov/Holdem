@@ -226,10 +226,6 @@ public class GameRenderer {
     public void changesOccurred(final String TAG, final SampleResponse response){
     	if(TAG.equals("R")){
     		players = response.getPlayers();
-    		for(int i=0; i<players.size(); i++){
-    			if(players.get(i) instanceof Bot)
-    			System.out.println(players.get(i).getStrategy()+"");
-    		}
     	}
     	else if(TAG.equals("N")){
     		gameOver = false;

@@ -377,6 +377,8 @@ public class KryoServer implements Runnable {
 				players.get(i).setInGame(false);
 				players.get(i).setFolded(true);
 			}
+			if(players.get(i) instanceof Bot)
+				((Bot) players.get(i)).setStrategy(findRandomStrategy());
 		}
 		flopTime = false;
 		turnTime = false;
@@ -503,12 +505,7 @@ public class KryoServer implements Runnable {
     				players.get(numPlayers).setInGame(true);
     				numPlayers++;
     			} else {
-    				final int randomStrategy = generator.nextInt(3);
-    				Strategy newStrategy;
-    				if(randomStrategy==0) newStrategy = new Easy();
-    				else if(randomStrategy==1) newStrategy = new Medium();
-    				else newStrategy = new Hard();
-    				players.add(new Bot(numPlayers, "Bot"+String.valueOf(i), newStrategy));
+    				players.add(new Bot(numPlayers, "Bot"+String.valueOf(i), findRandomStrategy()));
     				players.get(numPlayers).setChipsAmount(playersChips);
     				players.get(numPlayers).setInGame(true);
     				numPlayers++;
@@ -527,6 +524,22 @@ public class KryoServer implements Runnable {
     		server.sendToTCP(con.getID(), response);
 		}
     }
+
+	private Strategy findRandomStrategy() {
+		int randomStrategy;
+		if(limitType.equals("no-limit")){
+			randomStrategy = generator.nextInt(5);
+		} else {
+			randomStrategy = generator.nextInt(4);
+		}
+		Strategy newStrategy;
+		if(randomStrategy==0) newStrategy = new Easy();
+		else if(randomStrategy==1) newStrategy = new Medium();
+		else if(randomStrategy==2) newStrategy = new Hard();
+		else if(randomStrategy==3) newStrategy = new FoldStrategy();
+		else newStrategy = new AllInStrategy();
+		return newStrategy;
+	}
 	
 	private void handleDisconnected(final Connection con) {
 		for(final Player player : players){
@@ -658,6 +671,11 @@ public class KryoServer implements Runnable {
     }
 
 	private void initiateNewHand(final List<Player> players) {
+		for(int i=0; i<players.size(); i++){
+			if(players.get(i) instanceof Bot)
+			System.out.println(players.get(i).getStrategy()+"");
+		}
+		System.out.println("---------------------");
 		deck = new Deck();
 		pokerTable = new PokerTable();
 		pokerTable.setLimitType(limitType);
