@@ -4,10 +4,10 @@ import java.util.List;
 
 public class Medium implements Strategy
 {
-	private transient final String name = "Medium";
-	private transient SampleRequest request;
-	private transient HandRank rank;
-	private transient int howMuchToBet;
+	private final String name = "Medium";
+	private SampleRequest request;
+	private HandRank rank;
+	private int howMuchToBet;
 	
 	@Override
 	public Strategy getStrategy() {

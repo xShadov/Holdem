@@ -9,13 +9,13 @@ import com.tp.holdem.SampleRequest;
 
 public class FakeServer extends KryoServer
 {
-	private final transient int betPlayer = 0;
-	private transient int maxBetOnTable;
-	private transient int bigBlindAmount;
-	private final transient int fixedChips = 40;
-	private transient final String limit = "no-limit";
-	private transient final PokerTable pokerTable = new PokerTable();
-	private transient SampleRequest request;
+	private final int betPlayer = 0;
+	private int maxBetOnTable;
+	private int bigBlindAmount;
+	private final int fixedChips = 40;
+	private final String limit = "no-limit";
+	private final PokerTable pokerTable = new PokerTable();
+	private SampleRequest request;
 	
 	public FakeServer(final int maxBetOnTable, final int bigBlindAmount)
 	{

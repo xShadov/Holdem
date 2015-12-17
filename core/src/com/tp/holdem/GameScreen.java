@@ -17,7 +17,7 @@ public class GameScreen implements Screen, InputProcessor {
     private transient float runTime;
     private transient Stage stage;
     private transient KryoClient client;
-    private List<TextButton> buttons;
+    private transient List<TextButton> buttons;
    
     // This is the constructor, not the class declaration
     public GameScreen() {

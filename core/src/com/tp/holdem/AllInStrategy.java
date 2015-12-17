@@ -5,8 +5,8 @@ import java.util.List;
 
 public class AllInStrategy implements Strategy
 {
-	private final transient static String NAME = "Always All-in";
-	private transient SampleRequest request;
+	private final static String NAME = "Always All-in";
+	private SampleRequest request;
 	
 	@Override
 	public Strategy getStrategy() 

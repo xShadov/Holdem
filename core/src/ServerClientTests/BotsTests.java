@@ -24,9 +24,9 @@ public class BotsTests
 	private static final String CHECK = "CHECK";
 	private static final String CALL = "CALL";
 	private transient final List<Card> hand = new ArrayList<Card>();
-	private final transient List<Card> tableCards = new ArrayList<Card>();
-	final private transient String[] suits = {"Spade", "Heart", "Diamond", "Club"};
-  	final private transient String[] honours = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"}; 
+	private final List<Card> tableCards = new ArrayList<Card>();
+	final private String[] suits = {"Spade", "Heart", "Diamond", "Club"};
+  	final private String[] honours = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"}; 
   	
 	@Before
 	public void setUp()

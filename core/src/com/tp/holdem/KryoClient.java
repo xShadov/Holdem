@@ -11,8 +11,8 @@ import com.esotericsoftware.kryonet.Listener;
 
 public class KryoClient {
 
-	private Client simulationClient;
-	private GameRenderer renderer;
+	private transient Client simulationClient;
+	private transient GameRenderer renderer;
     public KryoClient(final GameRenderer renderer) {
 
         try {

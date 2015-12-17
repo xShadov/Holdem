@@ -5,12 +5,12 @@ import java.util.Random;
 
 public class Hard implements Strategy
 {
-	private transient final String name = "Hard";
-	private transient SampleRequest request;
-	private transient HandRank rank;
-	private transient final Random random = new Random();
-	private transient int a; //wylosowana liczba
-	private transient int howMuchToBet;
+	private final String name = "Hard";
+	private SampleRequest request;
+	private HandRank rank;
+	private final Random random = new Random();
+	private int a; //wylosowana liczba
+	private int howMuchToBet;
 
 	@Override
 	public Strategy getStrategy() {

@@ -31,7 +31,7 @@ public class GameRenderer {
     private transient boolean gameOver = false;
     private transient List<String> possibleOptions;
     private transient String limitType;
-    private int turnToBet;
+    private transient int turnToBet;
     private transient List<Player> players;
     private transient List<Card> yourCards;
     private transient List<Card> cardsOnTable;
@@ -226,6 +226,10 @@ public class GameRenderer {
     public void changesOccurred(final String TAG, final SampleResponse response){
     	if(TAG.equals("R")){
     		players = response.getPlayers();
+    		for(int i=0; i<players.size(); i++){
+    			if(players.get(i) instanceof Bot)
+    			System.out.println(players.get(i).getStrategy()+"");
+    		}
     	}
     	else if(TAG.equals("N")){
     		gameOver = false;

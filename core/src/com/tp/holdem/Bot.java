@@ -2,7 +2,7 @@ package com.tp.holdem;
 
 public class Bot extends Player
 {
-	private final transient Strategy strategy;
+	private final Strategy strategy;
 	public Bot(final int number, final String name, final Strategy strategy)
 	{
 		super(number,name);

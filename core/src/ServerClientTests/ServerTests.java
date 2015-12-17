@@ -23,8 +23,8 @@ import com.tp.holdem.SampleRequest;
 
 public class ServerTests {
 
-	transient Class<?> c;
-	transient Method[] allMethods;
+	Class<?> c;
+	Method[] allMethods;
 	
 	@Before
 	public void setUp() throws ClassNotFoundException{

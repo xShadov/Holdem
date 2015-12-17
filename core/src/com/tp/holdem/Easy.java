@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Easy implements Strategy{
 
-	private final transient static String NAME = "Easy";
-	private transient SampleRequest request;
+	private final static String NAME = "Easy";
+	private SampleRequest request;
 
 	@Override
 	public Strategy getStrategy() {

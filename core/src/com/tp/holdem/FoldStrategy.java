@@ -4,8 +4,8 @@ import java.util.List;
 
 public class FoldStrategy implements Strategy
 {
-	private final transient static String NAME = "Always Fold";
-	private transient SampleRequest request;
+	private final static String NAME = "Always Fold";
+	private SampleRequest request;
 
 	@Override
 	public Strategy getStrategy() {
