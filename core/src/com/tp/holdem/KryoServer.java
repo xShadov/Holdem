@@ -231,16 +231,18 @@ public class KryoServer implements Runnable {
 	}
 
 	private List<Player> timeToCheckWinner(final List<Player> players, final PokerTable pokerTable) {
-		final List<List<Card>> revealedCards = new ArrayList<List<Card>>();
+		final List<List<Card>> revealedCards = new ArrayList<List<Card>>(players.size());
 		for(int i=0; i<players.size(); i++){
 			if(!players.get(i).isFolded() && players.get(i).isInGame()){
 				final List<Card> cards = new ArrayList<Card>();
 				cards.add(players.get(i).getHand().get(0));
 				cards.add(players.get(i).getHand().get(1));
 				revealedCards.add(i, cards);
+			} else {
+				revealedCards.add(i, null);
 			}
 		}
-		response = new SampleResponse("RC", revealedCards, false, false);
+		response = new SampleResponse("RC", revealedCards, true, false);
 		server.sendToAllTCP(response);
 
 		final List<HandRank> hands = new ArrayList<HandRank>();
@@ -323,6 +325,8 @@ public class KryoServer implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		response = new SampleResponse("RC", null, false, false);
+		server.sendToAllTCP(response);
 		return players;
 	}
 

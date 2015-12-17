@@ -11,6 +11,7 @@ public class SampleResponse {
 	private List<List<Card>> cards2;
 	private PokerTable pokerTable;
 	private int number = 0;
+	private boolean revealed = false;
 	private int maxBetOnTable = 0;
 	private List<String> possibleOptions;
 
@@ -45,6 +46,7 @@ public class SampleResponse {
 	public SampleResponse(final String TAG, final List<List<Card>> cards2, final boolean dummy, final boolean dummy2){
 		this.cards2 = cards2;
 		this.tag = TAG;
+		this.revealed = dummy;
 	}
 	
 	public SampleResponse(final String TAG, final int number){
@@ -125,6 +127,14 @@ public class SampleResponse {
 
 	public void setCards2(final List<List<Card>> cards2) {
 		this.cards2 = cards2;
+	}
+
+	public boolean isRevealed() {
+		return revealed;
+	}
+
+	public void setRevealed(boolean revealed) {
+		this.revealed = revealed;
 	}
 }
 

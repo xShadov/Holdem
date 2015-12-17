@@ -14,10 +14,10 @@ public class Player {
   	private int betAmount = 0;
   	private int betAmountThisRound = 0;
   	private int chipsAmount = 0;
-  	private transient boolean isFolded = false;
+  	private boolean isFolded = false;
   	private int connectionId = 0;
   	private boolean inGame = true;
-  	private transient boolean isAllIn = false;
+  	private boolean isAllIn = false;
   	private int fromWhichPot = -1;
   	private HandRank handRank;
   	

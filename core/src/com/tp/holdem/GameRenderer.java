@@ -12,42 +12,42 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameRenderer {
 
-	private final GameWorld myWorld;
-    private final OrthographicCamera cam;
-    private final TextureRegion bg;
-    private final SpriteBatch batcher;
-    private final BitmapFont font, font2, font3;
-    private PokerTable pokerTable;
-    private boolean waitingForAll;
-    private String waitingMessage = "Nope";
-    private int winnerNumber = -1;
-    private boolean tie = false;
-    private int smallBlindAmount = 0;
-    private int pot = 0;
-    private boolean revealed = false;
-    private List<List<Card>> revealedCards;
-    private int maxBetOnTable = 0;
-    private int fixedLimit = 0;
-    private boolean gameOver = false;
-    private List<String> possibleOptions;
-    private String limitType;
+	private transient final GameWorld myWorld;
+    private transient final OrthographicCamera cam;
+    private transient final TextureRegion bg;
+    private transient final SpriteBatch batcher;
+    private transient final BitmapFont font, font2, font3;
+    private transient PokerTable pokerTable;
+    private transient boolean waitingForAll;
+    private transient String waitingMessage = "Nope";
+    private transient int winnerNumber = -1;
+    private transient boolean tie = false;
+    private transient int smallBlindAmount = 0;
+    private transient int pot = 0;
+    private transient boolean revealed = false;
+    private transient List<List<Card>> revealedCards;
+    private transient int maxBetOnTable = 0;
+    private transient int fixedLimit = 0;
+    private transient boolean gameOver = false;
+    private transient List<String> possibleOptions;
+    private transient String limitType;
     private int turnToBet;
-    private List<Player> players;
-    private List<Card> yourCards;
-    private List<Card> cardsOnTable;
-    private final Texture cards;
-    private int yourNumber=0;
-    private final TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
-    private final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
-    private final int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
-    private final int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
-    private final int[] dealerPositionY = {237, 243, 330, 442, 502, 499, 516, 429, 313, 244};
-    private final int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
-    private final int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
-    private final int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
-    private final int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
-    private final int[] chipsPositionX = {507, 313, 274, 286, 358, 538, 631, 705, 738, 636 };
-    private final int[] chipsPositionY = {273, 288, 374, 441, 501, 484, 484, 451, 370, 280 };
+    private transient List<Player> players;
+    private transient List<Card> yourCards;
+    private transient List<Card> cardsOnTable;
+    private transient final Texture cards;
+    private transient int yourNumber=0;
+    private transient final TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
+    private transient final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
+    private transient final int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
+    private transient final int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
+    private transient final int[] dealerPositionY = {237, 243, 330, 442, 502, 499, 516, 429, 313, 244};
+    private transient final int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
+    private transient final int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
+    private transient final int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
+    private transient final int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
+    private transient final int[] chipsPositionX = {507, 313, 274, 286, 358, 538, 631, 705, 738, 636 };
+    private transient final int[] chipsPositionY = {273, 288, 374, 441, 501, 484, 484, 451, 370, 280 };
     
     public GameRenderer(final GameWorld world){
     	bg = new TextureRegion(new Texture("data/pokerTable.jpg"), 0, 0, 1024, 780);
@@ -252,8 +252,13 @@ public class GameRenderer {
     		waitingMessage = response.getText();
     	}
     	else if(TAG.equals("RC")){
-    		revealed = true;
-    		revealedCards = response.getCards2();
+    		if(response.isRevealed()){
+    			revealed = true;
+    			revealedCards = response.getCards2();
+    		} else {
+    			revealed = false;
+    			revealedCards = null;
+    		}
     	}
     	else if(TAG.equals("B")){
     		turnToBet = response.getNumber();
