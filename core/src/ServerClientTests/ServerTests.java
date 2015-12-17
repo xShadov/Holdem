@@ -17,6 +17,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 import com.tp.holdem.Card;
 import com.tp.holdem.Deck;
+import com.tp.holdem.Easy;
 import com.tp.holdem.Player;
 import com.tp.holdem.PokerTable;
 import com.tp.holdem.SampleRequest;
@@ -986,6 +987,9 @@ public class ServerTests {
 		final Field chap3 = c.getDeclaredField("botsCount");
 		chap3.setAccessible(true);
 		chap3.set(t, 1);
+		final Field chap4 = c.getDeclaredField("botStrategy");
+		chap4.setAccessible(true);
+		chap4.set(t, new Easy());
 		Object o = method.invoke(t, conn);
 		final Field po = c.getDeclaredField("players");
 		po.setAccessible(true);

@@ -35,9 +35,9 @@ public class GameRenderer {
     private transient List<Player> players;
     private transient List<Card> yourCards;
     private transient List<Card> cardsOnTable;
-    private transient final Texture cards;
+    private transient Texture cards;
     private transient int yourNumber=0;
-    private transient final TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
+    private transient TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
     private transient final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
     private transient final int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
     private transient final int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
