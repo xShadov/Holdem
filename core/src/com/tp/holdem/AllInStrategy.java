@@ -2,28 +2,23 @@ package com.tp.holdem;
 
 import java.util.List;
 
-
-public class AllInStrategy implements Strategy
-{
+public class AllInStrategy implements Strategy {
 	private final static String NAME = "Always All-in";
 	private SampleRequest request;
-	
+
 	@Override
-	public Strategy getStrategy() 
-	{
+	public Strategy getStrategy() {
 		return this;
 	}
-	
-	public String getTag()
-	{
+
+	public String getTag() {
 		return request.getTag();
 	}
 
 	@Override
-	public void whatDoIDo(final KryoServer server, final List<Card> hand, final int betAmount, final int chips) 
-	{		
+	public void whatDoIDo(final KryoServer server, final List<Card> hand, final int betAmount, final int chips) {
 		request = new SampleRequest("ALLIN", server.getBetPlayer());
-		server.handleReceived((Object)request);
+		server.handleReceived((Object) request);
 	}
 
 	@Override

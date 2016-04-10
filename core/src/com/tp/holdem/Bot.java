@@ -1,21 +1,20 @@
 package com.tp.holdem;
 
-public class Bot extends Player
-{
+public class Bot extends Player {
 	private Strategy strategy;
-	public Bot(final int number, final String name, final Strategy strategy)
-	{
-		super(number,name);
+
+	public Bot(final int number, final String name, final Strategy strategy) {
+		super(number, name);
 		this.strategy = strategy;
 	}
+
 	@Override
-	public Strategy getStrategy()
-	{
+	public Strategy getStrategy() {
 		return strategy;
 	}
+
 	public void setStrategy(Strategy strategy) {
 		this.strategy = strategy;
 	}
-	
-}
 
+}

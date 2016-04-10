@@ -7,8 +7,7 @@ import com.tp.holdem.KryoServer;
 import com.tp.holdem.PokerTable;
 import com.tp.holdem.SampleRequest;
 
-public class FakeServer extends KryoServer
-{
+public class FakeServer extends KryoServer {
 	private final int betPlayer = 0;
 	private int maxBetOnTable;
 	private int bigBlindAmount;
@@ -16,66 +15,54 @@ public class FakeServer extends KryoServer
 	private final String limit = "no-limit";
 	private final PokerTable pokerTable = new PokerTable();
 	private SampleRequest request;
-	
-	public FakeServer(final int maxBetOnTable, final int bigBlindAmount)
-	{
 
-		this.maxBetOnTable=maxBetOnTable;
-		this.bigBlindAmount=bigBlindAmount;
+	public FakeServer(final int maxBetOnTable, final int bigBlindAmount) {
+
+		this.maxBetOnTable = maxBetOnTable;
+		this.bigBlindAmount = bigBlindAmount;
 	}
-	
-	public void setCardsOnTable(final List<Card> tableCards)
-	{
+
+	public void setCardsOnTable(final List<Card> tableCards) {
 		pokerTable.setCardsOnTable(tableCards);
 	}
-	
-	public int getFixedChips()
-	{
+
+	public int getFixedChips() {
 		return fixedChips;
 	}
-	
-	public String getLimit()
-	{
+
+	public String getLimit() {
 		return limit;
 	}
-	
-	public void handleReceived(final SampleRequest request)
-	{
-		this.request=request;
+
+	public void handleReceived(final SampleRequest request) {
+		this.request = request;
 	}
-	
-	public void setMaxBetOnTable(final int maxBetOnTable)
-	{
-		this.maxBetOnTable=maxBetOnTable;
+
+	public void setMaxBetOnTable(final int maxBetOnTable) {
+		this.maxBetOnTable = maxBetOnTable;
 	}
-	
-	public void setbigBlindAmount(final int bigBlindAmount)
-	{
-		this.bigBlindAmount=bigBlindAmount;
+
+	public void setbigBlindAmount(final int bigBlindAmount) {
+		this.bigBlindAmount = bigBlindAmount;
 	}
-	
-	public String getReceived()
-	{
+
+	public String getReceived() {
 		return request.getTag();
 	}
-	
-	public int getMaxBetOnTable()
-	{
+
+	public int getMaxBetOnTable() {
 		return maxBetOnTable;
 	}
-	
-	public PokerTable getTable()
-	{
+
+	public PokerTable getTable() {
 		return pokerTable;
 	}
-	
-	public int getBetPlayer()
-	{
+
+	public int getBetPlayer() {
 		return betPlayer;
 	}
-	
-	public int getBigBlind()
-	{
+
+	public int getBigBlind() {
 		return bigBlindAmount;
 	}
 }

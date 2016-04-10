@@ -8,73 +8,71 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
-
-
 public class GameScreen implements Screen, InputProcessor {
 
 	private transient final GameWorld world;
-    private transient final GameRenderer renderer;
-    private transient float runTime;
-    private transient Stage stage;
-    private transient KryoClient client;
-    private transient List<TextButton> buttons;
-   
-    // This is the constructor, not the class declaration
-    public GameScreen() {
-    	world = new GameWorld();
-    	renderer = new GameRenderer(world);
-    	try{
-    		client = new KryoClient(renderer);
-    	} catch (Exception e){
+	private transient final GameRenderer renderer;
+	private transient float runTime;
+	private transient Stage stage;
+	private transient KryoClient client;
+	private transient List<TextButton> buttons;
+
+	// This is the constructor, not the class declaration
+	public GameScreen() {
+		world = new GameWorld();
+		renderer = new GameRenderer(world);
+		try {
+			client = new KryoClient(renderer);
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
-    	world.setRenderer(renderer);
-    	world.setClient(client);
-        Gdx.input.setInputProcessor(this);
-        buttons = world.getButtons();
-    }
+		world.setRenderer(renderer);
+		world.setClient(client);
+		Gdx.input.setInputProcessor(this);
+		buttons = world.getButtons();
+	}
 
-    @Override
-    public void render(final float delta) {
-    	stage.act(delta);
-        runTime += delta;
-        world.update(delta);
-        renderer.render(delta, runTime);
-        stage.draw();
-    }
+	@Override
+	public void render(final float delta) {
+		stage.act(delta);
+		runTime += delta;
+		world.update(delta);
+		renderer.render(delta, runTime);
+		stage.draw();
+	}
 
-    @Override
-    public void resize(final int width, final int height) {
-    	stage.getViewport().update(width, height);
-    }
+	@Override
+	public void resize(final int width, final int height) {
+		stage.getViewport().update(width, height);
+	}
 
-    @Override
-    public void show() {
-    	
-    	stage = new Stage();
-    	Gdx.input.setInputProcessor(stage);
-    	for(final TextButton button : buttons){
-    		stage.addActor(button);
-    	}
-		stage.addActor(world.getSlider());	
-    }
+	@Override
+	public void show() {
 
-    @Override
-    public void hide() {
-    }
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
+		for (final TextButton button : buttons) {
+			stage.addActor(button);
+		}
+		stage.addActor(world.getSlider());
+	}
 
-    @Override
-    public void pause() {
-    }
+	@Override
+	public void hide() {
+	}
 
-    @Override
-    public void resume() {
-    }
+	@Override
+	public void pause() {
+	}
 
-    @Override
-    public void dispose() {
-    }
+	@Override
+	public void resume() {
+	}
+
+	@Override
+	public void dispose() {
+	}
 
 	public List<TextButton> getButtons() {
 		return buttons;

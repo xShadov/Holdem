@@ -33,9 +33,9 @@ public class ComparatorsTests {
 	transient List<Player> players;
 	transient HandRank hand1, hand2;
 	transient List<HandRankingEnum> allRanks;
-	
-    @Before
-    public void setUp(){
+
+	@Before
+	public void setUp() {
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
 		hands = new ArrayList<HandRank>();
@@ -54,10 +54,10 @@ public class ComparatorsTests {
 		allRanks.add(HandRankingEnum.FOUR_OF_A_KIND);
 		allRanks.add(HandRankingEnum.STRAIGHT_FLUSH);
 		allRanks.add(HandRankingEnum.ROYAL_FLUSH);
- 	}
-	  
+	}
+
 	@After
-	public void tearDown(){
+	public void tearDown() {
 		hands = null;
 		allRanks = null;
 		comp = null;
@@ -67,9 +67,9 @@ public class ComparatorsTests {
 		hand1 = null;
 		hand2 = null;
 	}
-	
+
 	@Test
-	public final void testCompareTwoHands(){
+	public final void testCompareTwoHands() {
 		cards.add(new Card("4", HEART));
 		cards.add(new Card("5", SPADE));
 		tableCards.add(new Card("6", CLUB));
@@ -88,12 +88,13 @@ public class ComparatorsTests {
 		tableCards.add(new Card("3", CLUB));
 		tableCards.add(new Card("7", SPADE));
 		hands.add(HandOperations.findHandRank(1, cards, tableCards));
-		assertEquals(-1, comp.compare(hands.get(0), hands.get(1) ));
-		assertEquals(1, comp.compare(hands.get(1), hands.get(0) ));
-		assertEquals(0, comp.compare(hands.get(0), hands.get(0) ));
+		assertEquals(-1, comp.compare(hands.get(0), hands.get(1)));
+		assertEquals(1, comp.compare(hands.get(1), hands.get(0)));
+		assertEquals(0, comp.compare(hands.get(0), hands.get(0)));
 	}
-	@Test                                        
-	public final void testSortingByHandPower() {          
+
+	@Test
+	public final void testSortingByHandPower() {
 		cards.add(new Card("4", HEART));
 		cards.add(new Card(JACK, SPADE));
 		tableCards.add(new Card("6", CLUB));
@@ -137,10 +138,10 @@ public class ComparatorsTests {
 		assertEquals(2, hands.get(1).getPlayerNumber());
 		assertEquals(3, hands.get(2).getPlayerNumber());
 		assertEquals(1, hands.get(3).getPlayerNumber());
-    } 
-		
-	@Test                                        
-    public final void testSortingByBet() {          
+	}
+
+	@Test
+	public final void testSortingByBet() {
 		final Player player0 = new Player(0);
 		player0.setBetAmount(500);
 		final Player player1 = new Player(1);
@@ -159,7 +160,7 @@ public class ComparatorsTests {
 		hands.add(new HandRank(3, HandRankingEnum.FOUR_OF_A_KIND, new ArrayList<Card>()));
 		Collections.sort(hands, new HandRankComparator());
 		final List<Player> winners = new ArrayList<Player>();
-		for(int i=0; i<hands.size();i++){
+		for (int i = 0; i < hands.size(); i++) {
 			winners.add(players.get(hands.get(i).getPlayerNumber()));
 		}
 		Collections.sort(winners, new BetComparator());
@@ -167,17 +168,17 @@ public class ComparatorsTests {
 		assertEquals(600, winners.get(1).getBetAmount());
 		assertEquals(600, winners.get(2).getBetAmount());
 		assertEquals(1000, winners.get(3).getBetAmount());
-    } 
-	
-	@Test                                        
-    public final void testCompareHandsOnlyByNames() {     
-		for(int i=0; i<allRanks.size(); i++){
+	}
+
+	@Test
+	public final void testCompareHandsOnlyByNames() {
+		for (int i = 0; i < allRanks.size(); i++) {
 			hand1.setHand(allRanks.get(i));
-			for(int j=0; j<allRanks.size(); j++){
+			for (int j = 0; j < allRanks.size(); j++) {
 				hand2.setHand(allRanks.get(j));
-				if(i==j){
+				if (i == j) {
 					continue;
-				} else if(i<j){
+				} else if (i < j) {
 					assertEquals(-1, comp.compare(hand1, hand2));
 					assertEquals(1, comp.compare(hand2, hand1));
 				} else {
@@ -186,10 +187,10 @@ public class ComparatorsTests {
 				}
 			}
 		}
-    } 
-	
-	@Test                                        
-    public final void testCompareHighCardByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareHighCardByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.HIGH_CARD);
 		hand2.setHand(HandRankingEnum.HIGH_CARD);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -238,10 +239,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("3");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    } 
-	
-	@Test                                        
-    public final void testCompareOnePairsByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareOnePairsByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.PAIR);
 		hand2.setHand(HandRankingEnum.PAIR);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -286,10 +287,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("3");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareOnePairsByCardsMakingDeckSecond() {     
+	}
+
+	@Test
+	public final void testCompareOnePairsByCardsMakingDeckSecond() {
 		hand1.setHand(HandRankingEnum.PAIR);
 		hand2.setHand(HandRankingEnum.PAIR);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -334,10 +335,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(4).setHonour(QUEEN);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareOnePairsByCardsMakingDeckThird() {     
+	}
+
+	@Test
+	public final void testCompareOnePairsByCardsMakingDeckThird() {
 		hand1.setHand(HandRankingEnum.PAIR);
 		hand2.setHand(HandRankingEnum.PAIR);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -382,10 +383,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(4).setHonour(QUEEN);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareOnePairsByCardsMakingDeckFourth() {     
+	}
+
+	@Test
+	public final void testCompareOnePairsByCardsMakingDeckFourth() {
 		hand1.setHand(HandRankingEnum.PAIR);
 		hand2.setHand(HandRankingEnum.PAIR);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -430,10 +431,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(4).setHonour(QUEEN);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareTwoPairsByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareTwoPairsByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.TWO_PAIR);
 		hand2.setHand(HandRankingEnum.TWO_PAIR);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -480,10 +481,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("3");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareTwoPairsByCardsMakingDeckSecond() {     
+	}
+
+	@Test
+	public final void testCompareTwoPairsByCardsMakingDeckSecond() {
 		hand1.setHand(HandRankingEnum.TWO_PAIR);
 		hand2.setHand(HandRankingEnum.TWO_PAIR);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -530,10 +531,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(2).setHonour("9");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareTwoPairsByCardsMakingDeckThird() {     
+	}
+
+	@Test
+	public final void testCompareTwoPairsByCardsMakingDeckThird() {
 		hand1.setHand(HandRankingEnum.TWO_PAIR);
 		hand2.setHand(HandRankingEnum.TWO_PAIR);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -580,10 +581,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(4).setHonour(KING);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareThreeOfAKindByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareThreeOfAKindByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.THREE_OF_A_KIND);
 		hand2.setHand(HandRankingEnum.THREE_OF_A_KIND);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -624,10 +625,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("3");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareThreeOfAKindByCardsMakingDeckSecond() {     
+	}
+
+	@Test
+	public final void testCompareThreeOfAKindByCardsMakingDeckSecond() {
 		hand1.setHand(HandRankingEnum.THREE_OF_A_KIND);
 		hand2.setHand(HandRankingEnum.THREE_OF_A_KIND);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -668,10 +669,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(4).setHonour(KING);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareThreeOfAKindByCardsMakingDeckThird() {     
+	}
+
+	@Test
+	public final void testCompareThreeOfAKindByCardsMakingDeckThird() {
 		hand1.setHand(HandRankingEnum.THREE_OF_A_KIND);
 		hand2.setHand(HandRankingEnum.THREE_OF_A_KIND);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -712,10 +713,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(4).setHonour(KING);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareStraightByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareStraightByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.STRAIGHT);
 		hand2.setHand(HandRankingEnum.STRAIGHT);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -748,7 +749,7 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("4");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-		
+
 		hand2.getCardsThatMakeDeck().get(4).setHonour("5");
 		hand2.getCardsThatMakeDeck().get(3).setHonour("4");
 		hand2.getCardsThatMakeDeck().get(2).setHonour("3");
@@ -761,10 +762,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("2");
 		assertEquals(1, comp.compare(hand1, hand2));
 		assertEquals(-1, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareFlushByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareFlushByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.FLUSH);
 		hand2.setHand(HandRankingEnum.FLUSH);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -813,10 +814,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("3");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareFullHouseByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareFullHouseByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.FULL_HOUSE);
 		hand2.setHand(HandRankingEnum.FULL_HOUSE);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -867,10 +868,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("9");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareFullHouseByCardsMakingDeckSecond() {     
+	}
+
+	@Test
+	public final void testCompareFullHouseByCardsMakingDeckSecond() {
 		hand1.setHand(HandRankingEnum.FULL_HOUSE);
 		hand2.setHand(HandRankingEnum.FULL_HOUSE);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -921,10 +922,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour(ACE);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareFourOfAKindByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareFourOfAKindByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.FOUR_OF_A_KIND);
 		hand2.setHand(HandRankingEnum.FOUR_OF_A_KIND);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -961,10 +962,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("4");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareFourOfAKindByCardsMakingDeckSecond() {     
+	}
+
+	@Test
+	public final void testCompareFourOfAKindByCardsMakingDeckSecond() {
 		hand1.setHand(HandRankingEnum.FOUR_OF_A_KIND);
 		hand2.setHand(HandRankingEnum.FOUR_OF_A_KIND);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -1001,10 +1002,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(4).setHonour(ACE);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareStraightFlushByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareStraightFlushByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.STRAIGHT_FLUSH);
 		hand2.setHand(HandRankingEnum.STRAIGHT_FLUSH);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -1037,7 +1038,7 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("4");
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-		
+
 		hand2.getCardsThatMakeDeck().get(4).setHonour("5");
 		hand2.getCardsThatMakeDeck().get(3).setHonour("4");
 		hand2.getCardsThatMakeDeck().get(2).setHonour("3");
@@ -1050,10 +1051,10 @@ public class ComparatorsTests {
 		hand1.getCardsThatMakeDeck().get(0).setHonour("2");
 		assertEquals(1, comp.compare(hand1, hand2));
 		assertEquals(-1, comp.compare(hand2, hand1));
-    }
-	
-	@Test                                        
-    public final void testCompareRoyalFlushByCardsMakingDeck() {     
+	}
+
+	@Test
+	public final void testCompareRoyalFlushByCardsMakingDeck() {
 		hand1.setHand(HandRankingEnum.ROYAL_FLUSH);
 		hand2.setHand(HandRankingEnum.ROYAL_FLUSH);
 		final List<Card> cards1 = new ArrayList<Card>();
@@ -1072,5 +1073,5 @@ public class ComparatorsTests {
 		hand2.setCardsThatMakeDeck(cards2);
 		assertEquals(0, comp.compare(hand1, hand2));
 		assertEquals(0, comp.compare(hand2, hand1));
-    }
+	}
 }

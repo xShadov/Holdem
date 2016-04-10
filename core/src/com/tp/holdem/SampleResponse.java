@@ -4,8 +4,8 @@ import java.util.List;
 
 public class SampleResponse {
 
-	private String text="";
-	private String tag="";
+	private String text = "";
+	private String tag = "";
 	private List<Player> players;
 	private List<Card> cards;
 	private List<List<Card>> cards2;
@@ -15,46 +15,47 @@ public class SampleResponse {
 	private int maxBetOnTable = 0;
 	private List<String> possibleOptions;
 
-	public SampleResponse(){
-		
+	public SampleResponse() {
+
 	}
-	
-	public SampleResponse(final String TAG){
+
+	public SampleResponse(final String TAG) {
 		this.tag = TAG;
 	}
-	
-	public SampleResponse(final String TAG, final String text){
+
+	public SampleResponse(final String TAG, final String text) {
 		this.tag = TAG;
-		this.text=text;
+		this.text = text;
 	}
-	
-	public SampleResponse(final String TAG, final PokerTable pokerTable){
+
+	public SampleResponse(final String TAG, final PokerTable pokerTable) {
 		this.tag = TAG;
 		this.pokerTable = pokerTable;
 	}
-	
-	public SampleResponse(final String TAG, final List<Player> players){
+
+	public SampleResponse(final String TAG, final List<Player> players) {
 		this.players = players;
 		this.tag = TAG;
 	}
 
-	public SampleResponse(final String TAG, final List<Card> cards, final boolean dummy){
+	public SampleResponse(final String TAG, final List<Card> cards, final boolean dummy) {
 		this.cards = cards;
 		this.tag = TAG;
 	}
-	
-	public SampleResponse(final String TAG, final List<List<Card>> cards2, final boolean dummy, final boolean dummy2){
+
+	public SampleResponse(final String TAG, final List<List<Card>> cards2, final boolean dummy, final boolean dummy2) {
 		this.cards2 = cards2;
 		this.tag = TAG;
 		this.revealed = dummy;
 	}
-	
-	public SampleResponse(final String TAG, final int number){
+
+	public SampleResponse(final String TAG, final int number) {
 		this.tag = TAG;
 		this.number = number;
 	}
-	
-	public SampleResponse(final String TAG, final int number, final int maxBetOnTable, final List<String> possibleOptions){
+
+	public SampleResponse(final String TAG, final int number, final int maxBetOnTable,
+			final List<String> possibleOptions) {
 		this.tag = TAG;
 		this.number = number;
 		this.maxBetOnTable = maxBetOnTable;
@@ -72,11 +73,11 @@ public class SampleResponse {
 	public List<Player> getPlayers() {
 		return players;
 	}
-	
-	public List<Card> getCards()
-	{
+
+	public List<Card> getCards() {
 		return cards;
 	}
+
 	public void setPlayers(final List<Player> players) {
 		this.players = players;
 	}
@@ -88,12 +89,12 @@ public class SampleResponse {
 	public void setTag(final String tAG) {
 		tag = tAG;
 	}
-	
-	public String getText(){
+
+	public String getText() {
 		return text;
 	}
-	
-	public void setText(final String text){
+
+	public void setText(final String text) {
 		this.text = text;
 	}
 
@@ -137,4 +138,3 @@ public class SampleResponse {
 		this.revealed = revealed;
 	}
 }
-

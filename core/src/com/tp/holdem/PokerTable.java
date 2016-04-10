@@ -13,30 +13,25 @@ public class PokerTable {
 	private int fixedLimit;
 	private int fixedRaiseCount;
 	private int raiseCount;
-	
-	public PokerTable()
-	{
+
+	public PokerTable() {
 		this.pot = 0;
 		this.cardsOnTable = new ArrayList<Card>();
 	}
-	
-	public void setPot(final int newPot)
-	{
-		this.pot=newPot;
+
+	public void setPot(final int newPot) {
+		this.pot = newPot;
 	}
-	
-	public int getPot()
-	{
+
+	public int getPot() {
 		return pot;
 	}
-	
-	public List<Card> getCardList()
-	{
+
+	public List<Card> getCardList() {
 		return cardsOnTable;
 	}
-	
-	public void addCard(final Card card)
-	{
+
+	public void addCard(final Card card) {
 		cardsOnTable.add(card);
 	}
 
