@@ -1,6 +1,6 @@
 package com.tp.holdem.core.model;
 
-public enum HandRankingEnum {
+public enum Hands {
 	ROYAL_FLUSH(10),
 	STRAIGHT_FLUSH(9),
 	FOUR_OF_A_KIND(8),
@@ -14,11 +14,11 @@ public enum HandRankingEnum {
 
 	private int value;
 
-	HandRankingEnum(final int value) {
+	Hands(final int value) {
 		this.value = value;
 	}
 
-	public int getValue() {
+	public int value() {
 		return value;
 	}
 }

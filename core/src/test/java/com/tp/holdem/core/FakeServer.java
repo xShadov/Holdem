@@ -7,7 +7,7 @@ import com.tp.holdem.core.model.SampleRequest;
 import java.util.List;
 
 public class FakeServer extends KryoServer {
-	private final int betPlayer = 0;
+/*	private final int betPlayer = 0;
 	private int maxBetOnTable;
 	private int bigBlindAmount;
 	private final int fixedChips = 40;
@@ -63,5 +63,5 @@ public class FakeServer extends KryoServer {
 
 	public int getBigBlind() {
 		return bigBlindAmount;
-	}
+	}*/
 }

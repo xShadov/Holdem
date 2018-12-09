@@ -84,6 +84,9 @@ public class KryoServer implements Runnable {
 		kryo.register(SampleRequest.class);
 		kryo.register(ArrayList.class);
 		kryo.register(List.class);
+		kryo.register(Honour.class);
+		kryo.register(Moves.class);
+		kryo.register(Suit.class);
 		kryo.register(Player.class);
 		kryo.register(Card.class);
 		kryo.register(Deck.class);
@@ -717,7 +720,7 @@ public class KryoServer implements Runnable {
 		}
 		pokerTable.setBigBlindAmount(bigBlindAmount);
 		pokerTable.setSmallBlindAmount(smallBlindAmount);
-		deck.dealCards(2, players);
+		deck.dealCards(2, io.vavr.collection.List.ofAll(players));
 		for (final Player player : players) {
 			// HCD - hand cards dealt
 			response = new SampleResponse("HCD", player.getHand(), false);

@@ -1,14 +1,14 @@
 package com.tp.holdem.core;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.tp.holdem.core.model.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KryoClient {
 
@@ -27,6 +27,9 @@ public class KryoClient {
 			kryo.register(SampleRequest.class);
 			kryo.register(ArrayList.class);
 			kryo.register(List.class);
+			kryo.register(Honour.class);
+			kryo.register(Moves.class);
+			kryo.register(Suit.class);
 			kryo.register(Player.class);
 			kryo.register(Card.class);
 			kryo.register(Deck.class);

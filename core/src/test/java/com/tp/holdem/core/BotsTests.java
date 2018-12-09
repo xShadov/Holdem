@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 public class BotsTests {
-	private static final String FOLD = "FOLD";
+	/*private static final String FOLD = "FOLD";
 	private static final String BET = "BET";
 	private static final String RAISE = "RAISE";
 	private static final String ALLIN = "ALLIN";
@@ -397,5 +397,5 @@ public class BotsTests {
 		server.setCardsOnTable(tableCards);
 		bot.whatDoIDo(server, hand, 20, 20);
 		assertTrue(bot.getTag().equals(FOLD));
-	}
+	}*/
 }

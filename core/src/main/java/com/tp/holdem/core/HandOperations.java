@@ -3,7 +3,7 @@ package com.tp.holdem.core;
 import com.tp.holdem.core.compare.CardComparator;
 import com.tp.holdem.core.model.Card;
 import com.tp.holdem.core.model.HandRank;
-import com.tp.holdem.core.model.HandRankingEnum;
+import com.tp.holdem.core.model.Hands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,25 +20,25 @@ public class HandOperations {
 		Collections.sort(cards, new CardComparator());
 
 		if (isARoyalFlush(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.ROYAL_FLUSH, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.ROYAL_FLUSH, cardsThatMakeDeck);
 		} else if (isAStraightFlush(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.STRAIGHT_FLUSH, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.STRAIGHT_FLUSH, cardsThatMakeDeck);
 		} else if (isAFourOfAKind(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.FOUR_OF_A_KIND, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.FOUR_OF_A_KIND, cardsThatMakeDeck);
 		} else if (isAFullHouse(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.FULL_HOUSE, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.FULL_HOUSE, cardsThatMakeDeck);
 		} else if (isAFlush(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.FLUSH, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.FLUSH, cardsThatMakeDeck);
 		} else if (isAStraight(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.STRAIGHT, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.STRAIGHT, cardsThatMakeDeck);
 		} else if (isThreeOfAKind(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.THREE_OF_A_KIND, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.THREE_OF_A_KIND, cardsThatMakeDeck);
 		} else if (isTwoPair(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.TWO_PAIR, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.TWO_PAIR, cardsThatMakeDeck);
 		} else if (isPair(cards)) {
-			return new HandRank(playerNumber, HandRankingEnum.PAIR, cardsThatMakeDeck);
+			return new HandRank(playerNumber, Hands.PAIR, cardsThatMakeDeck);
 		} else {
-			return new HandRank(playerNumber, HandRankingEnum.HIGH_CARD, getFiveMaxCards(cards));
+			return new HandRank(playerNumber, Hands.HIGH_CARD, getFiveMaxCards(cards));
 		}
 	}
 

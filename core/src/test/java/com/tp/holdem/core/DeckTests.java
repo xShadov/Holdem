@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class DeckTests {
-
+/*
 	private transient Deck deck;
 
 	@Before
@@ -100,5 +100,5 @@ public class DeckTests {
 		players.add(new Player(2));
 		deck.dealCards(26, players);
 		assertTrue("Deck should be empty", deck.isEmpty());
-	}
+	}*/
 }

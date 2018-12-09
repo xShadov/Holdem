@@ -4,7 +4,6 @@ import com.tp.holdem.core.compare.BetComparator;
 import com.tp.holdem.core.compare.HandRankComparator;
 import com.tp.holdem.core.model.*;
 import com.tp.holdem.core.strategy.AllInStrategy;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,19 +13,12 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class PlayerTests {
-
-	private transient Player playerNoName, playerWithName;
+	/*private Player playerNoName, playerWithName;
 
 	@Before
 	public void setUp() {
-		playerNoName = new Player(5);
-		playerWithName = new Player(6, "Roger");
-	}
-
-	@After
-	public void tearDown() {
-		playerNoName = null;
-		playerWithName = null;
+		playerNoName = Player.unnamed(5);
+		playerWithName = Player.named(6, "Roger");
 	}
 
 	@Test
@@ -35,33 +27,15 @@ public class PlayerTests {
 	}
 
 	@Test
-	public final void testPlayerGetName() {
-		assertEquals("Player has the wrong name", "Player5", playerNoName.getName());
-	}
-
-	@Test
-	public final void testPlayerGetNumber() {
-		assertEquals("Player has the wrong number", 6, playerWithName.getNumber());
-		playerWithName.setNumber(15);
-		assertEquals("Player has the wrong number", 15, playerWithName.getNumber());
-	}
-
-	@Test
-	public final void testPlayerSetName() {
-		playerNoName.setName("Steven");
-		assertEquals("Player has the wrong number", "Steven", playerNoName.getName());
-	}
-
-	@Test
 	public final void testPlayerAddCard() {
-		playerNoName.addCard(new Card("5", "Heart"));
+		playerNoName.addCard(Card.from(Suit.HEART, Honour.FIVE));
 		assertEquals("Player still has no cards", 1, playerNoName.getHand().size());
 	}
 
 	@Test
 	public final void testPlayerCardsInPosesion() {
-		playerWithName.addCard(new Card("5", "Heart"));
-		playerWithName.addCard(new Card("6", "Heart"));
+		playerWithName.addCard(Card.from(Suit.HEART, Honour.FIVE));
+		playerWithName.addCard(Card.from(Suit.HEART, Honour.SIX));
 		assertEquals("Player has wrong number of cards", 2, playerWithName.getHand().size());
 	}
 
@@ -82,8 +56,8 @@ public class PlayerTests {
 	@Test
 	public final void testPlayerClearHand() {
 		final Player player = new Player(15);
-		player.addCard(new Card("Jack", "Spade"));
-		player.addCard(new Card("Queen", "Diamond"));
+		player.addCard(Card.from(Suit.DIAMOND, Honour.QUEEN));
+		player.addCard(Card.from(Suit.SPADE, Honour.JACK));
 		player.clearHand();
 		assertEquals(0, player.getHand().size());
 	}
@@ -108,8 +82,8 @@ public class PlayerTests {
 	public final void testPlayerHandSetting() {
 		final List<Card> cards = new ArrayList<Card>();
 		final Player player = new Player(15);
-		cards.add(new Card("Jack", "Spade"));
-		cards.add(new Card("Queen", "Diamond"));
+		cards.add(Card.from(Suit.SPADE, Honour.JACK));
+		cards.add(Card.from(Suit.DIAMOND, Honour.QUEEN));
 		player.setHand(cards);
 		assertEquals(2, player.getHand().size());
 		assertEquals("Jack", player.getHand().get(0).getHonour());
@@ -135,10 +109,10 @@ public class PlayerTests {
 		final Player player = new Player(15);
 		final HandRank handRank = new HandRank();
 		handRank.setPlayerNumber(player.getNumber());
-		handRank.setHand(HandRankingEnum.ROYAL_FLUSH);
+		handRank.setHand(Hands.ROYAL_FLUSH);
 		handRank.setCardsThatMakeDeck(new ArrayList<Card>());
 		player.setHandRank(handRank);
-		assertEquals(HandRankingEnum.ROYAL_FLUSH, player.getHandRank().getHand());
+		assertEquals(Hands.ROYAL_FLUSH, player.getHandRank().getHand());
 		assertEquals(15, player.getHandRank().getPlayerNumber());
 		assertEquals(0, player.getHandRank().getCardsThatMakeDeck().size());
 	}
@@ -147,13 +121,13 @@ public class PlayerTests {
 	public final void testPlayerHandRankWithCards() {
 		final Player player = new Player(15);
 		final List<Card> cards = new ArrayList<Card>();
-		cards.add(new Card("2", "Club"));
-		cards.add(new Card("2", "Heart"));
-		cards.add(new Card("5", "Club"));
-		cards.add(new Card("5", "Heart"));
-		cards.add(new Card("5", "Club"));
-		player.setHandRank(new HandRank(player.getNumber(), HandRankingEnum.ROYAL_FLUSH, cards));
-		assertEquals(HandRankingEnum.ROYAL_FLUSH, player.getHandRank().getHand());
+		cards.add(Card.from(Suit.CLUB, Honour.TWO));
+		cards.add(Card.from(Suit.HEART,Honour.TWO));
+		cards.add(Card.from(Suit.CLUB, Honour.FIVE));
+		cards.add(Card.from(Suit.HEART, Honour.FIVE));
+		cards.add(Card.from(Suit.CLUB, Honour.FIVE));
+		player.setHandRank(new HandRank(player.getNumber(), Hands.ROYAL_FLUSH, cards));
+		assertEquals(Hands.ROYAL_FLUSH, player.getHandRank().getHand());
 		assertEquals(15, player.getHandRank().getPlayerNumber());
 		assertEquals(5, player.getHandRank().getCardsThatMakeDeck().size());
 		String string = player.getNumber() + " " + player.getHandRank().getHand();
@@ -166,9 +140,9 @@ public class PlayerTests {
 	@Test
 	public final void testPlayerCompareHands() {
 		final Player player = new Player(15);
-		player.setHandRank(new HandRank(player.getNumber(), HandRankingEnum.STRAIGHT, new ArrayList<Card>()));
+		player.setHandRank(new HandRank(player.getNumber(), Hands.STRAIGHT, new ArrayList<Card>()));
 		final Player player2 = new Player(20);
-		player2.setHandRank(new HandRank(player2.getNumber(), HandRankingEnum.STRAIGHT_FLUSH, new ArrayList<Card>()));
+		player2.setHandRank(new HandRank(player2.getNumber(), Hands.STRAIGHT_FLUSH, new ArrayList<Card>()));
 		final HandRankComparator comp = new HandRankComparator();
 		assertEquals(-1, comp.compare(player.getHandRank(), player2.getHandRank()));
 		assertEquals(1, comp.compare(player2.getHandRank(), player.getHandRank()));
@@ -187,7 +161,7 @@ public class PlayerTests {
 		playerToClone.setFolded(true);
 		playerToClone.setInGame(false);
 		final Player clonedPlayer = new Player();
-		clonedPlayer.setAllProperties(playerToClone);
+		clonedPlayer.copy(playerToClone);
 		assertEquals(clonedPlayer.isAllIn(), playerToClone.isAllIn());
 		assertEquals(clonedPlayer.getBetAmount(), playerToClone.getBetAmount());
 		assertEquals(clonedPlayer.getBetAmountThisRound(), playerToClone.getBetAmountThisRound());
@@ -197,6 +171,6 @@ public class PlayerTests {
 		assertEquals(clonedPlayer.getChipsAmount(), playerToClone.getChipsAmount());
 		assertEquals(clonedPlayer.isFolded(), playerToClone.isFolded());
 		assertEquals(clonedPlayer.isInGame(), playerToClone.isInGame());
-	}
+	}*/
 
 }

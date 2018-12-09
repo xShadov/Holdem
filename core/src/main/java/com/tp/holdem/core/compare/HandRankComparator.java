@@ -1,7 +1,7 @@
 package com.tp.holdem.core.compare;
 
 import com.tp.holdem.core.model.HandRank;
-import com.tp.holdem.core.model.HandRankingEnum;
+import com.tp.holdem.core.model.Hands;
 
 import java.util.Comparator;
 
@@ -14,9 +14,9 @@ public class HandRankComparator implements Comparator<HandRank> {
 	@Override
 	public int compare(final HandRank hand1, final HandRank hand2) {
 		if (hand1.getHand() == hand2.getHand()) {
-			if (hand1.getHand() == HandRankingEnum.ROYAL_FLUSH)
+			if (hand1.getHand() == Hands.ROYAL_FLUSH)
 				return 0;
-			else if (hand1.getHand() == HandRankingEnum.STRAIGHT_FLUSH) {
+			else if (hand1.getHand() == Hands.STRAIGHT_FLUSH) {
 				if (hand1.getCardsThatMakeDeck().get(hand1.getCardsThatMakeDeck().size() - 1).getValue() > hand2
 						.getCardsThatMakeDeck().get(hand2.getCardsThatMakeDeck().size() - 1).getValue()) {
 					return 1;
@@ -26,7 +26,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 				} else {
 					return 0;
 				}
-			} else if (hand1.getHand() == HandRankingEnum.FOUR_OF_A_KIND) {
+			} else if (hand1.getHand() == Hands.FOUR_OF_A_KIND) {
 				int index1;
 				int index2;
 				if (hand1.getCardsThatMakeDeck().get(0).getHonour() == hand1.getCardsThatMakeDeck().get(1)
@@ -63,7 +63,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 					else
 						return 0;
 				}
-			} else if (hand1.getHand() == HandRankingEnum.FULL_HOUSE) {
+			} else if (hand1.getHand() == Hands.FULL_HOUSE) {
 				int indexTriples1;
 				int indexDoubles1;
 				int indexTriples2;
@@ -103,7 +103,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 						return 0;
 					}
 				}
-			} else if (hand1.getHand() == HandRankingEnum.FLUSH) {
+			} else if (hand1.getHand() == Hands.FLUSH) {
 				for (int i = 4; i >= 0; i--) {
 					if (hand1.getCardsThatMakeDeck().get(i).getValue() > hand2.getCardsThatMakeDeck().get(i)
 							.getValue()) {
@@ -116,7 +116,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 							return 0;
 					}
 				}
-			} else if (hand1.getHand() == HandRankingEnum.STRAIGHT) {
+			} else if (hand1.getHand() == Hands.STRAIGHT) {
 				if (hand1.getCardsThatMakeDeck().get(hand1.getCardsThatMakeDeck().size() - 1).getValue() > hand2
 						.getCardsThatMakeDeck().get(hand2.getCardsThatMakeDeck().size() - 1).getValue()) {
 					return 1;
@@ -126,7 +126,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 				} else {
 					return 0;
 				}
-			} else if (hand1.getHand() == HandRankingEnum.THREE_OF_A_KIND) {
+			} else if (hand1.getHand() == Hands.THREE_OF_A_KIND) {
 				int index1;
 				int index2;
 				if (hand1.getCardsThatMakeDeck().get(0).getValue() == hand1.getCardsThatMakeDeck().get(1).getValue()
@@ -193,7 +193,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 							return 0;
 					}
 				}
-			} else if (hand1.getHand() == HandRankingEnum.TWO_PAIR) {
+			} else if (hand1.getHand() == Hands.TWO_PAIR) {
 				int index1first;
 				int index2first;
 				if (hand1.getCardsThatMakeDeck().get(4).getValue() == hand1.getCardsThatMakeDeck().get(3).getValue()) {
@@ -254,7 +254,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 							return 0;
 					}
 				}
-			} else if (hand1.getHand() == HandRankingEnum.PAIR) {
+			} else if (hand1.getHand() == Hands.PAIR) {
 				int index1;
 				int index2;
 				if (hand1.getCardsThatMakeDeck().get(4).getValue() == hand1.getCardsThatMakeDeck().get(3).getValue()) {
@@ -354,7 +354,7 @@ public class HandRankComparator implements Comparator<HandRank> {
 				}
 			}
 		} else {
-			if (hand1.getHand().getValue() > hand2.getHand().getValue()) {
+			if (hand1.getHand().value() > hand2.getHand().value()) {
 				return 1;
 			} else
 				return -1;

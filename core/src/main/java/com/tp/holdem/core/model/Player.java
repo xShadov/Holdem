@@ -65,4 +65,7 @@ public class Player {
 		hand.clear();
 	}
 
+	public static boolean playing(Player player) {
+		return player.isInGame() && !player.isFolded;
+	}
 }

@@ -41,7 +41,7 @@ public class HardStrategy implements Strategy {
 
 		// FLOP
 		if (server.getTable().getCardsOnTable().size() == 3) {
-			if (rank.getHand().getValue() > 4) {
+			if (rank.getHand().value() > 4) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("ALLIN", server.getBetPlayer());
@@ -60,7 +60,7 @@ public class HardStrategy implements Strategy {
 						request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
-			} else if (rank.getHand().getValue() == 4) {
+			} else if (rank.getHand().value() == 4) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -79,7 +79,7 @@ public class HardStrategy implements Strategy {
 				}
 			}
 
-			else if (rank.getHand().getValue() < 4) {
+			else if (rank.getHand().value() < 4) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -101,7 +101,7 @@ public class HardStrategy implements Strategy {
 
 		// TURN
 		else if (server.getTable().getCardsOnTable().size() == 4) {
-			if (rank.getHand().getValue() > 4) {
+			if (rank.getHand().value() > 4) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("ALLIN", server.getBetPlayer());
@@ -120,7 +120,7 @@ public class HardStrategy implements Strategy {
 						request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
-			} else if (rank.getHand().getValue() == 4) {
+			} else if (rank.getHand().value() == 4) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -137,7 +137,7 @@ public class HardStrategy implements Strategy {
 						request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
-			} else if (rank.getHand().getValue() == 1) {
+			} else if (rank.getHand().value() == 1) {
 				a = random.nextInt(10);
 				if (a < 4) {
 					if (server.getMaxBetOnTable() == 0) {
@@ -156,13 +156,13 @@ public class HardStrategy implements Strategy {
 						request = new SampleRequest("FOLD", server.getBetPlayer());
 					}
 				}
-			} else if (rank.getHand().getValue() == 3) {
+			} else if (rank.getHand().value() == 3) {
 				if (server.getMaxBetOnTable() == betAmount) {
 					request = new SampleRequest("CHECK", server.getBetPlayer());
 				} else {
 					request = new SampleRequest("FOLD", server.getBetPlayer());
 				}
-			} else if (rank.getHand().getValue() == 2) {
+			} else if (rank.getHand().value() == 2) {
 				if (server.getMaxBetOnTable() == betAmount) {
 					request = new SampleRequest("CHECK", server.getBetPlayer());
 				} else {
@@ -173,7 +173,7 @@ public class HardStrategy implements Strategy {
 
 		// RIVER
 		else if (server.getTable().getCardsOnTable().size() == 5) {
-			if (rank.getHand().getValue() > 4) {
+			if (rank.getHand().value() > 4) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("ALLIN", server.getBetPlayer());
@@ -192,7 +192,7 @@ public class HardStrategy implements Strategy {
 						request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
-			} else if (rank.getHand().getValue() == 4) {
+			} else if (rank.getHand().value() == 4) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -209,7 +209,7 @@ public class HardStrategy implements Strategy {
 						request = new SampleRequest("CALL", server.getBetPlayer());
 					}
 				}
-			} else if (rank.getHand().getValue() == 1) {
+			} else if (rank.getHand().value() == 1) {
 				a = random.nextInt(10);
 				if (a < 2) {
 					if (server.getMaxBetOnTable() == 0) {
@@ -228,13 +228,13 @@ public class HardStrategy implements Strategy {
 						request = new SampleRequest("FOLD", server.getBetPlayer());
 					}
 				}
-			} else if (rank.getHand().getValue() == 3) {
+			} else if (rank.getHand().value() == 3) {
 				if (server.getMaxBetOnTable() == betAmount) {
 					request = new SampleRequest("CHECK", server.getBetPlayer());
 				} else {
 					request = new SampleRequest("FOLD", server.getBetPlayer());
 				}
-			} else if (rank.getHand().getValue() == 2) {
+			} else if (rank.getHand().value() == 2) {
 				if (server.getMaxBetOnTable() == betAmount) {
 					request = new SampleRequest("CHECK", server.getBetPlayer());
 				} else {

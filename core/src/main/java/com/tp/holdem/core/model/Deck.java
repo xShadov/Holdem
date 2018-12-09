@@ -1,56 +1,40 @@
 package com.tp.holdem.core.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
+import io.vavr.collection.List;
+import lombok.Data;
+
+import java.util.stream.IntStream;
+
+@Data
 public class Deck {
-
-	final private List<Card> cards = new ArrayList<Card>(52);
-	final private String[] suits = { "Spade", "Heart", "Diamond", "Club" };
-	final private String[] honours = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
-
-	public Deck() {
-		for (int i = 0; i <= 12; i++) {
-			cards.add(new Card(honours[i], suits[0]));
-			cards.add(new Card(honours[i], suits[1]));
-			cards.add(new Card(honours[i], suits[2]));
-			cards.add(new Card(honours[i], suits[3]));
-		}
-	}
+	private java.util.List<Card> cards = List.of(Honour.values())
+			.flatMap(honour ->
+					List.of(
+							Card.from(Suit.HEART, honour),
+							Card.from(Suit.CLUB, honour),
+							Card.from(Suit.DIAMOND, honour),
+							Card.from(Suit.SPADE, honour)
+					)
+			).shuffle()
+			.toJavaList();
 
 	public void dealCards(final int numberOfCards, final List<Player> players) {
-		shuffleCards();
-		for (int b = 1; b <= numberOfCards; b++) {
-			for (final Player player : players) {
-				if (!player.isFolded() && player.isInGame()) {
+		final List<Player> playing = players
+				.filter(Player::playing);
+
+		IntStream.range(0, numberOfCards).forEach(i ->
+				playing.forEach(player -> {
 					player.addCard(cards.get(0));
 					cards.remove(0);
-				}
-			}
-		}
-	}
-
-	public int howManyCardsLeft() {
-		return cards.size();
-	}
-
-	public boolean isEmpty() {
-		return cards.size() == 0;
-	}
-
-	public List<Card> getCards() {
-		return cards;
-	}
-
-	public void shuffleCards() {
-		Collections.shuffle(cards);
+				})
+		);
 	}
 
 	public Card drawCard() {
-		final Card card = cards.get(0);
-		cards.remove(0);
-		return card;
+		return List.ofAll(cards).headOption()
+				.peek(card -> cards.remove(0))
+				.getOrElseThrow(() -> new IllegalStateException("Card cannot be drawn - deck is empty"));
 	}
 
 }

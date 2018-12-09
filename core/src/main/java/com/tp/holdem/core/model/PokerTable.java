@@ -1,9 +1,10 @@
 package com.tp.holdem.core.model;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Data
 public class PokerTable {
@@ -14,11 +15,7 @@ public class PokerTable {
 	private int fixedRaiseCount;
 	private int raiseCount;
 	private String limitType;
-	private List<Card> cardsOnTable;
-
-	public PokerTable() {
-		this.cardsOnTable = new ArrayList<>();
-	}
+	private List<Card> cardsOnTable = Lists.newArrayList();
 
 	public void addCard(final Card card) {
 		cardsOnTable.add(card);

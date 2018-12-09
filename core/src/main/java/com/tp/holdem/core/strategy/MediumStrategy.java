@@ -37,7 +37,7 @@ public class MediumStrategy implements Strategy {
 		rank = HandOperations.findHandRank(0, hand, server.getTable().getCardsOnTable());
 
 		if (server.getTable().getCardsOnTable().size() > 0) {
-			if (rank.getHand().getValue() > 3) {
+			if (rank.getHand().value() > 3) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("ALLIN", server.getBetPlayer());
@@ -58,7 +58,7 @@ public class MediumStrategy implements Strategy {
 				}
 			}
 
-			else if (rank.getHand().getValue() == 3) {
+			else if (rank.getHand().value() == 3) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("CHECK", server.getBetPlayer());
@@ -77,7 +77,7 @@ public class MediumStrategy implements Strategy {
 				}
 			}
 
-			else if (rank.getHand().getValue() < 3) {
+			else if (rank.getHand().value() < 3) {
 				if (server.getMaxBetOnTable() <= betAmount) {
 					if (server.getBigBlind() >= chips) {
 						request = new SampleRequest("CHECK", server.getBetPlayer());

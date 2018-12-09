@@ -9,10 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.tp.holdem.core.model.Card;
-import com.tp.holdem.core.model.Player;
-import com.tp.holdem.core.model.PokerTable;
-import com.tp.holdem.core.model.SampleResponse;
+import com.tp.holdem.core.model.*;
+import io.vavr.Tuple2;
 
 public class GameRenderer {
 
@@ -232,7 +230,8 @@ public class GameRenderer {
 	}
 
 	public TextureRegion findCurrentCardTexture(final Card card) {
-		return new TextureRegion(cards, card.getxCordination(), card.getyCordination(), 69, 94);
+		final Tuple2<Integer, Integer> coordinates = CardCoordinates.find(card);
+		return new TextureRegion(cards, coordinates._1, coordinates._2, 69, 94);
 	}
 
 	public void changesOccurred(final String TAG, final SampleResponse response) {
