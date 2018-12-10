@@ -12,8 +12,9 @@
 
 	<modules>
 		<module>desktop</module>
-		<module>core</module>
+		<module>client</module>
 		<module>menu</module>
+		<module>server</module>
 	</modules>
 
 	<properties>

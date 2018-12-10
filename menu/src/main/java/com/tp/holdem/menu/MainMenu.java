@@ -1,8 +1,8 @@
 package com.tp.holdem.menu;
 
-import com.tp.holdem.core.KryoServer;
-import com.tp.holdem.core.strategy.AllInStrategy;
-import com.tp.holdem.core.strategy.Strategy;
+import com.tp.holdem.client.architecture.KryoServer;
+import com.tp.holdem.client.strategy.AllInStrategy;
+import com.tp.holdem.client.strategy.Strategy;
 
 import javax.swing.*;
 import java.awt.*;

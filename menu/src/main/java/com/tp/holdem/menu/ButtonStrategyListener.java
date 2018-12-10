@@ -1,6 +1,6 @@
 package com.tp.holdem.menu;
 
-import com.tp.holdem.core.strategy.*;
+import com.tp.holdem.client.strategy.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
