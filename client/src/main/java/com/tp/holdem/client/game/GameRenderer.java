@@ -12,12 +12,20 @@ import com.tp.holdem.client.architecture.bus.Action;
 import com.tp.holdem.client.architecture.bus.GameObservable;
 import com.tp.holdem.client.architecture.model.action.ActionType;
 import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
+import com.tp.holdem.client.game.drawing.CardDrawer;
+import com.tp.holdem.client.game.drawing.ChipsDrawer;
+import com.tp.holdem.client.game.drawing.TableDrawer;
 import com.tp.holdem.client.model.*;
 import io.vavr.Tuple2;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Slf4j
 public class GameRenderer {
+	private CardDrawer cardDrawer;
+	private TableDrawer tableDrawer;
+	private ChipsDrawer chipsDrawer;
 
 	private GameState gameState;
 	//private transient final GameWatcher myWorld;
@@ -27,7 +35,7 @@ public class GameRenderer {
 	private transient int winnerNumber = -1;
 	private transient boolean tie = false;
 	private transient int smallBlindAmount = 0;
-	private transient int pot = 0;
+	private transient int potAmount = 0;
 	private transient boolean revealed = false;
 	private transient List<List<Card>> revealedCards;
 	private transient int maxBetOnTable = 0;
@@ -41,61 +49,58 @@ public class GameRenderer {
 	private transient List<Card> cardsOnTable;
 	private transient int yourNumber = 0;*/
 
-	private final OrthographicCamera cam;
-	private final TextureRegion tableTexture;
 	private final SpriteBatch batcher;
-	private final BitmapFont font, font2, font3;
-	private final Texture cards;
-	private final TextureRegion reverse, bigBlind, smallBlind, dealer, box, boxOff, boxFold, smallStack, semiStack, bigStack, spotlight;
-	private final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
-	private final int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
+	private final TextureRegion bigBlind, smallBlind, dealer, box, boxOff, boxFold, spotlight;
+	private final BitmapFont smallFont, mediumFont, bigFont;
+
 	private final int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
 	private final int[] dealerPositionY = {237, 243, 330, 442, 502, 499, 516, 429, 313, 244};
 	private final int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
 	private final int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
 	private final int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
 	private final int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
-	private final int[] chipsPositionX = {507, 313, 274, 286, 358, 538, 631, 705, 738, 636};
-	private final int[] chipsPositionY = {273, 288, 374, 441, 501, 484, 484, 451, 370, 280};
+
 
 	public GameRenderer(GameState gameState) {
 		this.gameState = gameState;
 
-		tableTexture = new TextureRegion(new Texture("data/pokerTable.jpg"), 0, 0, 1024, 780);
+
 		dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
 		smallBlind = new TextureRegion(new Texture("data/smallBlind.png"), 0, 0, 35, 32);
 		bigBlind = new TextureRegion(new Texture("data/bigBlind.png"), 0, 0, 36, 34);
-		smallStack = new TextureRegion(new Texture("data/smallStack.png"), 0, 0, 28, 28);
-		semiStack = new TextureRegion(new Texture("data/semiStack.png"), 0, 0, 28, 30);
-		bigStack = new TextureRegion(new Texture("data/bigStack.png"), 0, 0, 31, 33);
-		//myWorld = world;
-		cam = new OrthographicCamera();
+
+
+		OrthographicCamera cam = new OrthographicCamera();
 		cam.setToOrtho(false, 1024, 780);
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
 
-		cards = new Texture(Gdx.files.internal("data/cards.png"));
+
 		box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
 		boxOff = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxOff.png")), 0, 0, 160, 96);
 		boxFold = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxFold.png")), 0, 0, 160, 96);
-		reverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
+
 		spotlight = new TextureRegion(new Texture(Gdx.files.internal("data/spotlight.png")), 0, 0, 352, 740);
-		font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		font.getData().setScale(.4f);
-		font2 = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		font2.getData().setScale(.80f);
-		font3 = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		font3.getData().setScale(1.5f);
+		smallFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
+		smallFont.getData().setScale(.4f);
+		mediumFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
+		mediumFont.getData().setScale(.80f);
+		bigFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
+		bigFont.getData().setScale(1.5f);
+
+		this.cardDrawer = new CardDrawer(batcher, gameState);
+		this.tableDrawer = new TableDrawer(batcher);
+		this.chipsDrawer = new ChipsDrawer(batcher, gameState);
 	}
 
 	public void render(final float delta, final float runTime) {
-
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batcher.begin();
 
-		batcher.draw(tableTexture, 0, 0, 1024, 780);
+		tableDrawer.drawTable();
+
 		batcher.enableBlending();
 
 		/*if (gameOver) {
@@ -119,9 +124,23 @@ public class GameRenderer {
 				drawCardsOnTable(i);
 			}
 		}*/
-		batcher.draw(findCurrentCardTexture(Card.from(Suit.CLUB, Honour.ACE)), 315 + 1 * 82, 360);
+
+		drawGameState();
+
 		batcher.end();
 	}
+
+	private void drawGameState() {
+		if (gameState.isCurrentPlayerWaiting())
+			mediumFont.draw(batcher, "Waiting for all players", 300, 500);
+
+		if (gameState.isGameStarted()) {
+			cardDrawer.drawCards();
+
+			chipsDrawer.drawChips();
+		}
+	}
+
 /*
 	private void drawRevealedCards(final int i) {
 		if (revealed) {
@@ -238,11 +257,6 @@ public class GameRenderer {
 		}
 	}*/
 
-	public TextureRegion findCurrentCardTexture(final Card card) {
-		final Tuple2<Integer, Integer> coordinates = CardCoordinates.find(card);
-		return new TextureRegion(cards, coordinates._1, coordinates._2, 69, 94);
-	}
-
 /*	public void changesOccurred(final String TAG, final SimpleServerResponse response) {
 		if (TAG.equals("R")) {
 			players = response.getPlayers();
@@ -252,7 +266,7 @@ public class GameRenderer {
 		} else if (TAG.equals("T")) {
 			pokerTable = response.getTable();
 			cardsOnTable = pokerTable.getCardsOnTable();
-			pot = pokerTable.getPot();
+			potAmount = pokerTable.getPotAmount();
 			smallBlindAmount = pokerTable.getSmallBlindAmount();
 			limitType = pokerTable.getLimitType();
 			fixedLimit = pokerTable.getFixedLimit();
@@ -292,13 +306,13 @@ public class GameRenderer {
 						if (limitType.equals("no-limit")) {
 							myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount()
 									- (maxBetOnTable - players.get(yourNumber).getBetAmountThisRound()));
-						} else if (limitType.equals("pot-limit")) {
+						} else if (limitType.equals("potAmount-limit")) {
 							if (players.get(yourNumber).getChipsAmount()
-									- (maxBetOnTable - players.get(yourNumber).getBetAmountThisRound()) < pot) {
+									- (maxBetOnTable - players.get(yourNumber).getBetAmountThisRound()) < potAmount) {
 								myWorld.getSlider().setRange(smallBlindAmount, players.get(yourNumber).getChipsAmount()
 										- (maxBetOnTable - players.get(yourNumber).getBetAmountThisRound()));
 							} else {
-								myWorld.getSlider().setRange(smallBlindAmount, pot);
+								myWorld.getSlider().setRange(smallBlindAmount, potAmount);
 							}
 						} else {
 							if (players.get(yourNumber).getChipsAmount()

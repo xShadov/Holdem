@@ -2,7 +2,7 @@ package com.tp.holdem.client.game;
 
 import com.tp.holdem.client.architecture.bus.*;
 import com.tp.holdem.client.architecture.model.action.ActionType;
-import com.tp.holdem.client.architecture.model.common.GameStartMessage;
+import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
 import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
 import com.tp.holdem.client.architecture.model.event.EventType;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +23,8 @@ public class GameWatcher implements ServerObservable, GameObservable {
 			handlePlayerConnection(event);
 		}
 
-		if (event.getEventType() == EventType.GAME_START) {
-			handleGameStart(event);
+		if (event.getEventType() == EventType.UPDATE_STATE) {
+			handleUpdateState(event);
 		}
 	}
 
@@ -42,12 +42,12 @@ public class GameWatcher implements ServerObservable, GameObservable {
 		toState.message(connectAction);
 	}
 
-	private void handleGameStart(Event event) {
-		log.debug("Sending game start event to state");
+	private void handleUpdateState(Event event) {
+		log.debug("Sending update state event to state");
 
-		final GameStartMessage response = event.instance(GameStartMessage.class);
+		final UpdateStateMessage response = event.instance(UpdateStateMessage.class);
 
-		final Action action = Action.from(ActionType.GAME_START, response);
+		final Action action = Action.from(ActionType.UPDATE_STATE, response);
 		toState.message(action);
 	}
 }

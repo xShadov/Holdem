@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 @Data
 public class Deck {
-	private java.util.List<Card> cards = List.of(Honour.values())
+	private final java.util.List<Card> cards = List.of(Honour.values())
 			.flatMap(honour ->
 					List.of(
 							Card.from(Suit.HEART, honour),

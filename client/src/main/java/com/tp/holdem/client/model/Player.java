@@ -1,60 +1,57 @@
 package com.tp.holdem.client.model;
 
-import com.tp.holdem.client.strategy.Strategy;
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.Lists;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
 public class Player {
-	private int number = -1;
-	private List<Card> hand = new ArrayList<>();
-	private String name = "";
-	private boolean hasDealerButton;
-	private boolean hasBigBlind;
-	private boolean hasSmallBlind;
+	private int number;
+	private int connectionId;
+
 	private int betAmount;
 	private int betAmountThisRound;
 	private int chipsAmount;
-	private boolean isFolded;
-	private int connectionId;
-	private boolean inGame = true;
+	private int fromWhichPot;
+
+	private boolean inGame;
 	private boolean isAllIn;
-	private int fromWhichPot = -1;
+	private boolean isFolded;
+	private boolean hasDealerButton;
+	private boolean hasBigBlind;
+	private boolean hasSmallBlind;
+
+	private String name;
+
+	private List<Card> hand;
 	private HandRank handRank;
 
-	public static Player numbered(int number) {
-		return new Player(number, "Player" + number);
-	}
-
-	public Player() {
-
-	}
-
-	public void setAllProperties(final Player player) {
-		this.number = player.getNumber();
-		this.name = player.getName();
-		this.hasDealerButton = player.isHasDealerButton();
-		this.hasBigBlind = player.isHasBigBlind();
-		this.hasSmallBlind = player.isHasSmallBlind();
-		this.betAmount = player.getBetAmount();
-		this.betAmountThisRound = player.getBetAmountThisRound();
-		this.chipsAmount = player.getChipsAmount();
-		this.isFolded = player.isFolded;
-		this.inGame = player.isInGame();
-		this.isAllIn = player.isAllIn;
-		this.fromWhichPot = player.getFromWhichPot();
-	}
-
-	public Player(final int number) {
+	private Player(int number, int connectionId, int betAmount,
+				   int betAmountThisRound, int chipsAmount, int fromWhichPot,
+				   boolean inGame, boolean isAllIn, boolean isFolded,
+				   boolean hasDealerButton, boolean hasBigBlind, boolean hasSmallBlind,
+				   String name, List<Card> hand, HandRank handRank) {
 		this.number = number;
-		this.name = "Player" + number;
-	}
-
-	public Player(final int number, final String name) {
-		this.number = number;
+		this.connectionId = connectionId;
+		this.betAmount = betAmount;
+		this.betAmountThisRound = betAmountThisRound;
+		this.chipsAmount = chipsAmount;
+		this.fromWhichPot = fromWhichPot;
+		this.inGame = inGame;
+		this.isAllIn = isAllIn;
+		this.isFolded = isFolded;
+		this.hasDealerButton = hasDealerButton;
+		this.hasBigBlind = hasBigBlind;
+		this.hasSmallBlind = hasSmallBlind;
 		this.name = name;
+		this.hand = MoreObjects.firstNonNull(hand, Lists.newArrayList());
+		this.handRank = handRank;
 	}
 
 	public void addCard(final Card card) {

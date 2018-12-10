@@ -18,11 +18,11 @@ public class PokerTableTests {
 
 	@Test
 	public final void testTablePot() {
-		assertEquals(0, table.getPot());
-		table.setPot(5000);
-		assertEquals(5000, table.getPot());
-		table.setPot(table.getPot() - 500);
-		assertEquals(4500, table.getPot());
+		assertEquals(0, table.getPotAmount());
+		table.setPotAmount(5000);
+		assertEquals(5000, table.getPotAmount());
+		table.setPotAmount(table.getPotAmount() - 500);
+		assertEquals(4500, table.getPotAmount());
 	}
 
 	@Test

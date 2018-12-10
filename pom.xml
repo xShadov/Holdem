@@ -13,7 +13,6 @@
 	<modules>
 		<module>desktop</module>
 		<module>client</module>
-		<module>menu</module>
 		<module>server</module>
 	</modules>
 

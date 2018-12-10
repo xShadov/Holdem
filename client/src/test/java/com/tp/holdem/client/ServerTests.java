@@ -65,7 +65,7 @@ public class ServerTests {
 		playersWithHiddenCards.add(new Player());
 		playersWithHiddenCards.add(new Player());
 		final PokerTable table = new PokerTable();
-		table.setPot(1000);
+		table.setPotAmount(1000);
 		table.addCard(new Card("10", "Spade"));
 		table.addCard(new Card("9", "Spade"));
 		table.addCard(new Card("8", "Spade"));
@@ -108,7 +108,7 @@ public class ServerTests {
 		playersWithHiddenCards.add(new Player());
 		playersWithHiddenCards.add(new Player());
 		final PokerTable table = new PokerTable();
-		table.setPot(1000);
+		table.setPotAmount(1000);
 		table.addCard(new Card("10", "Club"));
 		table.addCard(new Card("9", "Club"));
 		table.addCard(new Card("8", "Club"));
@@ -160,7 +160,7 @@ public class ServerTests {
 		playersWithHiddenCards.add(new Player());
 		playersWithHiddenCards.add(new Player());
 		final PokerTable table = new PokerTable();
-		table.setPot(1000);
+		table.setPotAmount(1000);
 		table.addCard(new Card("10", "Club"));
 		table.addCard(new Card("9", "Club"));
 		table.addCard(new Card("8", "Club"));
@@ -331,7 +331,7 @@ public class ServerTests {
 		assertEquals(40, players.get(0).getBetAmountThisRound());
 		assertEquals(20, players.get(1).getBetAmount());
 		assertEquals(20, players.get(1).getBetAmountThisRound());
-		assertEquals(60, pokerTable.getPot());
+		assertEquals(60, pokerTable.getPotAmount());
 		assertEquals(1, chap5.get(t));
 		final Field bid = c.getDeclaredField("bidingCount");
 		bid.setAccessible(true);
@@ -400,7 +400,7 @@ public class ServerTests {
 		assertEquals(15, players.get(0).getBetAmountThisRound());
 		assertEquals(10, players.get(1).getBetAmount());
 		assertEquals(10, players.get(1).getBetAmountThisRound());
-		assertEquals(25, pokerTable.getPot());
+		assertEquals(25, pokerTable.getPotAmount());
 		assertEquals(1, chap5.get(t));
 		final Field bid = c.getDeclaredField("bidingCount");
 		bid.setAccessible(true);
@@ -471,7 +471,7 @@ public class ServerTests {
 		assertEquals(40, players.get(0).getBetAmountThisRound());
 		assertEquals(20, players.get(1).getBetAmount());
 		assertEquals(20, players.get(1).getBetAmountThisRound());
-		assertEquals(60, pokerTable.getPot());
+		assertEquals(60, pokerTable.getPotAmount());
 		assertEquals(1, chap5.get(t));
 		final Field bid = c.getDeclaredField("bidingCount");
 		bid.setAccessible(true);
@@ -509,7 +509,7 @@ public class ServerTests {
 		playersWithHiddenCards.add(new Player());
 		playersWithHiddenCards.add(new Player());
 		final PokerTable table = new PokerTable();
-		table.setPot(1000);
+		table.setPotAmount(1000);
 		table.addCard(new Card("10", "Club"));
 		table.addCard(new Card("9", "Club"));
 		table.addCard(new Card("8", "Club"));
@@ -672,7 +672,7 @@ public class ServerTests {
 		mb.setAccessible(true);
 		final int maxBet = Integer.parseInt(mb.get(t).toString());
 		assertEquals(500, maxBet);
-		assertEquals(500, table.getPot());
+		assertEquals(500, table.getPotAmount());
 		assertTrue(players.get(0).isAllIn());
 	}
 
@@ -735,7 +735,7 @@ public class ServerTests {
 		assertEquals(500, players.get(0).getBetAmountThisRound());
 		assertEquals(200, players.get(0).getChipsAmount());
 		assertEquals(500, maxBet);
-		assertEquals(300, table.getPot());
+		assertEquals(300, table.getPotAmount());
 	}
 
 	@Test
@@ -829,7 +829,7 @@ public class ServerTests {
 		final Field lb = c.getDeclaredField("lastToBet");
 		lb.setAccessible(true);
 		final int lastBet = Integer.parseInt(lb.get(t).toString());
-		assertEquals(1500, table.getPot());
+		assertEquals(1500, table.getPotAmount());
 		assertEquals(0, players.get(0).getChipsAmount());
 		assertEquals(1500, maxBet);
 		assertEquals(1, lastBet);
@@ -891,7 +891,7 @@ public class ServerTests {
 		final Field lb = c.getDeclaredField("lastToBet");
 		lb.setAccessible(true);
 		final int lastBet = Integer.parseInt(lb.get(t).toString());
-		assertEquals(700, table.getPot());
+		assertEquals(700, table.getPotAmount());
 		assertEquals(800, players.get(0).getChipsAmount());
 		assertEquals(700, maxBet);
 		assertEquals(1, lastBet);

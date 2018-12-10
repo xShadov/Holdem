@@ -1,11 +1,11 @@
 package com.tp.holdem.client.architecture.model.event;
 
-import com.tp.holdem.client.architecture.model.common.GameStartMessage;
 import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
+import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
 
 public enum EventType {
 	PLAYER_CONNECTION(PlayerConnectMessage.class),
-	GAME_START(GameStartMessage.class);
+	UPDATE_STATE(UpdateStateMessage.class);
 
 	private Class<? extends ServerResponse> clazz;
 

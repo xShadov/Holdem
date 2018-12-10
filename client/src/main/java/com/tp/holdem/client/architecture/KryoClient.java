@@ -7,7 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.tp.holdem.client.architecture.bus.Event;
 import com.tp.holdem.client.architecture.bus.EventBus;
 import com.tp.holdem.client.architecture.model.ClientMoveRequest;
-import com.tp.holdem.client.architecture.model.common.GameStartMessage;
+import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
 import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
 import com.tp.holdem.client.architecture.model.event.EventType;
 import com.tp.holdem.client.model.*;
@@ -46,7 +46,7 @@ public class KryoClient {
 		kryo.register(Event.class,registerCount.getAndIncrement());
 		kryo.register(EventType.class,registerCount.getAndIncrement());
 		kryo.register(PlayerConnectMessage.class,registerCount.getAndIncrement());
-		kryo.register(GameStartMessage.class,registerCount.getAndIncrement());
+		kryo.register(UpdateStateMessage.class,registerCount.getAndIncrement());
 
 		simulationClient.addListener(new Listener() {
 			public synchronized void received(final Connection connection, final Object responseObject) {

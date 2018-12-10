@@ -1,21 +1,27 @@
 package com.tp.holdem.client.model;
 
-import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PokerTable {
-	private int pot;
+	private int potAmount;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
-	private int fixedLimit;
-	private int fixedRaiseCount;
-	private int raiseCount;
-	private String limitType;
-	private List<Card> cardsOnTable = Lists.newArrayList();
+	private List<Card> cardsOnTable;
+
+	public void upBlinds() {
+		smallBlindAmount *= 2;
+		bigBlindAmount *= 2;
+	}
 
 	public void addCard(final Card card) {
 		cardsOnTable.add(card);

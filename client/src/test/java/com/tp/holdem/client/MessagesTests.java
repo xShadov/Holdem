@@ -43,15 +43,15 @@ public class MessagesTests {
 	@Test
 	public final void testResponseTAGWithTable() {
 		final PokerTable table = new PokerTable();
-		table.setPot(5000);
+		table.setPotAmount(5000);
 		response = new SimpleServerResponse(TAG, table);
 		assertEquals(TAG, response.getTag());
-		assertEquals(5000, response.getTable().getPot());
+		assertEquals(5000, response.getTable().getPotAmount());
 		response.setTag(TAG2);
-		table.setPot(6000);
+		table.setPotAmount(6000);
 		response.setTable(table);
 		assertEquals(TAG2, response.getTag());
-		assertEquals(6000, response.getTable().getPot());
+		assertEquals(6000, response.getTable().getPotAmount());
 	}
 
 	@Test
