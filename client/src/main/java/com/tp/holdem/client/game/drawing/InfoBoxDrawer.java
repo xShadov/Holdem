@@ -49,6 +49,6 @@ public class InfoBoxDrawer {
 		batcher.draw(boxFinder.apply(player.isInGame(), player.isFolded()), boxPositionX[index], boxPositionY[index]);
 		smallFont.draw(batcher, player.getName(), boxPositionX[index] + 18, boxPositionY[index] + 81);
 		smallFont.draw(batcher, "Chips" + player.getChipsAmount(), boxPositionX[index] + 18, boxPositionY[index] + 54);
-		smallFont.draw(batcher, "Bet:" + player.getBetAmountThisRound() + "/" + player.getBetAmountThisRound(), boxPositionX[index] + 18, boxPositionY[index] + 27);
+		smallFont.draw(batcher, "Bet:" + player.getBetAmount() + "/" + player.getChipsAmount(), boxPositionX[index] + 18, boxPositionY[index] + 27);
 	}
 }

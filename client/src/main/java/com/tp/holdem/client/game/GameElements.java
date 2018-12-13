@@ -1,7 +1,9 @@
 package com.tp.holdem.client.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,21 +14,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tp.holdem.client.architecture.bus.Action;
 import com.tp.holdem.client.architecture.bus.ActionBus;
+import com.tp.holdem.client.architecture.bus.GameObservable;
 import com.tp.holdem.client.architecture.model.action.ActionType;
 import com.tp.holdem.client.architecture.model.action.PlayerBetAction;
 import com.tp.holdem.client.architecture.model.action.PlayerRaiseAction;
+import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
+import com.tp.holdem.client.model.Moves;
+import com.tp.holdem.client.model.Player;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 
-public class GameElements {
-	private final ActionBus withWatcher;
-	private final Map<ActionType, TextButton> moveButtons;
+public class GameElements implements GameObservable {
+	private final Map<Moves, TextButton> moveButtons;
 	private final Slider slider;
 
-	public GameElements(ActionBus withWatcher) {
-		this.withWatcher = withWatcher;
+	private final Batch batcher;
 
+	public GameElements(ActionBus withWatcher) {
 		final TextureAtlas atlas = new TextureAtlas("data/button.pack");
 		final Skin buttonsSkin = new Skin(atlas);
 		final Table table = new Table(buttonsSkin);
@@ -39,6 +44,8 @@ public class GameElements {
 		slider.setAnimateDuration(0.01f);
 		slider.setPosition(300, 80);
 		slider.setWidth(400);
+
+		batcher = new SpriteBatch();
 
 		final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 		textButtonStyle.up = buttonsSkin.getDrawable("button_up");
@@ -62,12 +69,12 @@ public class GameElements {
 		raiseButton.setBounds(540, 19, 78, 40);
 
 		moveButtons = HashMap.of(
-				ActionType.RAISE, raiseButton,
-				ActionType.FOLD, foldButton,
-				ActionType.CHECK, checkButton,
-				ActionType.ALLIN, allInButton,
-				ActionType.CALL, callButton,
-				ActionType.BET, betButton
+				Moves.RAISE, raiseButton,
+				Moves.FOLD, foldButton,
+				Moves.CHECK, checkButton,
+				Moves.ALLIN, allInButton,
+				Moves.CALL, callButton,
+				Moves.BET, betButton
 		);
 		moveButtons.values().forEach(button -> {
 			button.pad(10);
@@ -126,13 +133,8 @@ public class GameElements {
 		});
 	}
 
-	public void manageButtons(final List<ActionType> possibleOptions) {
-		possibleOptions
-				.flatMap(moveButtons::get)
-				.forEach(button -> {
-					button.setVisible(true);
-					button.setDisabled(false);
-				});
+	public Slider slider() {
+		return slider;
 	}
 
 	public List<Actor> actors() {
@@ -146,5 +148,35 @@ public class GameElements {
 		});
 		slider.setVisible(false);
 		slider.setDisabled(true);
+	}
+
+	@Override
+	public void accept(Action action) {
+		if (action.getActionType() == ActionType.UPDATE_STATE) {
+			handleUpdateState(action);
+		}
+	}
+
+	private void handleUpdateState(Action action) {
+		final UpdateStateMessage message = action.instance(UpdateStateMessage.class);
+
+		final Player currentPlayer = message.getGameState().getCurrentPlayer();
+		final List<Moves> options = List.ofAll(currentPlayer.getPossibleMoves());
+
+		options.flatMap(moveButtons::get)
+				.forEach(button -> {
+					button.setVisible(true);
+					button.setDisabled(false);
+				});
+
+		if (options.contains(Moves.BET) || options.contains(Moves.RAISE)) {
+			slider.setDisabled(false);
+			slider.setVisible(true);
+
+			slider.setRange(
+					currentPlayer.getMinimumBet(),
+					currentPlayer.getMaximumBet()
+			);
+		}
 	}
 }

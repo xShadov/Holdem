@@ -6,7 +6,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.google.common.collect.Lists;
 import com.tp.holdem.client.architecture.bus.Event;
-import com.tp.holdem.client.architecture.model.ClientMoveRequest;
 import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
 import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
 import com.tp.holdem.client.architecture.model.event.EventType;
@@ -39,7 +38,6 @@ public class TempServer implements Runnable {
 		final AtomicInteger registerCount = new AtomicInteger(16);
 
 		final Kryo kryo = server.getKryo();
-		kryo.register(ClientMoveRequest.class, registerCount.getAndIncrement());
 		kryo.register(ArrayList.class, registerCount.getAndIncrement());
 		kryo.register(List.class, registerCount.getAndIncrement());
 		kryo.register(Honour.class, registerCount.getAndIncrement());
@@ -54,6 +52,7 @@ public class TempServer implements Runnable {
 		kryo.register(PlayerConnectMessage.class,registerCount.getAndIncrement());
 		kryo.register(UpdateStateMessage.class, registerCount.getAndIncrement());
 		kryo.register(GameState.class, registerCount.getAndIncrement());
+		kryo.register(Moves.class, registerCount.getAndIncrement());
 
 		server.addListener(new Listener() {
 			public synchronized void received(final Connection connection, final Object object) {
@@ -104,7 +103,10 @@ public class TempServer implements Runnable {
 				.number(assignedNumber)
 				.chipsAmount(1500)
 				.betAmount(new Random().nextInt(3000))
+				.minimumBet((int) (Math.random() * 100))
+				.maximumBet((int) (Math.random() * 500))
 				.connectionId(con.getID())
+				.possibleMoves(Lists.newArrayList(Moves.BET, Moves.ALLIN, Moves.FOLD))
 				.inGame(true)
 				.build();
 

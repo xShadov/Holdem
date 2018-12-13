@@ -10,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GameWatcher implements ServerObservable, GameObservable {
 	private final ActionBus toState;
+	private final ActionBus toElements;
 
-	public GameWatcher(ActionBus toState) {
+	public GameWatcher(ActionBus toState, ActionBus toElements) {
 		this.toState = toState;
+		this.toElements = toElements;
 	}
 
 	@Override
@@ -43,11 +45,12 @@ public class GameWatcher implements ServerObservable, GameObservable {
 	}
 
 	private void handleUpdateState(Event event) {
-		log.debug("Sending update state event to state");
+		log.debug("Sending update state event to state and elements");
 
 		final UpdateStateMessage response = event.instance(UpdateStateMessage.class);
 
 		final Action action = Action.from(ActionType.UPDATE_STATE, response);
 		toState.message(action);
+		toElements.message(action);
 	}
 }

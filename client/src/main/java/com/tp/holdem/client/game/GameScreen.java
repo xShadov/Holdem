@@ -4,17 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.tp.holdem.client.game.rendering.ElementsRenderer;
+import com.tp.holdem.client.game.rendering.Renderer;
+import com.tp.holdem.client.game.rendering.StateRenderer;
 
 public class GameScreen implements Screen, InputProcessor {
 	private final GameWatcher watcher;
-	private final GameRenderer renderer;
+	private final Renderer renderer;
 	private final GameElements gameElements;
 	private final GameState gameState;
 
 	private float runTime;
 	private Stage stage;
 
-	public GameScreen(GameWatcher world, GameRenderer renderer, GameElements gameElements, GameState gameState) {
+	public GameScreen(GameWatcher world, GameElements gameElements, GameState gameState, Renderer renderer) {
 		this.watcher = world;
 		this.renderer = renderer;
 		this.gameElements = gameElements;

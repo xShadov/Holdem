@@ -1,15 +1,16 @@
-package com.tp.holdem.client.game;
+package com.tp.holdem.client.game.rendering;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.tp.holdem.client.game.GameState;
 import com.tp.holdem.client.game.drawing.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GameRenderer {
+public class StateRenderer implements Renderer{
 	private CardDrawer cardDrawer;
 	private TableDrawer tableDrawer;
 	private ChipsDrawer chipsDrawer;
@@ -43,7 +44,7 @@ public class GameRenderer {
 	private final BitmapFont smallFont, mediumFont, bigFont;
 
 
-	public GameRenderer(GameState gameState) {
+	public StateRenderer(GameState gameState) {
 		OrthographicCamera cam = new OrthographicCamera();
 		cam.setToOrtho(false, 1024, 780);
 		batcher = new SpriteBatch();
@@ -65,10 +66,8 @@ public class GameRenderer {
 		this.spotlightDrawer = new SpotlightDrawer(batcher, gameState);
 	}
 
+	@Override
 	public void render(final float delta, final float runTime) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		batcher.begin();
 
 		batcher.enableBlending();
@@ -107,7 +106,7 @@ public class GameRenderer {
 			if (gameState.isCurrentPlayerWinner())
 				bigFont.draw(batcher, "YOU WIN!", 320, 550);
 			else
-				gameState.getWinnerPlayer().forEach(player -> bigFont.draw(batcher, String.format("%s WON!", player.getName()), 320, 550));
+				bigFont.draw(batcher, String.format("%s WON!", gameState.getWinnerPlayer().getName()), 320, 550);
 		}
 
 		if (gameState.isCurrentPlayerWaiting())

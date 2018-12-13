@@ -9,7 +9,6 @@ import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
 import com.tp.holdem.client.model.Card;
 import com.tp.holdem.client.model.Player;
 import com.tp.holdem.client.model.PokerTable;
-import io.vavr.control.Option;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,21 +52,8 @@ public class GameState implements GameObservable {
 		return players;
 	}
 
-	public Option<PokerTable> getTable() {
-		return Option.of(table);
-	}
-
-	public Option<Player> getBettingPlayer() {
-		return Option.of(bettingPlayer);
-	}
-
-	public Option<Player> getWinnerPlayer() {
-		return Option.of(winnerPlayer);
-	}
-
 	public boolean isCurrentPlayerWinner() {
-		return getWinnerPlayer()
-				.exists(player -> player.getNumber() == currentPlayer.getNumber());
+		return winnerPlayer.getNumber() == currentPlayer.getNumber();
 	}
 
 	public boolean isCurrentPlayerWaiting() {
@@ -79,7 +65,7 @@ public class GameState implements GameObservable {
 	}
 
 	public boolean isGameStarted() {
-		return getTable().isDefined();
+		return getTable() != null;
 	}
 
 	public int relativePlayerNumber(Player player) {
@@ -87,11 +73,11 @@ public class GameState implements GameObservable {
 	}
 
 	public boolean hasWinner() {
-		return getWinnerPlayer().isDefined();
+		return getWinnerPlayer() != null;
 	}
 
 	public boolean isSomeoneBetting() {
-		return getBettingPlayer().isDefined();
+		return getBettingPlayer() != null;
 	}
 
 	public List<Card> getCardsOnTable() {
