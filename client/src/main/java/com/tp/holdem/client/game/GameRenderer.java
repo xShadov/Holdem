@@ -3,29 +3,19 @@ package com.tp.holdem.client.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.google.common.base.Preconditions;
-import com.tp.holdem.client.architecture.bus.Action;
-import com.tp.holdem.client.architecture.bus.GameObservable;
-import com.tp.holdem.client.architecture.model.action.ActionType;
-import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
-import com.tp.holdem.client.game.drawing.CardDrawer;
-import com.tp.holdem.client.game.drawing.ChipsDrawer;
-import com.tp.holdem.client.game.drawing.TableDrawer;
-import com.tp.holdem.client.model.*;
-import io.vavr.Tuple2;
+import com.tp.holdem.client.game.drawing.*;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class GameRenderer {
 	private CardDrawer cardDrawer;
 	private TableDrawer tableDrawer;
 	private ChipsDrawer chipsDrawer;
+	private InfoBoxDrawer infoBoxDrawer;
+	private ButtonsDrawer buttonsDrawer;
+	private SpotlightDrawer spotlightDrawer;
 
 	private GameState gameState;
 	//private transient final GameWatcher myWorld;
@@ -50,37 +40,15 @@ public class GameRenderer {
 	private transient int yourNumber = 0;*/
 
 	private final SpriteBatch batcher;
-	private final TextureRegion bigBlind, smallBlind, dealer, box, boxOff, boxFold, spotlight;
 	private final BitmapFont smallFont, mediumFont, bigFont;
-
-	private final int[] dealerPositionX = {448, 276, 210, 228, 303, 477, 660, 736, 738, 666};
-	private final int[] dealerPositionY = {237, 243, 330, 442, 502, 499, 516, 429, 313, 244};
-	private final int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
-	private final int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
-	private final int[] boxPositionX = {364, 136, 21, 45, 168, 405, 597, 777, 813, 678};
-	private final int[] boxPositionY = {120, 112, 301, 484, 616, 603, 612, 498, 227, 117};
 
 
 	public GameRenderer(GameState gameState) {
-		this.gameState = gameState;
-
-
-		dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
-		smallBlind = new TextureRegion(new Texture("data/smallBlind.png"), 0, 0, 35, 32);
-		bigBlind = new TextureRegion(new Texture("data/bigBlind.png"), 0, 0, 36, 34);
-
-
 		OrthographicCamera cam = new OrthographicCamera();
 		cam.setToOrtho(false, 1024, 780);
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
 
-
-		box = new TextureRegion(new Texture(Gdx.files.internal("data/infoBox.png")), 0, 0, 160, 96);
-		boxOff = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxOff.png")), 0, 0, 160, 96);
-		boxFold = new TextureRegion(new Texture(Gdx.files.internal("data/infoBoxFold.png")), 0, 0, 160, 96);
-
-		spotlight = new TextureRegion(new Texture(Gdx.files.internal("data/spotlight.png")), 0, 0, 352, 740);
 		smallFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
 		smallFont.getData().setScale(.4f);
 		mediumFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
@@ -88,9 +56,13 @@ public class GameRenderer {
 		bigFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
 		bigFont.getData().setScale(1.5f);
 
+		this.gameState = gameState;
 		this.cardDrawer = new CardDrawer(batcher, gameState);
 		this.tableDrawer = new TableDrawer(batcher);
 		this.chipsDrawer = new ChipsDrawer(batcher, gameState);
+		this.infoBoxDrawer = new InfoBoxDrawer(batcher, gameState);
+		this.buttonsDrawer = new ButtonsDrawer(batcher, gameState);
+		this.spotlightDrawer = new SpotlightDrawer(batcher, gameState);
 	}
 
 	public void render(final float delta, final float runTime) {
@@ -98,8 +70,6 @@ public class GameRenderer {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batcher.begin();
-
-		tableDrawer.drawTable();
 
 		batcher.enableBlending();
 
@@ -131,11 +101,26 @@ public class GameRenderer {
 	}
 
 	private void drawGameState() {
+		tableDrawer.drawTable();
+
+		if (gameState.hasWinner()) {
+			if (gameState.isCurrentPlayerWinner())
+				bigFont.draw(batcher, "YOU WIN!", 320, 550);
+			else
+				gameState.getWinnerPlayer().forEach(player -> bigFont.draw(batcher, String.format("%s WON!", player.getName()), 320, 550));
+		}
+
 		if (gameState.isCurrentPlayerWaiting())
 			mediumFont.draw(batcher, "Waiting for all players", 300, 500);
 
 		if (gameState.isGameStarted()) {
+			spotlightDrawer.drawSpotlight();
+
 			cardDrawer.drawCards();
+
+			buttonsDrawer.drawButtons();
+
+			infoBoxDrawer.drawInfoBoxes();
 
 			chipsDrawer.drawChips();
 		}
@@ -359,5 +344,4 @@ public class GameRenderer {
 	public List<String> getPossibleOptions() {
 		return possibleOptions;
 	}*/
-
 }

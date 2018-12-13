@@ -29,7 +29,7 @@ public class Player {
 
 	private String name;
 
-	private List<Card> hand;
+	private List<Card> hand = Lists.newArrayList();
 	private HandRank handRank;
 
 	private Player(int number, int connectionId, int betAmount,

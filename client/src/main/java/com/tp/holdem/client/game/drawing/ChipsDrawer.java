@@ -34,12 +34,7 @@ public class ChipsDrawer {
 
 	public void drawChips() {
 		final AtomicInteger drawCount = new AtomicInteger(0);
-
-		batcher.draw(amountToTexture.get(gameState.getCurrentPlayer().getBetAmount()), chipsPositionX[drawCount.get()], chipsPositionY[drawCount.get()]);
-
-		drawCount.incrementAndGet();
-
-		gameState.getOtherPlayers()
+		gameState.getAllPlayers()
 				.forEach(player -> {
 					batcher.draw(amountToTexture.get(player.getBetAmount()), chipsPositionX[drawCount.get()], chipsPositionY[drawCount.get()]);
 					drawCount.incrementAndGet();

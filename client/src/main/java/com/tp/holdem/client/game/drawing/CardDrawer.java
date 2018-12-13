@@ -12,6 +12,9 @@ import io.vavr.Tuple2;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CardDrawer {
+	private static final int[] tableCardsPositionX = {315, 397, 479, 561, 643};
+	private static final int tableCardsPositionY = 360;
+
 	private static final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
 	private static final int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
 	private static final int offsetX = 20;
@@ -29,10 +32,28 @@ public class CardDrawer {
 	}
 
 	public void drawCards() {
+		drawPlayersCards();
+		drawTableCards();
+	}
+
+	private void drawTableCards() {
+		AtomicInteger drawCount = new AtomicInteger(0);
+		gameState.getCardsOnTable().forEach(card -> batcher.draw(findCurrentCardTexture(card), tableCardsPositionX[drawCount.getAndIncrement()], tableCardsPositionY));
+	}
+
+	private void drawPlayersCards() {
 		final AtomicInteger drawnCount = new AtomicInteger(0);
 
-		batcher.draw(findCurrentCardTexture(gameState.getCurrentPlayer().getHand().get(0)), positionX[drawnCount.get()], positionY[drawnCount.get()]);
-		batcher.draw(findCurrentCardTexture(gameState.getCurrentPlayer().getHand().get(1)), positionX[drawnCount.get()] + offsetX, positionY[drawnCount.get()] + offsetY);
+		batcher.draw(
+				findCurrentCardTexture(gameState.getCurrentPlayer().getHand().get(0)),
+				positionX[drawnCount.get()],
+				positionY[drawnCount.get()]
+		);
+		batcher.draw(
+				findCurrentCardTexture(gameState.getCurrentPlayer().getHand().get(1)),
+				positionX[drawnCount.get()] + offsetX,
+				positionY[drawnCount.get()] + offsetY
+		);
 
 		drawnCount.incrementAndGet();
 

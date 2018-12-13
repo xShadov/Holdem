@@ -10,6 +10,7 @@ import com.tp.holdem.client.architecture.model.ClientMoveRequest;
 import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
 import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
 import com.tp.holdem.client.architecture.model.event.EventType;
+import com.tp.holdem.client.game.GameState;
 import com.tp.holdem.client.model.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,8 +51,9 @@ public class TempServer implements Runnable {
 
 		kryo.register(Event.class, registerCount.getAndIncrement());
 		kryo.register(EventType.class, registerCount.getAndIncrement());
-		kryo.register(PlayerConnectMessage.class, registerCount.getAndIncrement());
+		kryo.register(PlayerConnectMessage.class,registerCount.getAndIncrement());
 		kryo.register(UpdateStateMessage.class, registerCount.getAndIncrement());
+		kryo.register(GameState.class, registerCount.getAndIncrement());
 
 		server.addListener(new Listener() {
 			public synchronized void received(final Connection connection, final Object object) {
@@ -121,21 +123,28 @@ public class TempServer implements Runnable {
 	private void startGame() {
 		log.debug(String.format("Starting game with %d players", players.size()));
 
+		Deck deck = new Deck();
 		table = PokerTable.builder()
-				.cardsOnTable(Lists.newArrayList())
+				.cardsOnTable(Lists.newArrayList(deck.drawCard(), deck.drawCard(), deck.drawCard()))
 				.bigBlindAmount(40)
 				.smallBlindAmount(20)
 				.build();
 
-		Deck deck = new Deck();
+
 		deck.dealCards(2, io.vavr.collection.List.ofAll(players));
 
+		players.forEach(System.out::println);
+
 		players.forEach(player -> {
-			UpdateStateMessage response = UpdateStateMessage.builder()
-					.currentPlayer(player)
-					.players(players)
-					.table(table)
-					.build();
+			UpdateStateMessage response = UpdateStateMessage.from(
+					GameState.builder()
+							.currentPlayer(player)
+							.bettingPlayer(players.get(1))
+							.allPlayers(players)
+							.table(table)
+							.build()
+			);
+
 			server.sendToTCP(player.getConnectionId(), Event.from(EventType.UPDATE_STATE, response));
 		});
 	}
