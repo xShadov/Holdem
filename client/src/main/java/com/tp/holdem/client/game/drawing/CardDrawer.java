@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.client.model.Card;
-import com.tp.holdem.client.model.CardCoordinates;
+import com.tp.holdem.model.game.Card;
 import io.vavr.Tuple2;
 
 import java.util.concurrent.atomic.AtomicInteger;

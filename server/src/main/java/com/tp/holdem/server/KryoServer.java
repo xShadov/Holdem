@@ -9,12 +9,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.tp.holdem.client.architecture.model.action.ActionType;
-import com.tp.holdem.client.architecture.model.ClientMoveRequest;
-import com.tp.holdem.client.architecture.model.SimpleServerResponse;
-import com.tp.holdem.client.model.HandOperations;
-import com.tp.holdem.client.compare.BetComparator;
-import com.tp.holdem.client.compare.HandRankComparator;
+import com.tp.holdem.client.architecture.action.model.action.ActionType;
+import com.tp.holdem.client.architecture.action.model.ClientMoveRequest;
+import com.tp.holdem.client.architecture.action.model.SimpleServerResponse;
+import com.tp.holdem.logic.HandOperations;
+import com.tp.holdem.logic.BetComparator;
+import com.tp.holdem.logic.HandRankComparator;
 import com.tp.holdem.client.model.*;
 import com.tp.holdem.client.strategy.*;
 
@@ -97,7 +97,7 @@ public class KryoServer{//} implements Runnable {
 		kryo.register(Deck.class,24);
 		kryo.register(PokerTable.class,25);
 		kryo.register(Event.class,26);
-		kryo.register(EventType.class,27);
+		kryo.register(MessageType.class,27);
 		kryo.register(PlayerConnectMessage.class,29);
 		kryo.register(PlayerBetAction.class,31);
 		kryo.register(PlayerRaiseAction.class,32);

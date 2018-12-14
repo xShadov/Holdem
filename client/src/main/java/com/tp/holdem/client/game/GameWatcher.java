@@ -1,32 +1,33 @@
 package com.tp.holdem.client.game;
 
-import com.tp.holdem.client.architecture.bus.*;
-import com.tp.holdem.client.architecture.model.action.ActionType;
-import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
-import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
-import com.tp.holdem.client.architecture.model.event.EventType;
+import com.tp.holdem.client.architecture.action.Action;
+import com.tp.holdem.client.architecture.action.GameObservable;
+import com.tp.holdem.client.architecture.message.MessageBus;
+import com.tp.holdem.client.architecture.message.ServerObservable;
+import com.tp.holdem.model.message.Message;
+import com.tp.holdem.model.message.MessageType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GameWatcher implements ServerObservable, GameObservable {
-	private final ActionBus toState;
-	private final ActionBus toElements;
+	private final MessageBus toState;
+	private final MessageBus toElements;
 
-	public GameWatcher(ActionBus toState, ActionBus toElements) {
+	public GameWatcher(MessageBus toState, MessageBus toElements) {
 		this.toState = toState;
 		this.toElements = toElements;
 	}
 
 	@Override
-	public void accept(Event event) {
-		log.debug(String.format("Accepting event: %s", event.getEventType()));
+	public void accept(Message message) {
+		log.debug(String.format("Accepting message: %s", message.getMessageType()));
 
-		if (event.getEventType() == EventType.PLAYER_CONNECTION) {
-			handlePlayerConnection(event);
+		if (message.getMessageType() == MessageType.PLAYER_CONNECTION) {
+			handlePlayerConnection(message);
 		}
 
-		if (event.getEventType() == EventType.UPDATE_STATE) {
-			handleUpdateState(event);
+		if (message.getMessageType() == MessageType.UPDATE_STATE) {
+			handleUpdateState(message);
 		}
 	}
 
@@ -35,22 +36,17 @@ public class GameWatcher implements ServerObservable, GameObservable {
 
 	}
 
-	private void handlePlayerConnection(Event event) {
-		log.debug("Sending player connection event to state");
+	private void handlePlayerConnection(Message message) {
+		log.debug("Sending player connection message to state");
 
-		final PlayerConnectMessage response = event.instance(PlayerConnectMessage.class);
-
-		final Action connectAction = Action.from(ActionType.PLAYER_CONNECT, response);
-		toState.message(connectAction);
+		toState.message(message);
 	}
 
-	private void handleUpdateState(Event event) {
-		log.debug("Sending update state event to state and elements");
+	private void handleUpdateState(Message message) {
+		log.debug("Sending update state message to state and elements");
 
-		final UpdateStateMessage response = event.instance(UpdateStateMessage.class);
 
-		final Action action = Action.from(ActionType.UPDATE_STATE, response);
-		toState.message(action);
-		toElements.message(action);
+		toState.message(message);
+		toElements.message(message);
 	}
 }

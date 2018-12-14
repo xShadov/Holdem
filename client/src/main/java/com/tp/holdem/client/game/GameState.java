@@ -1,14 +1,14 @@
 package com.tp.holdem.client.game;
 
 import com.google.common.base.Preconditions;
-import com.tp.holdem.client.architecture.bus.Action;
-import com.tp.holdem.client.architecture.bus.GameObservable;
-import com.tp.holdem.client.architecture.model.action.ActionType;
-import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
-import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
-import com.tp.holdem.client.model.Card;
-import com.tp.holdem.client.model.Player;
-import com.tp.holdem.client.model.PokerTable;
+import com.tp.holdem.client.architecture.message.ServerObservable;
+import com.tp.holdem.model.game.Card;
+import com.tp.holdem.model.game.Player;
+import com.tp.holdem.model.game.PokerTable;
+import com.tp.holdem.model.message.Message;
+import com.tp.holdem.model.message.MessageType;
+import com.tp.holdem.model.message.PlayerConnectMessage;
+import com.tp.holdem.model.message.UpdateStateMessage;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class GameState implements GameObservable {
+public class GameState implements ServerObservable {
 	private PokerTable table;
 	private Player currentPlayer;
 	private Player bettingPlayer;
@@ -97,44 +97,44 @@ public class GameState implements GameObservable {
 	}
 
 	@Override
-	public void accept(Action action) {
-		log.debug(String.format("Received action: %s", action.getActionType()));
+	public void accept(Message message) {
+		log.debug(String.format("Received message: %s", message.getMessageType()));
 
-		if (action.getActionType() == ActionType.PLAYER_CONNECT) {
-			handlePlayerConnection(action);
+		if (message.getMessageType() == MessageType.PLAYER_CONNECTION) {
+			handlePlayerConnection(message);
 		}
 
-		if (action.getActionType() == ActionType.UPDATE_STATE) {
-			handleUpdateState(action);
+		if (message.getMessageType() == MessageType.UPDATE_STATE) {
+			handleUpdateState(message);
 		}
 	}
 
-	private void handlePlayerConnection(Action action) {
+	private void handlePlayerConnection(Message message) {
 		log.debug("Handling player connection event");
 
 		Preconditions.checkArgument(!isCurrentPlayerConnected(), "Player already connected");
 
-		final PlayerConnectMessage response = action.instance(PlayerConnectMessage.class);
+		final PlayerConnectMessage response = message.instance(PlayerConnectMessage.class);
 
 		currentPlayer = response.getPlayer();
 
 		log.debug(String.format("Registered current player with number: %d", currentPlayer.getNumber()));
 	}
 
-	private void handleUpdateState(Action action) {
+	private void handleUpdateState(Message message) {
 		log.debug("Handling update state event");
 
-		final UpdateStateMessage response = action.instance(UpdateStateMessage.class);
-		copyProperties(response.getGameState());
+		final UpdateStateMessage response = message.instance(UpdateStateMessage.class);
+		copyProperties(response);
 
 		log.debug(String.format("Staring game with %d players", allPlayers.size()));
 	}
 
-	public void copyProperties(GameState state) {
-		this.currentPlayer = state.currentPlayer;
-		this.allPlayers = state.allPlayers;
-		this.bettingPlayer = state.bettingPlayer;
-		this.table = state.table;
-		this.winnerPlayer = state.winnerPlayer;
+	public void copyProperties(UpdateStateMessage response) {
+		this.currentPlayer = response.getCurrentPlayer();
+		this.allPlayers = response.getAllPlayers();
+		this.bettingPlayer = response.getBettingPlayer();
+		this.table = response.getTable();
+		this.winnerPlayer = response.getWinnerPlayer();
 	}
 }

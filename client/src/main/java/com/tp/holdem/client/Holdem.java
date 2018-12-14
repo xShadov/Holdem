@@ -2,8 +2,8 @@ package com.tp.holdem.client;
 
 import com.badlogic.gdx.Game;
 import com.tp.holdem.client.architecture.KryoClient;
-import com.tp.holdem.client.architecture.bus.ActionBus;
-import com.tp.holdem.client.architecture.bus.EventBus;
+import com.tp.holdem.client.architecture.action.ActionBus;
+import com.tp.holdem.client.architecture.message.MessageBus;
 import com.tp.holdem.client.game.GameElements;
 import com.tp.holdem.client.game.GameScreen;
 import com.tp.holdem.client.game.GameState;
@@ -16,10 +16,10 @@ import io.vavr.collection.List;
 public class Holdem extends Game {
 	@Override
 	public void create() {
-		final EventBus clientToWatcher = new EventBus();
+		final MessageBus clientToWatcher = new MessageBus();
 		final ActionBus elementsToWatcher = new ActionBus();
-		final ActionBus watcherToElements = new ActionBus();
-		final ActionBus watcherToState = new ActionBus();
+		final MessageBus watcherToElements = new MessageBus();
+		final MessageBus watcherToState = new MessageBus();
 
 		final GameState gameState = new GameState();
 		watcherToState.register(gameState);

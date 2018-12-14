@@ -12,20 +12,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.tp.holdem.client.architecture.bus.Action;
-import com.tp.holdem.client.architecture.bus.ActionBus;
-import com.tp.holdem.client.architecture.bus.GameObservable;
-import com.tp.holdem.client.architecture.model.action.ActionType;
-import com.tp.holdem.client.architecture.model.action.PlayerBetAction;
-import com.tp.holdem.client.architecture.model.action.PlayerRaiseAction;
-import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
-import com.tp.holdem.client.model.Moves;
-import com.tp.holdem.client.model.Player;
+import com.tp.holdem.client.architecture.action.Action;
+import com.tp.holdem.client.architecture.action.ActionBus;
+import com.tp.holdem.client.architecture.message.ServerObservable;
+import com.tp.holdem.client.architecture.action.ActionType;
+import com.tp.holdem.client.architecture.action.PlayerBetAction;
+import com.tp.holdem.client.architecture.action.PlayerRaiseAction;
+import com.tp.holdem.model.game.Moves;
+import com.tp.holdem.model.game.Player;
+import com.tp.holdem.model.message.Message;
+import com.tp.holdem.model.message.MessageType;
+import com.tp.holdem.model.message.UpdateStateMessage;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 
-public class GameElements implements GameObservable {
+public class GameElements implements ServerObservable {
 	private final Map<Moves, TextButton> moveButtons;
 	private final Slider slider;
 
@@ -151,16 +153,16 @@ public class GameElements implements GameObservable {
 	}
 
 	@Override
-	public void accept(Action action) {
-		if (action.getActionType() == ActionType.UPDATE_STATE) {
-			handleUpdateState(action);
+	public void accept(Message message) {
+		if (message.getMessageType() == MessageType.UPDATE_STATE) {
+			handleUpdateState(message);
 		}
 	}
 
-	private void handleUpdateState(Action action) {
-		final UpdateStateMessage message = action.instance(UpdateStateMessage.class);
+	private void handleUpdateState(Message message) {
+		final UpdateStateMessage content = message.instance(UpdateStateMessage.class);
 
-		final Player currentPlayer = message.getGameState().getCurrentPlayer();
+		final Player currentPlayer = content.getCurrentPlayer();
 		final List<Moves> options = List.ofAll(currentPlayer.getPossibleMoves());
 
 		options.flatMap(moveButtons::get)

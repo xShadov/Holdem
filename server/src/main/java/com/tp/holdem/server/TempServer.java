@@ -5,12 +5,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.google.common.collect.Lists;
-import com.tp.holdem.client.architecture.bus.Event;
-import com.tp.holdem.client.architecture.model.common.PlayerConnectMessage;
-import com.tp.holdem.client.architecture.model.common.UpdateStateMessage;
-import com.tp.holdem.client.architecture.model.event.EventType;
-import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.client.model.*;
+import com.tp.holdem.model.game.*;
+import com.tp.holdem.model.message.Message;
+import com.tp.holdem.model.message.MessageType;
+import com.tp.holdem.model.message.PlayerConnectMessage;
+import com.tp.holdem.model.message.UpdateStateMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -47,11 +46,10 @@ public class TempServer implements Runnable {
 		kryo.register(Deck.class, registerCount.getAndIncrement());
 		kryo.register(PokerTable.class, registerCount.getAndIncrement());
 
-		kryo.register(Event.class, registerCount.getAndIncrement());
-		kryo.register(EventType.class, registerCount.getAndIncrement());
-		kryo.register(PlayerConnectMessage.class,registerCount.getAndIncrement());
+		kryo.register(Message.class, registerCount.getAndIncrement());
+		kryo.register(MessageType.class, registerCount.getAndIncrement());
+		kryo.register(PlayerConnectMessage.class, registerCount.getAndIncrement());
 		kryo.register(UpdateStateMessage.class, registerCount.getAndIncrement());
-		kryo.register(GameState.class, registerCount.getAndIncrement());
 		kryo.register(Moves.class, registerCount.getAndIncrement());
 
 		server.addListener(new Listener() {
@@ -115,7 +113,7 @@ public class TempServer implements Runnable {
 		log.debug(String.format("Player connected, assigned ID: %d", assignedNumber));
 
 		PlayerConnectMessage response = PlayerConnectMessage.from(newPlayer);
-		server.sendToTCP(con.getID(), Event.from(EventType.PLAYER_CONNECTION, response));
+		server.sendToTCP(con.getID(), Message.from(MessageType.PLAYER_CONNECTION, response));
 
 		if (players.size() == playersCount) {
 			startGame();
@@ -138,16 +136,14 @@ public class TempServer implements Runnable {
 		players.forEach(System.out::println);
 
 		players.forEach(player -> {
-			UpdateStateMessage response = UpdateStateMessage.from(
-					GameState.builder()
+			UpdateStateMessage response = UpdateStateMessage.builder()
 							.currentPlayer(player)
 							.bettingPlayer(players.get(1))
 							.allPlayers(players)
 							.table(table)
-							.build()
-			);
+							.build();
 
-			server.sendToTCP(player.getConnectionId(), Event.from(EventType.UPDATE_STATE, response));
+			server.sendToTCP(player.getConnectionId(), Message.from(MessageType.UPDATE_STATE, response));
 		});
 	}
 
