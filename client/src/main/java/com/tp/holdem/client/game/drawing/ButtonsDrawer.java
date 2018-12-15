@@ -32,11 +32,11 @@ public class ButtonsDrawer {
 	}
 
 	private void drawPlayer(int index, Player player) {
-		if (player.isHasDealerButton())
+		if (player.isDealerButton())
 			batcher.draw(dealer, dealerPositionX[index], dealerPositionY[index]);
-		if (player.isHasBigBlind())
+		if (player.isBigBlind())
 			batcher.draw(bigBlind, blindPositionX[index], blindPositionY[index]);
-		if (player.isHasSmallBlind())
+		if (player.isSmallBlind())
 			batcher.draw(smallBlind, blindPositionX[index], blindPositionY[index]);
 	}
 }

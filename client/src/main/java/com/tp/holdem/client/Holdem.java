@@ -20,6 +20,7 @@ public class Holdem extends Game {
 		final ActionBus elementsToWatcher = new ActionBus();
 		final MessageBus watcherToElements = new MessageBus();
 		final MessageBus watcherToState = new MessageBus();
+		final MessageBus watcherToClient = new MessageBus();
 
 		final GameState gameState = new GameState();
 		watcherToState.register(gameState);
@@ -27,7 +28,7 @@ public class Holdem extends Game {
 		final GameElements gameElements = new GameElements(elementsToWatcher);
 		watcherToElements.register(gameElements);
 
-		final GameWatcher watcher = new GameWatcher(watcherToState, watcherToElements);
+		final GameWatcher watcher = new GameWatcher(watcherToState, watcherToElements, watcherToClient);
 		clientToWatcher.register(watcher);
 		elementsToWatcher.register(watcher);
 
@@ -35,6 +36,8 @@ public class Holdem extends Game {
 		final ElementsRenderer elementsRenderer = new ElementsRenderer(gameElements);
 
 		final KryoClient client = new KryoClient(clientToWatcher);
+		watcherToClient.register(client);
+
 		client.start();
 
 		setScreen(new GameScreen(watcher, gameElements, gameState, CompositeRenderer.of(List.of(renderer, elementsRenderer))));

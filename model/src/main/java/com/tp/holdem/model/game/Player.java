@@ -22,11 +22,11 @@ public class Player {
 	private int chipsAmount;
 
 	private boolean inGame;
-	private boolean isAllIn;
-	private boolean isFolded;
-	private boolean hasDealerButton;
-	private boolean hasBigBlind;
-	private boolean hasSmallBlind;
+	private boolean allIn;
+	private boolean folded;
+	private boolean dealerButton;
+	private boolean bigBlind;
+	private boolean smallBlind;
 
 	private String name;
 
@@ -40,15 +40,7 @@ public class Player {
 		hand.add(card);
 	}
 
-	public void clearHand() {
-		hand.clear();
-	}
-
-	public static boolean playing(Player player) {
-		return player.isInGame() && !player.isFolded();
-	}
-
-	public int getAvailableChips() {
-		return chipsAmount - betAmount;
+	public boolean playing() {
+		return isInGame() && !isFolded();
 	}
 }

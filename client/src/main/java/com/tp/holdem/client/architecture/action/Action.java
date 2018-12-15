@@ -1,6 +1,6 @@
 package com.tp.holdem.client.architecture.action;
 
-import io.vavr.control.Option;
+import com.tp.holdem.model.game.Moves;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,27 +9,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Action {
-	private ActionType actionType;
-	private ActionRequest request;
+	private Moves move;
+	private int betAmount;
 
-	public static Action from(ActionType type, ActionRequest request) {
-		return new Action(type, request);
+	public static Action from(Moves move, int betAmount) {
+		return new Action(move, betAmount);
 	}
 
-	public static Action simple(ActionType type) {
-		return new Action(type, null);
-	}
-
-	public Option<ActionRequest> getRequest() {
-		return Option.of(request);
-	}
-
-	public <T extends ActionRequest> T instance(Class<T> clazz) {
-		return getRequest()
-				.filter(req -> actionType.clazz()
-						.exists(optionClazz -> optionClazz.isInstance(req))
-				)
-				.map(clazz::cast)
-				.getOrElseThrow(() -> new IllegalArgumentException("Action request is invalid"));
+	public static Action simple(Moves move) {
+		return new Action(move, 0);
 	}
 }

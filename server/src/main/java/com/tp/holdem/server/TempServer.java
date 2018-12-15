@@ -6,10 +6,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.google.common.collect.Lists;
 import com.tp.holdem.model.game.*;
-import com.tp.holdem.model.message.Message;
-import com.tp.holdem.model.message.MessageType;
-import com.tp.holdem.model.message.PlayerConnectMessage;
-import com.tp.holdem.model.message.UpdateStateMessage;
+import com.tp.holdem.model.message.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -51,10 +48,12 @@ public class TempServer implements Runnable {
 		kryo.register(PlayerConnectMessage.class, registerCount.getAndIncrement());
 		kryo.register(UpdateStateMessage.class, registerCount.getAndIncrement());
 		kryo.register(Moves.class, registerCount.getAndIncrement());
+		kryo.register(PlayerActionMessage.class, registerCount.getAndIncrement());
 
 		server.addListener(new Listener() {
 			public synchronized void received(final Connection connection, final Object object) {
 				//handleReceived(object);
+				log.debug("Received message from " + connection.getID() + ": " + object);
 			}
 
 			public synchronized void connected(final Connection con) {
@@ -137,11 +136,11 @@ public class TempServer implements Runnable {
 
 		players.forEach(player -> {
 			UpdateStateMessage response = UpdateStateMessage.builder()
-							.currentPlayer(player)
-							.bettingPlayer(players.get(1))
-							.allPlayers(players)
-							.table(table)
-							.build();
+					.currentPlayer(player)
+					.bettingPlayer(players.get(1))
+					.allPlayers(players)
+					.table(table)
+					.build();
 
 			server.sendToTCP(player.getConnectionId(), Message.from(MessageType.UPDATE_STATE, response));
 		});

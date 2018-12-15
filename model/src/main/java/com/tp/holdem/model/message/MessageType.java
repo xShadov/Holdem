@@ -3,7 +3,8 @@ package com.tp.holdem.model.message;
 
 public enum MessageType {
 	PLAYER_CONNECTION(PlayerConnectMessage.class),
-	UPDATE_STATE(UpdateStateMessage.class);
+	UPDATE_STATE(UpdateStateMessage.class),
+	PLAYER_ACTION(PlayerActionMessage.class);
 
 	private Class<? extends ServerMessage> clazz;
 

@@ -5,35 +5,32 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
-import com.tp.holdem.model.game.*;
-import com.tp.holdem.model.message.Message;
 import com.tp.holdem.client.architecture.message.MessageBus;
-import com.tp.holdem.model.message.MessageType;
-import com.tp.holdem.model.message.PlayerConnectMessage;
-import com.tp.holdem.model.message.UpdateStateMessage;
-import com.tp.holdem.client.game.GameState;
+import com.tp.holdem.client.architecture.message.ServerObservable;
+import com.tp.holdem.model.game.*;
+import com.tp.holdem.model.message.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-public class KryoClient {
+public class KryoClient implements ServerObservable {
 	private final MessageBus withWatcher;
+	private final Client client;
 
 	public KryoClient(MessageBus withWatcher) {
 		this.withWatcher = withWatcher;
+		this.client = new Client();
 	}
 
 	public void start() {
-		Client simulationClient = new Client();
-		simulationClient.start();
+		client.start();
 
 		final AtomicInteger registerCount = new AtomicInteger(16);
 
-		final Kryo kryo = simulationClient.getKryo();
+		final Kryo kryo = client.getKryo();
 		kryo.register(ArrayList.class, registerCount.getAndIncrement());
 		kryo.register(List.class, registerCount.getAndIncrement());
 		kryo.register(Honour.class, registerCount.getAndIncrement());
@@ -48,13 +45,13 @@ public class KryoClient {
 		kryo.register(PlayerConnectMessage.class, registerCount.getAndIncrement());
 		kryo.register(UpdateStateMessage.class, registerCount.getAndIncrement());
 		kryo.register(Moves.class, registerCount.getAndIncrement());
+		kryo.register(PlayerActionMessage.class, registerCount.getAndIncrement());
 
-		simulationClient.addListener(new Listener() {
+		client.addListener(new Listener() {
 			public synchronized void received(final Connection connection, final Object responseObject) {
-				if (responseObject instanceof Message) {
-					final Message response = (Message) responseObject;
-					withWatcher.message(response);
-				} else if (responseObject instanceof FrameworkMessage)
+				if (responseObject instanceof Message)
+					withWatcher.message((Message) responseObject);
+				else if (responseObject instanceof FrameworkMessage)
 					log.info("Received framework message");
 				else
 					log.error(String.format("Unknown message type from server: %s", responseObject));
@@ -63,18 +60,19 @@ public class KryoClient {
 
 		new Thread(() -> {
 			try {
-				simulationClient.connect(5000, "127.0.0.1", 54555);
+				client.connect(5000, "127.0.0.1", 54555);
 				while (true) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException ex) {
-						ex.printStackTrace();
-					}
+					Thread.sleep(100);
 				}
-			} catch (IOException ex) {
+			} catch (Exception ex) {
 				ex.printStackTrace();
-				System.exit(1);
 			}
 		}).start();
+	}
+
+	@Override
+	public void accept(Message event) {
+		log.debug(String.format("Sending message to server: %s", event));
+		client.sendTCP(event);
 	}
 }

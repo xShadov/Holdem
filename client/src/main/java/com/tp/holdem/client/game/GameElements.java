@@ -15,9 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tp.holdem.client.architecture.action.Action;
 import com.tp.holdem.client.architecture.action.ActionBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.client.architecture.action.ActionType;
-import com.tp.holdem.client.architecture.action.PlayerBetAction;
-import com.tp.holdem.client.architecture.action.PlayerRaiseAction;
 import com.tp.holdem.model.game.Moves;
 import com.tp.holdem.model.game.Player;
 import com.tp.holdem.model.message.Message;
@@ -87,7 +84,7 @@ public class GameElements implements ServerObservable {
 		checkButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				withWatcher.message(Action.simple(ActionType.CHECK));
+				withWatcher.message(Action.simple(Moves.CHECK));
 				setButtonsInvisible();
 			}
 		});
@@ -95,7 +92,7 @@ public class GameElements implements ServerObservable {
 		foldButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				withWatcher.message(Action.simple(ActionType.FOLD));
+				withWatcher.message(Action.simple(Moves.FOLD));
 				setButtonsInvisible();
 			}
 		});
@@ -103,8 +100,7 @@ public class GameElements implements ServerObservable {
 		betButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				final PlayerBetAction betRequest = PlayerBetAction.from((int) slider.getValue());
-				withWatcher.message(Action.from(ActionType.BET, betRequest));
+				withWatcher.message(Action.from(Moves.BET, (int) slider.getValue()));
 				setButtonsInvisible();
 			}
 		});
@@ -112,7 +108,7 @@ public class GameElements implements ServerObservable {
 		callButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				withWatcher.message(Action.simple(ActionType.CALL));
+				withWatcher.message(Action.simple(Moves.CALL));
 				setButtonsInvisible();
 			}
 		});
@@ -120,7 +116,7 @@ public class GameElements implements ServerObservable {
 		allInButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				withWatcher.message(Action.simple(ActionType.ALLIN));
+				withWatcher.message(Action.simple(Moves.ALLIN));
 				setButtonsInvisible();
 			}
 		});
@@ -128,8 +124,7 @@ public class GameElements implements ServerObservable {
 		raiseButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(final InputEvent event, final float x, final float y) {
-				final PlayerRaiseAction raiseRequest = PlayerRaiseAction.from((int) slider.getValue());
-				withWatcher.message(Action.from(ActionType.RAISE, raiseRequest));
+				withWatcher.message(Action.from(Moves.RAISE, (int) slider.getValue()));
 				setButtonsInvisible();
 			}
 		});

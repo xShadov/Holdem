@@ -17,13 +17,4 @@ public class PokerTable {
 	private int smallBlindAmount;
 	private int bigBlindAmount;
 	private List<Card> cardsOnTable;
-
-	public void upBlinds() {
-		smallBlindAmount *= 2;
-		bigBlindAmount *= 2;
-	}
-
-	public void addCard(final Card card) {
-		cardsOnTable.add(card);
-	}
 }
