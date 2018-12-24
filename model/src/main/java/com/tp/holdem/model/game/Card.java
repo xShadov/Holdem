@@ -19,4 +19,8 @@ public class Card {
 	public static Card from(Suit suit, Honour honour) {
 		return new Card(suit, honour);
 	}
+
+	public String code() {
+		return String.format("%s_%s", honour.name(), suit.name());
+	}
 }

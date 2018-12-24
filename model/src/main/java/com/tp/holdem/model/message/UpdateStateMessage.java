@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class UpdateStateMessage implements ServerMessage {
 	private PokerTable table;
 	private Player currentPlayer;

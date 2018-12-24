@@ -9,9 +9,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayerConnectMessage implements ServerMessage {
+	private boolean success;
 	private Player player;
 
-	public static PlayerConnectMessage from(Player player) {
-		return new PlayerConnectMessage(player);
+	public static PlayerConnectMessage success(Player player) {
+		return new PlayerConnectMessage(true, player);
+	}
+
+	public static PlayerConnectMessage failure() {
+		return new PlayerConnectMessage(false, null);
 	}
 }

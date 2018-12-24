@@ -4,38 +4,34 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.google.common.collect.Lists;
 import com.tp.holdem.model.game.*;
 import com.tp.holdem.model.message.*;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class TempServer implements Runnable {
 	private final Server server;
-	private final int playersCount;
+	private final GameHandler gameHandler;
+	private final GameParams gameParams;
 
-	private final List<Player> players = Lists.newArrayList();
-	private PokerTable table;
+	private Map<Connection, Integer> connectedPlayers = HashMap.empty();
 
-	public TempServer(final int playersCount) throws Exception {
-		log.debug(String.format("Staring kryoServer, playersCount=%d", playersCount));
-
-		this.playersCount = playersCount;
-
-		server = new Server();
-
-		final Thread gameThread = new Thread(this);
+	public TempServer(Server server, GameHandler gameHandler, GameParams gameParams) {
+		this.server = server;
+		this.gameHandler = gameHandler;
+		this.gameParams = gameParams;
 
 		final AtomicInteger registerCount = new AtomicInteger(16);
 
 		final Kryo kryo = server.getKryo();
-		kryo.register(ArrayList.class, registerCount.getAndIncrement());
-		kryo.register(List.class, registerCount.getAndIncrement());
+		kryo.register(java.util.ArrayList.class, registerCount.getAndIncrement());
+		kryo.register(java.util.List.class, registerCount.getAndIncrement());
 		kryo.register(Honour.class, registerCount.getAndIncrement());
 		kryo.register(Suit.class, registerCount.getAndIncrement());
 		kryo.register(Player.class, registerCount.getAndIncrement());
@@ -50,7 +46,40 @@ public class TempServer implements Runnable {
 		kryo.register(Moves.class, registerCount.getAndIncrement());
 		kryo.register(PlayerActionMessage.class, registerCount.getAndIncrement());
 
-		server.addListener(new Listener() {
+		/*
+
+		while (true) {
+			Thread.sleep(100);
+		}*/
+	}
+
+	public void start() {
+		try {
+			server.addListener(serverListener());
+
+			server.bind(gameParams.getPort());
+			server.start();
+
+			final Thread gameThread = new Thread(this);
+			gameThread.start();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public synchronized void run() {
+		try {
+			while (true) {
+				Thread.sleep(500);
+			}
+		} catch (InterruptedException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private Listener serverListener() {
+		return new Listener() {
 			public synchronized void received(final Connection connection, final Object object) {
 				//handleReceived(object);
 				log.debug("Received message from " + connection.getID() + ": " + object);
@@ -59,98 +88,56 @@ public class TempServer implements Runnable {
 			public synchronized void connected(final Connection con) {
 				log.debug(String.format("Connection attempt: %d", con.getID()));
 
-				if (players.size() < playersCount) {
-					handleConnected(con);
-				} else {
-					con.close();
-				}
+				final boolean connected = tryConnectingPlayer(con);
+
+				if (!connected)
+					return;
+
+				if (enoughPlayers())
+					startGame();
 			}
 
 			public synchronized void disconnected(final Connection con) {
 				//handleDisconnected(con);
 			}
 
-		});
-
-		server.bind(54555);
-		server.start();
-		gameThread.start();
-
-		while (true) {
-			Thread.sleep(100);
-		}
+		};
 	}
 
-	@Override
-	public synchronized void run() {
-		while (true) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+	private boolean tryConnectingPlayer(Connection con) {
+		if (enoughPlayers()) {
+			final PlayerConnectMessage response = PlayerConnectMessage.failure();
+			server.sendToTCP(con.getID(), Message.from(MessageType.PLAYER_CONNECTION, response));
+			return false;
 		}
-	}
 
-	private void handleConnected(final Connection con) {
-		int assignedNumber = players.size();
+		final Player player = gameHandler.connectPlayer();
+		connectedPlayers = connectedPlayers.put(con, player.getNumber());
 
-		Player newPlayer = Player.builder()
-				.name("Player" + assignedNumber)
-				.number(assignedNumber)
-				.chipsAmount(1500)
-				.betAmount(new Random().nextInt(3000))
-				.minimumBet((int) (Math.random() * 100))
-				.maximumBet((int) (Math.random() * 500))
-				.connectionId(con.getID())
-				.possibleMoves(Lists.newArrayList(Moves.BET, Moves.ALLIN, Moves.FOLD))
-				.inGame(true)
-				.build();
-
-		players.add(newPlayer);
-
-		log.debug(String.format("Player connected, assigned ID: %d", assignedNumber));
-
-		PlayerConnectMessage response = PlayerConnectMessage.from(newPlayer);
-		server.sendToTCP(con.getID(), Message.from(MessageType.PLAYER_CONNECTION, response));
-
-		if (players.size() == playersCount) {
-			startGame();
-		}
+		final PlayerConnectMessage connectionResponse = PlayerConnectMessage.success(player);
+		server.sendToTCP(con.getID(), Message.from(MessageType.PLAYER_CONNECTION, connectionResponse));
+		return true;
 	}
 
 	private void startGame() {
-		log.debug(String.format("Starting game with %d players", players.size()));
+		final UpdateStateMessage response = gameHandler.startGame();
 
-		Deck deck = new Deck();
-		table = PokerTable.builder()
-				.cardsOnTable(Lists.newArrayList(deck.drawCard(), deck.drawCard(), deck.drawCard()))
-				.bigBlindAmount(40)
-				.smallBlindAmount(20)
-				.build();
+		System.out.println(connectedPlayers);
 
+		connectedPlayers.forEach((connection, playerNumber) -> {
+			final Player currentPlayer = List.ofAll(response.getAllPlayers())
+					.find(player -> Objects.equals(playerNumber, player.getNumber()))
+					.getOrElseThrow(() -> new IllegalStateException("List of all players does not contain current player"));
 
-		deck.dealCards(2, io.vavr.collection.List.ofAll(players));
-
-		players.forEach(System.out::println);
-
-		players.forEach(player -> {
-			UpdateStateMessage response = UpdateStateMessage.builder()
-					.currentPlayer(player)
-					.bettingPlayer(players.get(1))
-					.allPlayers(players)
-					.table(table)
+			final UpdateStateMessage modifiedResponse = response.toBuilder()
+					.currentPlayer(currentPlayer)
 					.build();
 
-			server.sendToTCP(player.getConnectionId(), Message.from(MessageType.UPDATE_STATE, response));
+			server.sendToTCP(connection.getID(), Message.from(MessageType.UPDATE_STATE, modifiedResponse));
 		});
 	}
 
-	public static void main(final String[] args) {
-		try {
-			new TempServer(2);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+	private boolean enoughPlayers() {
+		return connectedPlayers.size() >= gameParams.getPlayerCount();
 	}
 }

@@ -65,7 +65,7 @@ public class KryoClient implements ServerObservable {
 					Thread.sleep(100);
 				}
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				throw new RuntimeException(ex);
 			}
 		}).start();
 	}

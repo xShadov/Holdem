@@ -28,8 +28,6 @@ public class GameElements implements ServerObservable {
 	private final Map<Moves, TextButton> moveButtons;
 	private final Slider slider;
 
-	private final Batch batcher;
-
 	public GameElements(ActionBus withWatcher) {
 		final TextureAtlas atlas = new TextureAtlas("data/button.pack");
 		final Skin buttonsSkin = new Skin(atlas);
@@ -43,8 +41,6 @@ public class GameElements implements ServerObservable {
 		slider.setAnimateDuration(0.01f);
 		slider.setPosition(300, 80);
 		slider.setWidth(400);
-
-		batcher = new SpriteBatch();
 
 		final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 		textButtonStyle.up = buttonsSkin.getDrawable("button_up");

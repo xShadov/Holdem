@@ -2,12 +2,15 @@ package com.tp.holdem.client.game.drawing;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.google.common.collect.Maps;
 import com.tp.holdem.client.game.GameState;
 import com.tp.holdem.model.game.Card;
-import io.vavr.Tuple2;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CardDrawer {
@@ -19,15 +22,17 @@ public class CardDrawer {
 	private static final int offsetX = 20;
 	private static final int offsetY = -15;
 
-	private final Texture cardTextures = new Texture(Gdx.files.internal("data/cards.png"));
-	private final TextureRegion cardReverse = new TextureRegion(new Texture(Gdx.files.internal("data/reverse.png")), 0, 0, 69, 94);
-
 	private final SpriteBatch batcher;
 	private final GameState gameState;
+	private final TextureAtlas cardTextures;
+	private final TextureRegion cardReverse;
+	private final Map<String, TextureAtlas.AtlasRegion> cardRegionMap = Maps.newHashMap();
 
-	public CardDrawer(SpriteBatch batcher, GameState gameState) {
+	public CardDrawer(SpriteBatch batcher, GameState gameState, TextureAtlas textures) {
 		this.batcher = batcher;
 		this.gameState = gameState;
+		this.cardTextures = textures;
+		this.cardReverse = getRegion("red_back");
 	}
 
 	public void drawCards() {
@@ -66,7 +71,19 @@ public class CardDrawer {
 	}
 
 	private TextureRegion findCurrentCardTexture(final Card card) {
-		final Tuple2<Integer, Integer> coordinates = CardCoordinates.find(card);
-		return new TextureRegion(cardTextures, coordinates._1, coordinates._2, 69, 94);
+		return getRegion(card.code());
+	}
+
+	private TextureRegion getRegion(String code) {
+		TextureAtlas.AtlasRegion region = cardRegionMap.get(code);
+
+		if (region == null) {
+			region = cardTextures.findRegion(code);
+			cardRegionMap.put(code, region);
+		}
+
+		final Sprite sprite = new Sprite(region);
+		sprite.setPosition(69, 94);
+		return sprite;
 	}
 }

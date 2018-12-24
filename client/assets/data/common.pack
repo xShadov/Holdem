@@ -1,0 +1,75 @@
+
+common.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+infoBox
+  rotate: false
+  xy: 1, 16
+  size: 160, 96
+  orig: 160, 96
+  offset: 0, 0
+  index: -1
+infoBoxFold
+  rotate: false
+  xy: 163, 16
+  size: 160, 96
+  orig: 160, 96
+  offset: 0, 0
+  index: -1
+infoBoxOff
+  rotate: false
+  xy: 325, 16
+  size: 160, 96
+  orig: 160, 96
+  offset: 0, 0
+  index: -1
+smallStack
+  rotate: false
+  xy: 487, 53
+  size: 170, 59
+  orig: 170, 59
+  offset: 0, 0
+  index: -1
+hugeStack
+  rotate: false
+  xy: 659, 32
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+bigStack
+  rotate: false
+  xy: 741, 62
+  size: 86, 50
+  orig: 86, 50
+  offset: 0, 0
+  index: -1
+mediumStack
+  rotate: false
+  xy: 829, 62
+  size: 66, 50
+  orig: 66, 50
+  offset: 0, 0
+  index: -1
+bigBlind
+  rotate: false
+  xy: 897, 62
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+dealer
+  rotate: false
+  xy: 949, 62
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+smallBlind
+  rotate: false
+  xy: 487, 1
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1

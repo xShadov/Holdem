@@ -1,11 +1,14 @@
 package com.tp.holdem.client.game.drawing;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.google.common.collect.Maps;
 import com.tp.holdem.client.game.GameState;
 import com.tp.holdem.model.game.Player;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ButtonsDrawer {
@@ -14,16 +17,22 @@ public class ButtonsDrawer {
 	private static final int[] blindPositionX = {490, 315, 213, 246, 340, 519, 630, 748, 763, 637};
 	private static final int[] blindPositionY = {235, 234, 369, 469, 540, 520, 532, 466, 342, 237};
 
-	private final TextureRegion dealer = new TextureRegion(new Texture("data/dealer.png"), 0, 0, 50, 48);
-	private final TextureRegion smallBlind = new TextureRegion(new Texture("data/smallBlind.png"), 0, 0, 35, 32);
-	private final TextureRegion bigBlind = new TextureRegion(new Texture("data/bigBlind.png"), 0, 0, 36, 34);
-
 	private final SpriteBatch batcher;
 	private final GameState gameState;
+	private final TextureAtlas commonTextures;
 
-	public ButtonsDrawer(SpriteBatch batcher, GameState gameState) {
+	private final TextureRegion dealer;
+	private final TextureRegion smallBlind;
+	private final TextureRegion bigBlind;
+
+	public ButtonsDrawer(SpriteBatch batcher, GameState gameState, TextureAtlas commonTextures) {
 		this.batcher = batcher;
 		this.gameState = gameState;
+		this.commonTextures = commonTextures;
+
+		this.dealer = getRegion("dealer");
+		this.smallBlind = getRegion("smallBlind");
+		this.bigBlind = getRegion("bigBlind");
 	}
 
 	public void drawButtons() {
@@ -38,5 +47,13 @@ public class ButtonsDrawer {
 			batcher.draw(bigBlind, blindPositionX[index], blindPositionY[index]);
 		if (player.isSmallBlind())
 			batcher.draw(smallBlind, blindPositionX[index], blindPositionY[index]);
+	}
+
+	private TextureRegion getRegion(String code) {
+		final TextureRegion region = commonTextures.findRegion(code);
+
+		final Sprite sprite = new Sprite(region);
+		sprite.setPosition(50, 50);
+		return sprite;
 	}
 }

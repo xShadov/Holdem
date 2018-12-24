@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Player {
 	private int number;
-	private int connectionId;
 
 	private int minimumBet;
 	private int maximumBet;

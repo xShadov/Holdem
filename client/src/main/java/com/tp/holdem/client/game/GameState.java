@@ -116,6 +116,9 @@ public class GameState implements ServerObservable {
 
 		final PlayerConnectMessage response = message.instance(PlayerConnectMessage.class);
 
+		if (!response.isSuccess())
+			throw new IllegalStateException("You could not be connected to server");
+
 		currentPlayer = response.getPlayer();
 
 		log.debug(String.format("Registered current player with number: %d", currentPlayer.getNumber()));

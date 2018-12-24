@@ -16,8 +16,13 @@ public class Deck {
 							Card.from(Suit.DIAMOND, honour),
 							Card.from(Suit.SPADE, honour)
 					)
-			).shuffle()
+			)
+			.shuffle()
 			.toJavaList();
+
+	public static Deck instance() {
+		return new Deck();
+	}
 
 	public void dealCards(final int numberOfCards, final List<Player> players) {
 		final List<Player> playing = players
