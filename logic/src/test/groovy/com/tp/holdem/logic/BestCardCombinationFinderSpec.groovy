@@ -32,7 +32,8 @@ class BestCardCombinationFinderSpec extends Specification {
 
         Hands.THREE_OF_A_KIND | ['10D', '10C', '10H', '8C', 'QD', 'KH', 'AC'] | ['10D', '10C', '10H', 'KH', 'AC']
         Hands.THREE_OF_A_KIND | ['3D', '6C', '8H', 'JC', 'AD', 'AH', 'AC']    | ['8H', 'JC', 'AD', 'AH', 'AC']
-w
+
+        Hands.STRAIGHT        | ['AD', '2C', '3D', '4S', '5D', '6S', 'QC']    | ['2C', '3D', '4S', '5D', '6S']
         Hands.STRAIGHT        | ['7D', '8C', '9D', '10S', 'JD', 'QS', 'KC']   | ['9D', '10S', 'JD', 'QS', 'KC']
         Hands.STRAIGHT        | ['7D', '8C', '9D', '10S', 'JD', 'QS', 'AC']   | ['8C', '9D', '10S', 'JD', 'QS']
         Hands.STRAIGHT        | ['7D', '8C', '9D', '10S', 'JD', 'KS', 'AC']   | ['7D', '8C', '9D', '10S', 'JD']
@@ -46,6 +47,7 @@ w
         Hands.FULL_HOUSE      | ['2D', '2C', '2S', '3C', '3H', '4S', '4D']    | ['2D', '2C', '2S', '4S', '4D']
         Hands.FULL_HOUSE      | ['2D', '2C', '2S', '3C', '3H', '3S', 'AD']    | ['2C', '2D', '3C', '3H', '3S']
 
+        Hands.STRAIGHT        | ['AD', '2D', '3D', '4D', '5D', '6D', 'QD']    | ['2D', '3D', '4D', '5D', '6D']
         Hands.STRAIGHT_FLUSH  | ['7D', '8D', '9D', '10D', 'JD', 'QD', 'KD']   | ['9D', '10D', 'JD', 'QD', 'KD']
         Hands.STRAIGHT_FLUSH  | ['7S', '8S', '9S', '10S', 'JS', 'QS', 'AS']   | ['8S', '9S', '10S', 'JS', 'QS']
         Hands.STRAIGHT_FLUSH  | ['7S', '8S', '9S', '10S', 'JS', 'QD', 'KS']   | ['7S', '8S', '9S', '10S', 'JS']

@@ -2,33 +2,16 @@ package com.tp.holdem.logic;
 
 import com.tp.holdem.model.game.Card;
 import com.tp.holdem.model.game.Hands;
-import com.tp.holdem.model.game.Honour;
 import io.vavr.collection.List;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static com.tp.holdem.model.game.Honour.*;
-import static com.tp.holdem.model.game.Honour.ACE;
 
 class HandFinder {
 	private static final Comparator<Card> CARD_COMPARATOR = Comparator.comparing(Card::getValue);
-
-	private static final Predicate<List<Card>> REGULAR_STRAIGHT = values -> {
-		final List<Honour> mapped = values.map(Card::getHonour);
-		return IntStream.range(0, mapped.size() - 1)
-				.allMatch(index -> mapped.get(index + 1).isRightAfter(mapped.get(index)));
-	};
-	private static final Predicate<List<Card>> ACE_STRAIGHT = values -> values.map(Card::getHonour).containsAll(List.of(ACE, TWO, THREE, FOUR, FIVE));
-	private static final Predicate<List<Card>> STRAIGHT = ACE_STRAIGHT.or(REGULAR_STRAIGHT);
-	private static final Predicate<List<Card>> FLUSH = HandFinder::isFlush;
-	private static final Predicate<List<Card>> STRAIGHT_FLUSH = STRAIGHT.and(FLUSH);
-	private static final Predicate<List<Card>> ROYAL_FLUSH = REGULAR_STRAIGHT.and(FLUSH).and(cards -> cards.last().getHonour() == ACE);
 
 	static Hands findHand(List<Card> cards) {
 		if (cards.size() != 7)
@@ -60,13 +43,13 @@ class HandFinder {
 	static boolean isRoyalFlush(final List<Card> cards) {
 		return cards
 				.combinations(5)
-				.exists(ROYAL_FLUSH);
+				.exists(HandPredicates.ROYAL_FLUSH);
 	}
 
 	static boolean isStraightFlush(final List<Card> cards) {
 		return cards
 				.combinations(5)
-				.exists(STRAIGHT_FLUSH);
+				.exists(HandPredicates.STRAIGHT_FLUSH);
 	}
 
 	static boolean isFourOfAKind(final List<Card> cards) {
@@ -84,7 +67,7 @@ class HandFinder {
 		return cards
 				.distinctBy(Card::getHonour)
 				.combinations(5)
-				.exists(STRAIGHT);
+				.exists(HandPredicates.STRAIGHT);
 	}
 
 	static boolean isFlush(final List<Card> cards) {

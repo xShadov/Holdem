@@ -16,6 +16,6 @@ public class HandOperations {
 		final Hands playerHand = HandFinder.findHand(cards);
 		final List<Card> bestCardsThatMakeHand = BestCardCombinationFinder.findBestCardsForHand(cards, playerHand);
 
-		return new HandRank(player, playerHand, bestCardsThatMakeHand.toJavaList());
+		return new HandRank(playerHand, bestCardsThatMakeHand.toJavaList());
 	}
 }
