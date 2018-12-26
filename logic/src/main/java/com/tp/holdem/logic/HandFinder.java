@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.tp.holdem.model.game.Honour.*;
+import static com.tp.holdem.model.game.Honour.ACE;
 
-public class HandFinder {
+class HandFinder {
 	private static final Comparator<Card> CARD_COMPARATOR = Comparator.comparing(Card::getValue);
 
 	private static final Predicate<List<Card>> REGULAR_STRAIGHT = values -> {
@@ -29,7 +30,7 @@ public class HandFinder {
 	private static final Predicate<List<Card>> STRAIGHT_FLUSH = STRAIGHT.and(FLUSH);
 	private static final Predicate<List<Card>> ROYAL_FLUSH = REGULAR_STRAIGHT.and(FLUSH).and(cards -> cards.last().getHonour() == ACE);
 
-	public static Hands findHand(List<Card> cards) {
+	static Hands findHand(List<Card> cards) {
 		if (cards.size() != 7)
 			throw new IllegalArgumentException("There should be 7 cards (2 player + 5 table)");
 
@@ -56,50 +57,50 @@ public class HandFinder {
 		return Hands.HIGH_CARD;
 	}
 
-	private static boolean isRoyalFlush(final List<Card> cards) {
+	static boolean isRoyalFlush(final List<Card> cards) {
 		return cards
 				.combinations(5)
 				.exists(ROYAL_FLUSH);
 	}
 
-	private static boolean isStraightFlush(final List<Card> cards) {
+	static boolean isStraightFlush(final List<Card> cards) {
 		return cards
 				.combinations(5)
 				.exists(STRAIGHT_FLUSH);
 	}
 
-	private static boolean isFourOfAKind(final List<Card> cards) {
+	static boolean isFourOfAKind(final List<Card> cards) {
 		return countCardsBy(cards, Card::getHonour)
 				.values()
 				.contains(4L);
 	}
 
-	private static boolean isFullHouse(final List<Card> cards) {
+	static boolean isFullHouse(final List<Card> cards) {
 		final List<Long> honourCounts = List.ofAll(countCardsBy(cards, Card::getHonour).values());
 		return honourCounts.containsAll(Arrays.asList(2L, 3L)) || honourCounts.filter(count -> count == 3).size() == 2;
 	}
 
-	private static boolean isStraight(final List<Card> cards) {
+	static boolean isStraight(final List<Card> cards) {
 		return cards
 				.distinctBy(Card::getHonour)
 				.combinations(5)
 				.exists(STRAIGHT);
 	}
 
-	private static boolean isFlush(final List<Card> cards) {
+	static boolean isFlush(final List<Card> cards) {
 		return countCardsBy(cards, Card::getSuit)
 				.values()
 				.stream()
 				.anyMatch(count -> count >= 5);
 	}
 
-	private static boolean isThreeOfAKind(final List<Card> cards) {
+	static boolean isThreeOfAKind(final List<Card> cards) {
 		return countCardsBy(cards, Card::getHonour)
 				.values()
 				.contains(3L);
 	}
 
-	private static boolean isTwoPair(final List<Card> cards) {
+	static boolean isTwoPair(final List<Card> cards) {
 		return countCardsBy(cards, Card::getHonour)
 				.values()
 				.stream()
@@ -107,13 +108,13 @@ public class HandFinder {
 				.count() >= 2;
 	}
 
-	private static boolean isPair(final List<Card> cards) {
+	static boolean isPair(final List<Card> cards) {
 		return countCardsBy(cards, Card::getHonour)
 				.values()
 				.contains(2L);
 	}
 
-	private static <U> Map<U, Long> countCardsBy(List<Card> cards, Function<Card, ? extends U> mapper) {
+	static <U> Map<U, Long> countCardsBy(List<Card> cards, Function<Card, ? extends U> mapper) {
 		return cards
 				.map(mapper)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));

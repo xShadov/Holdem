@@ -5,7 +5,7 @@ import com.tp.holdem.model.game.Hands;
 
 import java.util.Comparator;
 
-public class HandRankComparator implements Comparator<HandRank> {
+class HandRankComparator implements Comparator<HandRank> {
 
 	public HandRankComparator() {
 

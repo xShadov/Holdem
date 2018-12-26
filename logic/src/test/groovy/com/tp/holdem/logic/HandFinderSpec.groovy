@@ -18,7 +18,7 @@ class HandFinderSpec extends Specification {
         cards                                         || hand
         ['10D', '10H', 'JS', 'JD', 'QD', 'KD', 'AD']   || Hands.ROYAL_FLUSH
         ['2C', '2D', '10D', 'JD', 'QD', 'KD', 'AD']   || Hands.ROYAL_FLUSH
-        ['AD', '10D', '10D', 'JD', 'QD', 'KD', '9D']  || Hands.ROYAL_FLUSH
+        ['AD', '10D', '10C', 'JD', 'QD', 'KD', '9D']  || Hands.ROYAL_FLUSH
 
         ['2C', '3C', '4C', '5C', '6C', 'KS', 'AC']    || Hands.STRAIGHT_FLUSH
         ['2C', '3D', '4C', '5C', '6C', '7C', '8C']    || Hands.STRAIGHT_FLUSH
