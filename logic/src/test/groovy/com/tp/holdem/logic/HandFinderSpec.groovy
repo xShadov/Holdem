@@ -9,7 +9,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
-class HandFinderTest extends Specification {
+class HandFinderSpec extends Specification {
     def "test different (correct) hand combinations"() {
         expect:
         HandFinder.findHand(List.ofAll(cards).map({ code -> Card.coded(code) })) == hand
