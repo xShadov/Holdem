@@ -24,14 +24,14 @@ honors_spade
   orig: 306, 180
   offset: 0, 0
   index: -1
-SIX_CLUB
+6C
   rotate: false
   xy: 925, 868
   size: 86, 132
   orig: 86, 132
   offset: 0, 0
   index: -1
-SIX_SPADE
+6S
   rotate: false
   xy: 925, 734
   size: 86, 132
@@ -45,7 +45,7 @@ honor_clubs
   orig: 297, 183
   offset: 0, 0
   index: -1
-SEVEN_DIAMOND
+7D
   rotate: false
   xy: 916, 600
   size: 86, 132
@@ -66,266 +66,266 @@ back_cards
   orig: 306, 148
   offset: 0, 0
   index: -1
-KING_HEART
+KH
   rotate: false
   xy: 1, 533
   size: 86, 132
   orig: 86, 132
   offset: 0, 0
   index: -1
-TEN_CLUB
+10C
   rotate: false
   xy: 89, 534
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-TEN_DIAMOND
+10D
   rotate: false
   xy: 177, 534
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-TEN_HEART
+10H
   rotate: false
   xy: 265, 507
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-TEN_SPADE
+10S
   rotate: false
   xy: 89, 401
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-TWO_CLUB
+2C
   rotate: false
   xy: 1, 400
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-TWO_DIAMOND
+2D
   rotate: false
   xy: 177, 401
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-TWO_HEART
+2H
   rotate: false
   xy: 353, 507
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-TWO_SPADE
+2S
   rotate: false
   xy: 441, 507
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-THREE_CLUB
+3C
   rotate: false
   xy: 529, 507
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-THREE_DIAMOND
+3D
   rotate: false
   xy: 617, 502
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-THREE_HEART
+3H
   rotate: false
   xy: 705, 502
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-THREE_SPADE
+3S
   rotate: false
   xy: 793, 502
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FOUR_CLUB
+4C
   rotate: false
   xy: 881, 467
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FOUR_DIAMOND
+4D
   rotate: false
   xy: 265, 374
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FOUR_HEART
+4H
   rotate: false
   xy: 89, 268
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FOUR_SPADE
+4S
   rotate: false
   xy: 1, 267
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FIVE_CLUB
+5C
   rotate: false
   xy: 177, 268
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FIVE_DIAMOND
+5D
   rotate: false
   xy: 353, 374
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FIVE_HEART
+5H
   rotate: false
   xy: 441, 374
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-FIVE_SPADE
+5S
   rotate: false
   xy: 529, 374
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-SIX_DIAMOND
+6D
   rotate: false
   xy: 617, 369
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-SIX_HEART
+6H
   rotate: false
   xy: 705, 369
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-SEVEN_CLUB
+7C
   rotate: false
   xy: 793, 369
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-SEVEN_HEART
+7H
   rotate: false
   xy: 881, 334
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-SEVEN_SPADE
+7S
   rotate: false
   xy: 265, 241
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-EIGHT_CLUB
+8C
   rotate: false
   xy: 89, 135
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-EIGHT_DIAMOND
+8D
   rotate: false
   xy: 1, 134
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-EIGHT_HEART
+8H
   rotate: false
   xy: 177, 135
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-EIGHT_SPADE
+8S
   rotate: false
   xy: 353, 241
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-NINE_CLUB
+9C
   rotate: false
   xy: 441, 241
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-NINE_DIAMOND
+9D
   rotate: false
   xy: 529, 241
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-NINE_HEART
+9H
   rotate: false
   xy: 617, 236
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-NINE_SPADE
+9S
   rotate: false
   xy: 705, 236
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-ACE_CLUB
+AC
   rotate: false
   xy: 793, 236
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-ACE_DIAMOND
+AD
   rotate: false
   xy: 881, 201
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-ACE_HEART
+AH
   rotate: false
   xy: 265, 108
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-ACE_SPADE
+AS
   rotate: false
   xy: 89, 2
   size: 86, 131
@@ -353,42 +353,42 @@ green_back
   orig: 86, 131
   offset: 0, 0
   index: -1
-JACK_CLUB
+JC
   rotate: false
   xy: 441, 108
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-JACK_DIAMOND
+JD
   rotate: false
   xy: 529, 108
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-JACK_HEART
+JH
   rotate: false
   xy: 617, 103
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-JACK_SPADE
+JS
   rotate: false
   xy: 705, 103
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-KING_CLUB
+KC
   rotate: false
   xy: 793, 103
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-KING_DIAMOND
+KD
   rotate: false
   xy: 881, 68
   size: 86, 131
@@ -400,7 +400,7 @@ cards2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-KING_SPADE
+KS
   rotate: false
   xy: 1, 1
   size: 86, 131
@@ -414,28 +414,28 @@ purple_back
   orig: 86, 131
   offset: 0, 0
   index: -1
-QUEEN_CLUB
+QC
   rotate: false
   xy: 177, 1
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-QUEEN_DIAMOND
+QD
   rotate: false
   xy: 265, 1
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-QUEEN_HEART
+QH
   rotate: false
   xy: 353, 1
   size: 86, 131
   orig: 86, 131
   offset: 0, 0
   index: -1
-QUEEN_SPADE
+QS
   rotate: false
   xy: 441, 1
   size: 86, 131

@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class HandRank {
-	private int playerNumber;
+	private Player player;
 	private Hands hand;
-	private List<Card> cardsThatMakeDeck;
+	private List<Card> cardsThatMakeHand;
 }

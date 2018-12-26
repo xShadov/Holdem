@@ -20,7 +20,11 @@ public class Card {
 		return new Card(suit, honour);
 	}
 
+	public static Card coded(String code) {
+		return Card.from(Suit.coded(code.charAt(code.length() - 1)), Honour.coded(code.substring(0, code.length() - 1)));
+	}
+
 	public String code() {
-		return String.format("%s_%s", honour.name(), suit.name());
+		return String.format("%s%s", honour.code(), suit.code());
 	}
 }

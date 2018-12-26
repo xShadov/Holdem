@@ -140,8 +140,8 @@ public class CardTests {
 		tableCards.add(new Card("3", CLUB));
 		tableCards.add(new Card(KING, SPADE));
 		assertEquals(Hands.FULL_HOUSE, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(0).getHonour());
-		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
+		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(0).getHonour());
+		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(2).getHonour());
 
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
@@ -153,8 +153,8 @@ public class CardTests {
 		tableCards.add(new Card("8", CLUB));
 		tableCards.add(new Card(KING, SPADE));
 		assertEquals(Hands.FULL_HOUSE, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(0).getHonour());
-		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
+		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(0).getHonour());
+		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(2).getHonour());
 	}
 
 	@Test
@@ -179,9 +179,9 @@ public class CardTests {
 		tableCards.add(new Card("3", CLUB));
 		tableCards.add(new Card(KING, SPADE));
 		assertEquals(Hands.TWO_PAIR, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getHonour());
-		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
-		assertEquals(KING, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(4).getHonour());
+		assertEquals("4", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(1).getHonour());
+		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(2).getHonour());
+		assertEquals(KING, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(4).getHonour());
 
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
@@ -193,9 +193,9 @@ public class CardTests {
 		tableCards.add(new Card("9", CLUB));
 		tableCards.add(new Card("10", SPADE));
 		assertEquals(Hands.TWO_PAIR, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getHonour());
-		assertEquals("9", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(2).getHonour());
-		assertEquals("10", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(4).getHonour());
+		assertEquals("8", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(1).getHonour());
+		assertEquals("9", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(2).getHonour());
+		assertEquals("10", HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(4).getHonour());
 	}
 
 	@Test
@@ -232,7 +232,7 @@ public class CardTests {
 		tableCards.add(new Card("3", SPADE));
 		tableCards.add(new Card(KING, SPADE));
 		assertEquals(Hands.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals(SPADE, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+		assertEquals(SPADE, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(1).getSuit());
 
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
@@ -245,7 +245,7 @@ public class CardTests {
 		tableCards.add(new Card("9", DIAMOND));
 		assertEquals(Hands.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
 		assertEquals(DIAMOND,
-				HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+				HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(1).getSuit());
 
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
@@ -257,7 +257,7 @@ public class CardTests {
 		tableCards.add(new Card("3", CLUB));
 		tableCards.add(new Card("9", CLUB));
 		assertEquals(Hands.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals(CLUB, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+		assertEquals(CLUB, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(1).getSuit());
 
 		cards = new ArrayList<Card>();
 		tableCards = new ArrayList<Card>();
@@ -269,7 +269,7 @@ public class CardTests {
 		tableCards.add(new Card("3", HEART));
 		tableCards.add(new Card("9", HEART));
 		assertEquals(Hands.FLUSH, HandOperations.findHandRank(1, cards, tableCards).getHand());
-		assertEquals(HEART, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeDeck().get(1).getSuit());
+		assertEquals(HEART, HandOperations.findHandRank(1, cards, tableCards).getCardsThatMakeHand().get(1).getSuit());
 	}
 
 	@Test

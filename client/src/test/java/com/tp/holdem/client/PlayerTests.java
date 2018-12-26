@@ -100,11 +100,11 @@ public class PlayerTests {
 		final HandRank handRank = new HandRank();
 		handRank.setPlayerNumber(player.getNumber());
 		handRank.setHand(Hands.ROYAL_FLUSH);
-		handRank.setCardsThatMakeDeck(new ArrayList<Card>());
+		handRank.setCardsThatMakeHand(new ArrayList<Card>());
 		player.setHandRank(handRank);
 		assertEquals(Hands.ROYAL_FLUSH, player.getHandRank().getHand());
 		assertEquals(15, player.getHandRank().getPlayerNumber());
-		assertEquals(0, player.getHandRank().getCardsThatMakeDeck().size());
+		assertEquals(0, player.getHandRank().getCardsThatMakeHand().size());
 	}
 
 	@Test
@@ -119,9 +119,9 @@ public class PlayerTests {
 		player.setHandRank(new HandRank(player.getNumber(), Hands.ROYAL_FLUSH, cards));
 		assertEquals(Hands.ROYAL_FLUSH, player.getHandRank().getHand());
 		assertEquals(15, player.getHandRank().getPlayerNumber());
-		assertEquals(5, player.getHandRank().getCardsThatMakeDeck().size());
+		assertEquals(5, player.getHandRank().getCardsThatMakeHand().size());
 		String string = player.getNumber() + " " + player.getHandRank().getHand();
-		for (final Card card : player.getHandRank().getCardsThatMakeDeck()) {
+		for (final Card card : player.getHandRank().getCardsThatMakeHand()) {
 			string += " " + card.getHonour() + " " + card.getSuit();
 		}
 		assertEquals(string, player.getHandRank() + "");

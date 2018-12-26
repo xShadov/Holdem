@@ -45,12 +45,6 @@ public class TempServer implements Runnable {
 		kryo.register(UpdateStateMessage.class, registerCount.getAndIncrement());
 		kryo.register(Moves.class, registerCount.getAndIncrement());
 		kryo.register(PlayerActionMessage.class, registerCount.getAndIncrement());
-
-		/*
-
-		while (true) {
-			Thread.sleep(100);
-		}*/
 	}
 
 	public void start() {
@@ -98,6 +92,7 @@ public class TempServer implements Runnable {
 			}
 
 			public synchronized void disconnected(final Connection con) {
+				log.debug(String.format("Dis-connection attempt: %d", con.getID()));
 				//handleDisconnected(con);
 			}
 
@@ -121,8 +116,6 @@ public class TempServer implements Runnable {
 
 	private void startGame() {
 		final UpdateStateMessage response = gameHandler.startGame();
-
-		System.out.println(connectedPlayers);
 
 		connectedPlayers.forEach((connection, playerNumber) -> {
 			final Player currentPlayer = List.ofAll(response.getAllPlayers())
