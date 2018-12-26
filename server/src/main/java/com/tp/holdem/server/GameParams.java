@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Builder
 @Value
-public class GameParams {
+class GameParams {
 	private final int playerCount;
 	private final int startingChips;
 	private final int bigBlindAmount;

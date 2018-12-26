@@ -20,7 +20,7 @@ import com.tp.holdem.client.strategy.*;
 
 import javax.smartcardio.CardDTO;*/
 
-public class KryoServer{//} implements Runnable {
+class KryoServer{//} implements Runnable {
 /*
 	private final transient int port = 54555;
 	private transient Server server;

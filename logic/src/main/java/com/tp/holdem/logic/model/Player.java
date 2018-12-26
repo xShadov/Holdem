@@ -31,6 +31,13 @@ public class Player {
 	@Builder.Default
 	private List<Card> hand = List.empty();
 
+	public static Player numbered(int number) {
+		return Player.builder()
+				.name("Player" + number)
+				.number(number)
+				.build();
+	}
+
 	public Player withCards(List<Card> cards) {
 		return this.toBuilder().hand(cards).build();
 	}

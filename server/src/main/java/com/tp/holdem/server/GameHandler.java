@@ -7,13 +7,13 @@ import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GameHandler {
+class GameHandler {
 	private final GameParams gameParams;
 
 	private Deck deck;
 	private PokerTable table;
 
-	public GameHandler(GameParams gameParams) {
+	GameHandler(GameParams gameParams) {
 		this.gameParams = gameParams;
 
 		this.deck = Deck.brandNew();
@@ -23,42 +23,42 @@ public class GameHandler {
 				.build();
 	}
 
-	public PokerTable startGame() {
+	PokerTable startGame() {
 		if (table.getAllPlayers().size() != gameParams.getPlayerCount())
 			throw new RuntimeException("Game cannot be started - wrong number of players");
 
-		log.debug(String.format("Starting dto with %d players", gameParams.getPlayerCount()));
+		log.debug(String.format("Starting game with %d players", gameParams.getPlayerCount()));
 
 		final List<Player> readyPlayers = table.getAllPlayers()
-				.map(player -> player.toBuilder().inGame(true).betAmount((int) (Math.random() * 1000)).build());
+				.map(player -> player.toBuilder().inGame(true).build());
 
 		final List<Player> playersWithCards = deck.dealCards(2, readyPlayers);
 
 		table = table.toBuilder()
 				.allPlayers(playersWithCards)
-				.bettingPlayer(playersWithCards.get(0))
+				.bettingPlayer(playersWithCards.head())
 				.build();
 
 		return table;
 	}
 
-	public Player connectPlayer() {
+	Player connectPlayer() {
 		final Player newPlayer = numberedPlayer();
 		table = table.addPlayer(newPlayer);
 		return newPlayer;
 	}
 
 	private Player numberedPlayer() {
-		final Integer newNumber = table.getAllPlayers()
+		return table.getAllPlayers()
 				.lastOption()
 				.map(Player::getNumber)
 				.map(number -> number + 1)
-				.getOrElse(0);
+				.map(Player::numbered)
+				.getOrElse(() -> Player.numbered(0));
+	}
 
-		return Player.builder()
-				.name("Player" + newNumber)
-				.number(newNumber)
-				.chipsAmount(gameParams.getStartingChips())
-				.build();
+	PokerTable disconnectPlayer(Integer playerNumber) {
+		table = table.playerLeft(playerNumber);
+		return table;
 	}
 }

@@ -5,6 +5,8 @@ import io.vavr.collection.List;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.Objects;
+
 @Value
 @Builder(toBuilder = true)
 public class PokerTable {
@@ -22,6 +24,17 @@ public class PokerTable {
 		return this.toBuilder()
 				.allPlayers(getAllPlayers().append(player))
 				.build();
+	}
+
+	public PokerTable playerLeft(Integer playerNumber) {
+		final Player foundPlayer = allPlayers
+				.find(player -> Objects.equals(player.getNumber(), playerNumber))
+				.getOrElseThrow(() -> new IllegalArgumentException("Player not found"));
+
+		final List<Player> modifiedPlayers = allPlayers
+				.replace(foundPlayer, foundPlayer.toBuilder().inGame(false).build());
+
+		return this.toBuilder().allPlayers(modifiedPlayers).build();
 	}
 
 	public PokerTableDTO toDTO() {
