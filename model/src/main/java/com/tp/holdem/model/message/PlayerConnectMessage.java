@@ -1,6 +1,7 @@
 package com.tp.holdem.model.message;
 
-import com.tp.holdem.model.game.Player;
+import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.model.message.dto.PlayerDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlayerConnectMessage implements ServerMessage {
 	private boolean success;
-	private Player player;
+	private CurrentPlayerDTO player;
 
-	public static PlayerConnectMessage success(Player player) {
+	public static PlayerConnectMessage success(CurrentPlayerDTO player) {
 		return new PlayerConnectMessage(true, player);
 	}
 

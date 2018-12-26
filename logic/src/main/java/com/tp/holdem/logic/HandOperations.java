@@ -1,6 +1,10 @@
 package com.tp.holdem.logic;
 
-import com.tp.holdem.model.game.*;
+import com.tp.holdem.logic.model.Card;
+import com.tp.holdem.logic.model.HandRank;
+import com.tp.holdem.logic.model.Player;
+import com.tp.holdem.logic.model.PokerTable;
+import com.tp.holdem.model.common.Hands;
 import io.vavr.collection.List;
 
 import java.util.Comparator;
@@ -16,6 +20,6 @@ public class HandOperations {
 		final Hands playerHand = HandFinder.findHand(cards);
 		final List<Card> bestCardsThatMakeHand = BestCardCombinationFinder.findBestCardsForHand(cards, playerHand);
 
-		return new HandRank(playerHand, bestCardsThatMakeHand.toJavaList());
+		return new HandRank(playerHand, bestCardsThatMakeHand);
 	}
 }

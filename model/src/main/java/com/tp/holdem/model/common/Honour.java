@@ -1,4 +1,4 @@
-package com.tp.holdem.model.game;
+package com.tp.holdem.model.common;
 
 import io.vavr.collection.List;
 

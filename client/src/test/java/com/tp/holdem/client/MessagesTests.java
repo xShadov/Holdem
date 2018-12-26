@@ -42,7 +42,7 @@ public class MessagesTests {
 
 	@Test
 	public final void testResponseTAGWithTable() {
-		final PokerTable table = new PokerTable();
+		final PokerTableDTO table = new PokerTableDTO();
 		table.setPotAmount(5000);
 		response = new SimpleServerResponse(TAG, table);
 		assertEquals(TAG, response.getTag());
@@ -56,15 +56,15 @@ public class MessagesTests {
 
 	@Test
 	public final void testResponseTAGWithPlayerList() {
-		final List<Player> players = new ArrayList<Player>();
-		players.add(new Player(0));
-		players.add(new Player(1));
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		players.add(new PlayerDTO(0));
+		players.add(new PlayerDTO(1));
 		response = new SimpleServerResponse(TAG, players);
 		assertEquals(TAG, response.getTag());
 		assertEquals("Player0", response.getPlayers().get(0).getName());
 		assertEquals("Player1", response.getPlayers().get(1).getName());
 		response.setTag(TAG2);
-		players.add(new Player(2));
+		players.add(new PlayerDTO(2));
 		response.setPlayers(players);
 		assertEquals(TAG2, response.getTag());
 		assertEquals("Player2", response.getPlayers().get(2).getName());
@@ -72,9 +72,9 @@ public class MessagesTests {
 
 	@Test
 	public final void testResponseTAGWithCardList() {
-		final List<Card> cards = new ArrayList<Card>();
-		cards.add(new Card("Jack", "Spade"));
-		cards.add(new Card("Queen", "Diamond"));
+		final List<CardDTO> cards = new ArrayList<CardDTO>();
+		cards.add(new CardDTO("Jack", "Spade"));
+		cards.add(new CardDTO("Queen", "Diamond"));
 		response = new SimpleServerResponse(TAG, cards, false);
 		assertEquals(TAG, response.getTag());
 		assertEquals("Jack", response.getCards().get(0).getHonour());

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.google.common.collect.Maps;
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.model.game.Card;
+import com.tp.holdem.model.message.dto.CardDTO;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -68,7 +68,7 @@ public class CardDrawer {
 				});
 	}
 
-	private TextureRegion findCurrentCardTexture(final Card card) {
+	private TextureRegion findCurrentCardTexture(final CardDTO card) {
 		return getRegion(card.code());
 	}
 

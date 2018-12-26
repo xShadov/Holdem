@@ -2,9 +2,10 @@ package com.tp.holdem.client.game;
 
 import com.google.common.base.Preconditions;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.model.game.Card;
-import com.tp.holdem.model.game.Player;
-import com.tp.holdem.model.game.PokerTable;
+import com.tp.holdem.model.message.dto.CardDTO;
+import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.model.message.dto.PlayerDTO;
+import com.tp.holdem.model.message.dto.PokerTableDTO;
 import com.tp.holdem.model.message.Message;
 import com.tp.holdem.model.message.MessageType;
 import com.tp.holdem.model.message.PlayerConnectMessage;
@@ -24,27 +25,27 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @ToString
 public class GameState implements ServerObservable {
-	private PokerTable table;
-	private Player currentPlayer;
-	private Player bettingPlayer;
-	private Player winnerPlayer;
-	private List<Player> allPlayers;
+	private PokerTableDTO table;
+	private CurrentPlayerDTO currentPlayer;
+	private PlayerDTO bettingPlayer;
+	private PlayerDTO winnerPlayer;
+	private List<PlayerDTO> allPlayers;
 
-	public List<Player> getOtherPlayers() {
+	public List<PlayerDTO> getOtherPlayers() {
 		return getAllPlayers().stream()
 				.skip(1)
 				.collect(Collectors.toList());
 	}
 
-	public List<Player> playersExcept(Player... players) {
-		final List<Integer> numbers = Arrays.stream(players).map(Player::getNumber).collect(Collectors.toList());
+	public List<PlayerDTO> playersExcept(PlayerDTO... players) {
+		final List<Integer> numbers = Arrays.stream(players).map(PlayerDTO::getNumber).collect(Collectors.toList());
 		return getAllPlayers().stream()
 				.filter(player -> !numbers.contains(player.getNumber()))
 				.collect(Collectors.toList());
 	}
 
-	public List<Player> getAllPlayers() {
-		final List<Player> players = allPlayers;
+	public List<PlayerDTO> getAllPlayers() {
+		final List<PlayerDTO> players = allPlayers;
 
 		while (players.get(0).getNumber() != currentPlayer.getNumber())
 			Collections.rotate(players, 1);
@@ -68,7 +69,7 @@ public class GameState implements ServerObservable {
 		return getTable() != null;
 	}
 
-	public int relativePlayerNumber(Player player) {
+	public int relativePlayerNumber(PlayerDTO player) {
 		return (player.getNumber() + getCurrentPlayer().getNumber()) % getAllPlayers().size();
 	}
 
@@ -80,7 +81,7 @@ public class GameState implements ServerObservable {
 		return getBettingPlayer() != null;
 	}
 
-	public List<Card> getCardsOnTable() {
+	public List<CardDTO> getCardsOnTable() {
 		return table.getCardsOnTable();
 	}
 
@@ -112,7 +113,7 @@ public class GameState implements ServerObservable {
 	private void handlePlayerConnection(Message message) {
 		log.debug("Handling player connection event");
 
-		Preconditions.checkArgument(!isCurrentPlayerConnected(), "Player already connected");
+		Preconditions.checkArgument(!isCurrentPlayerConnected(), "PlayerDTO already connected");
 
 		final PlayerConnectMessage response = message.instance(PlayerConnectMessage.class);
 
@@ -130,7 +131,7 @@ public class GameState implements ServerObservable {
 		final UpdateStateMessage response = message.instance(UpdateStateMessage.class);
 		copyProperties(response);
 
-		log.debug(String.format("Staring game with %d players", allPlayers.size()));
+		log.debug(String.format("Staring dto with %d players", allPlayers.size()));
 	}
 
 	public void copyProperties(UpdateStateMessage response) {

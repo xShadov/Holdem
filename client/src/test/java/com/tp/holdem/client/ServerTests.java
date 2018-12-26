@@ -20,7 +20,7 @@ public class ServerTests {
 	@Test
 	public final void testAllFoldedExceptBetPlayer()
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		for (final Method methodz : allMethods) {
 			if (methodz.getName().equals("everyoneFoldedExceptBetPlayer")) {
@@ -28,9 +28,9 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(0);
+		final PlayerDTO player1 = new PlayerDTO(0);
 		player1.setFolded(true);
-		final Player player2 = new Player(1);
+		final PlayerDTO player2 = new PlayerDTO(1);
 		player2.setFolded(false);
 		players.add(player1);
 		players.add(player2);
@@ -42,7 +42,7 @@ public class ServerTests {
 	@Test
 	public final void testTimeToCheckOneWinner() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -51,24 +51,24 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(0);
-		player1.addCard(new Card("Jack", "Spade"));
-		player1.addCard(new Card("Queen", "Spade"));
+		final PlayerDTO player1 = new PlayerDTO(0);
+		player1.addCard(new CardDTO("Jack", "Spade"));
+		player1.addCard(new CardDTO("Queen", "Spade"));
 		player1.setBetAmount(500);
-		final Player player2 = new Player(1);
-		player2.addCard(new Card("Jack", "Heart"));
-		player2.addCard(new Card("Queen", "Heart"));
+		final PlayerDTO player2 = new PlayerDTO(1);
+		player2.addCard(new CardDTO("Jack", "Heart"));
+		player2.addCard(new CardDTO("Queen", "Heart"));
 		player2.setBetAmount(500);
 		players.add(player1);
 		players.add(player2);
-		final List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
-		playersWithHiddenCards.add(new Player());
-		playersWithHiddenCards.add(new Player());
-		final PokerTable table = new PokerTable();
+		final List<PlayerDTO> playersWithHiddenCards = new ArrayList<PlayerDTO>(players.size());
+		playersWithHiddenCards.add(new PlayerDTO());
+		playersWithHiddenCards.add(new PlayerDTO());
+		final PokerTableDTO table = new PokerTableDTO();
 		table.setPotAmount(1000);
-		table.addCard(new Card("10", "Spade"));
-		table.addCard(new Card("9", "Spade"));
-		table.addCard(new Card("8", "Spade"));
+		table.addCard(new CardDTO("10", "Spade"));
+		table.addCard(new CardDTO("9", "Spade"));
+		table.addCard(new CardDTO("8", "Spade"));
 		final Object t = c.newInstance();
 		final Field chap = c.getDeclaredField("server");
 		chap.setAccessible(true);
@@ -77,14 +77,14 @@ public class ServerTests {
 		chap2.setAccessible(true);
 		chap2.set(t, playersWithHiddenCards);
 		final Object o = method.invoke(t, players, table);
-		final List<Player> oList = (List<Player>) o;
+		final List<PlayerDTO> oList = (List<PlayerDTO>) o;
 		assertEquals(1000, oList.get(0).getChipsAmount());
 	}
 
 	@Test
 	public final void testfindAmountChipsForAllInPot() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -94,24 +94,24 @@ public class ServerTests {
 			}
 		}
 
-		final Player player1 = new Player(0);
-		player1.addCard(new Card("Jack", "Spade"));
-		player1.addCard(new Card("Queen", "Spade"));
+		final PlayerDTO player1 = new PlayerDTO(0);
+		player1.addCard(new CardDTO("Jack", "Spade"));
+		player1.addCard(new CardDTO("Queen", "Spade"));
 		player1.setBetAmount(900);
-		final Player player2 = new Player(1);
-		player2.addCard(new Card("Jack", "Heart"));
-		player2.addCard(new Card("Queen", "Heart"));
+		final PlayerDTO player2 = new PlayerDTO(1);
+		player2.addCard(new CardDTO("Jack", "Heart"));
+		player2.addCard(new CardDTO("Queen", "Heart"));
 		player2.setBetAmount(500);
 		players.add(player1);
 		players.add(player2);
-		final List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
-		playersWithHiddenCards.add(new Player());
-		playersWithHiddenCards.add(new Player());
-		final PokerTable table = new PokerTable();
+		final List<PlayerDTO> playersWithHiddenCards = new ArrayList<PlayerDTO>(players.size());
+		playersWithHiddenCards.add(new PlayerDTO());
+		playersWithHiddenCards.add(new PlayerDTO());
+		final PokerTableDTO table = new PokerTableDTO();
 		table.setPotAmount(1000);
-		table.addCard(new Card("10", "Club"));
-		table.addCard(new Card("9", "Club"));
-		table.addCard(new Card("8", "Club"));
+		table.addCard(new CardDTO("10", "Club"));
+		table.addCard(new CardDTO("9", "Club"));
+		table.addCard(new CardDTO("8", "Club"));
 		for (final Method methodz : allMethods) {
 			if (methodz.getName().equals("timeToCheckWinner")) {
 				methodz.setAccessible(true);
@@ -135,7 +135,7 @@ public class ServerTests {
 	@Test
 	public final void testhowManyPeopleInSamePot() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -144,26 +144,26 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(0);
-		player1.addCard(new Card("Jack", "Spade"));
-		player1.addCard(new Card("Queen", "Spade"));
+		final PlayerDTO player1 = new PlayerDTO(0);
+		player1.addCard(new CardDTO("Jack", "Spade"));
+		player1.addCard(new CardDTO("Queen", "Spade"));
 		player1.setBetAmount(500);
-		final Player player2 = new Player(1);
-		player2.addCard(new Card("Jack", "Heart"));
-		player2.addCard(new Card("Queen", "Heart"));
+		final PlayerDTO player2 = new PlayerDTO(1);
+		player2.addCard(new CardDTO("Jack", "Heart"));
+		player2.addCard(new CardDTO("Queen", "Heart"));
 		player2.setBetAmount(500);
 		player1.setInGame(true);
 		player2.setInGame(true);
 		players.add(player1);
 		players.add(player2);
-		final List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
-		playersWithHiddenCards.add(new Player());
-		playersWithHiddenCards.add(new Player());
-		final PokerTable table = new PokerTable();
+		final List<PlayerDTO> playersWithHiddenCards = new ArrayList<PlayerDTO>(players.size());
+		playersWithHiddenCards.add(new PlayerDTO());
+		playersWithHiddenCards.add(new PlayerDTO());
+		final PokerTableDTO table = new PokerTableDTO();
 		table.setPotAmount(1000);
-		table.addCard(new Card("10", "Club"));
-		table.addCard(new Card("9", "Club"));
-		table.addCard(new Card("8", "Club"));
+		table.addCard(new CardDTO("10", "Club"));
+		table.addCard(new CardDTO("9", "Club"));
+		table.addCard(new CardDTO("8", "Club"));
 		for (final Method methodz : allMethods) {
 			if (methodz.getName().equals("timeToCheckWinner")) {
 				methodz.setAccessible(true);
@@ -185,7 +185,7 @@ public class ServerTests {
 	@Test
 	public final void testFirstAndLastToBet() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -194,9 +194,9 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(0);
-		final Player player2 = new Player(1);
-		final Player player3 = new Player(2);
+		final PlayerDTO player1 = new PlayerDTO(0);
+		final PlayerDTO player2 = new PlayerDTO(1);
+		final PlayerDTO player3 = new PlayerDTO(2);
 		player1.setInGame(true);
 		player2.setInGame(true);
 		player1.setAllIn(false);
@@ -235,7 +235,7 @@ public class ServerTests {
 	@Test
 	public final void testNotEnoughPlayers() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -245,8 +245,8 @@ public class ServerTests {
 			}
 		}
 
-		final Player player1 = new Player(0);
-		final Player player2 = new Player(1);
+		final PlayerDTO player1 = new PlayerDTO(0);
+		final PlayerDTO player2 = new PlayerDTO(1);
 		player1.setInGame(false);
 		player2.setInGame(false);
 		players.add(player1);
@@ -277,7 +277,7 @@ public class ServerTests {
 	@Test
 	public final void testNewHand() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -286,9 +286,9 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(1);
+		final PlayerDTO player1 = new PlayerDTO(1);
 		player1.setChipsAmount(1500);
-		final Player player2 = new Player(2);
+		final PlayerDTO player2 = new PlayerDTO(2);
 		player2.setChipsAmount(2500);
 		players.add(player1);
 		players.add(player2);
@@ -317,10 +317,10 @@ public class ServerTests {
 		final Object o = method.invoke(t, players);
 		final Field table = c.getDeclaredField("pokerTable");
 		table.setAccessible(true);
-		final PokerTable pokerTable = (PokerTable) table.get(t);
+		final PokerTableDTO pokerTable = (PokerTableDTO) table.get(t);
 		final Field deckz = c.getDeclaredField("deck");
 		deckz.setAccessible(true);
-		final Deck deck = (Deck) deckz.get(t);
+		final DeckDTO deck = (DeckDTO) deckz.get(t);
 		assertEquals(20, pokerTable.getSmallBlindAmount());
 		assertEquals(40, pokerTable.getBigBlindAmount());
 		assertEquals(48, deck.getCards().size());
@@ -346,7 +346,7 @@ public class ServerTests {
 	@Test
 	public final void testNewHandWithNoChips() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -355,9 +355,9 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(1);
+		final PlayerDTO player1 = new PlayerDTO(1);
 		player1.setChipsAmount(15);
-		final Player player2 = new Player(2);
+		final PlayerDTO player2 = new PlayerDTO(2);
 		player2.setChipsAmount(10);
 		players.add(player1);
 		players.add(player2);
@@ -386,10 +386,10 @@ public class ServerTests {
 		final Object o = method.invoke(t, players);
 		final Field table = c.getDeclaredField("pokerTable");
 		table.setAccessible(true);
-		final PokerTable pokerTable = (PokerTable) table.get(t);
+		final PokerTableDTO pokerTable = (PokerTableDTO) table.get(t);
 		final Field deckz = c.getDeclaredField("deck");
 		deckz.setAccessible(true);
-		final Deck deck = (Deck) deckz.get(t);
+		final DeckDTO deck = (DeckDTO) deckz.get(t);
 		assertEquals(20, pokerTable.getSmallBlindAmount());
 		assertEquals(40, pokerTable.getBigBlindAmount());
 		assertEquals(48, deck.getCards().size());
@@ -417,7 +417,7 @@ public class ServerTests {
 	@Test
 	public final void testNewHandWithExactAmountOfChips() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -426,9 +426,9 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(1);
+		final PlayerDTO player1 = new PlayerDTO(1);
 		player1.setChipsAmount(40);
-		final Player player2 = new Player(2);
+		final PlayerDTO player2 = new PlayerDTO(2);
 		player2.setChipsAmount(20);
 		players.add(player1);
 		players.add(player2);
@@ -457,10 +457,10 @@ public class ServerTests {
 		final Object o = method.invoke(t, players);
 		final Field table = c.getDeclaredField("pokerTable");
 		table.setAccessible(true);
-		final PokerTable pokerTable = (PokerTable) table.get(t);
+		final PokerTableDTO pokerTable = (PokerTableDTO) table.get(t);
 		final Field deckz = c.getDeclaredField("deck");
 		deckz.setAccessible(true);
-		final Deck deck = (Deck) deckz.get(t);
+		final DeckDTO deck = (DeckDTO) deckz.get(t);
 		assertEquals(20, pokerTable.getSmallBlindAmount());
 		assertEquals(40, pokerTable.getBigBlindAmount());
 		assertEquals(48, deck.getCards().size());
@@ -486,7 +486,7 @@ public class ServerTests {
 	@Test
 	public final void testTimeToCheckMultipleWinners() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -495,24 +495,24 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(0);
-		player1.addCard(new Card("Jack", "Spade"));
-		player1.addCard(new Card("Queen", "Spade"));
+		final PlayerDTO player1 = new PlayerDTO(0);
+		player1.addCard(new CardDTO("Jack", "Spade"));
+		player1.addCard(new CardDTO("Queen", "Spade"));
 		player1.setBetAmount(500);
-		final Player player2 = new Player(1);
-		player2.addCard(new Card("Jack", "Heart"));
-		player2.addCard(new Card("Queen", "Heart"));
+		final PlayerDTO player2 = new PlayerDTO(1);
+		player2.addCard(new CardDTO("Jack", "Heart"));
+		player2.addCard(new CardDTO("Queen", "Heart"));
 		player2.setBetAmount(500);
 		players.add(player1);
 		players.add(player2);
-		final List<Player> playersWithHiddenCards = new ArrayList<Player>(players.size());
-		playersWithHiddenCards.add(new Player());
-		playersWithHiddenCards.add(new Player());
-		final PokerTable table = new PokerTable();
+		final List<PlayerDTO> playersWithHiddenCards = new ArrayList<PlayerDTO>(players.size());
+		playersWithHiddenCards.add(new PlayerDTO());
+		playersWithHiddenCards.add(new PlayerDTO());
+		final PokerTableDTO table = new PokerTableDTO();
 		table.setPotAmount(1000);
-		table.addCard(new Card("10", "Club"));
-		table.addCard(new Card("9", "Club"));
-		table.addCard(new Card("8", "Club"));
+		table.addCard(new CardDTO("10", "Club"));
+		table.addCard(new CardDTO("9", "Club"));
+		table.addCard(new CardDTO("8", "Club"));
 		final Object t = c.newInstance();
 		final Field chap = c.getDeclaredField("server");
 		chap.setAccessible(true);
@@ -530,7 +530,7 @@ public class ServerTests {
 	@Test
 	public final void testResetAfterRound() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -539,8 +539,8 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(0);
-		final Player player2 = new Player(1);
+		final PlayerDTO player1 = new PlayerDTO(0);
+		final PlayerDTO player2 = new PlayerDTO(1);
 		player1.setInGame(false);
 		player2.setInGame(false);
 		players.add(player1);
@@ -582,7 +582,7 @@ public class ServerTests {
 	@Test
 	public final void testNextAsBet() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -591,9 +591,9 @@ public class ServerTests {
 				method.setAccessible(true);
 			}
 		}
-		final Player player1 = new Player(0);
-		final Player player2 = new Player(1);
-		final Player player3 = new Player(2);
+		final PlayerDTO player1 = new PlayerDTO(0);
+		final PlayerDTO player2 = new PlayerDTO(1);
+		final PlayerDTO player3 = new PlayerDTO(2);
 		player2.setInGame(false);
 		players.add(player1);
 		players.add(player2);
@@ -619,7 +619,7 @@ public class ServerTests {
 	@Test
 	public final void testHandleReceivedBet() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -629,8 +629,8 @@ public class ServerTests {
 			}
 		}
 		final Object t = c.newInstance();
-		final Player player1 = new Player(0);
-		final Player player2 = new Player(1);
+		final PlayerDTO player1 = new PlayerDTO(0);
+		final PlayerDTO player2 = new PlayerDTO(1);
 		player1.setChipsAmount(500);
 		players.add(player1);
 		players.add(player2);
@@ -639,7 +639,7 @@ public class ServerTests {
 		chap.set(t, server);
 		final Field chap2 = c.getDeclaredField("pokerTable");
 		chap2.setAccessible(true);
-		final PokerTable table = new PokerTable();
+		final PokerTableDTO table = new PokerTableDTO();
 		chap2.set(t, table);
 		final Field chap3 = c.getDeclaredField("maxBetOnTable");
 		chap3.setAccessible(true);
@@ -679,7 +679,7 @@ public class ServerTests {
 	@Test
 	public final void testHandleReceivedCall() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -689,13 +689,13 @@ public class ServerTests {
 			}
 		}
 		final Object t = c.newInstance();
-		final Player player1 = new Player(0);
+		final PlayerDTO player1 = new PlayerDTO(0);
 		player1.setChipsAmount(500);
 		player1.setBetAmountThisRound(200);
 		player1.setFolded(false);
-		final Player player2 = new Player(1);
+		final PlayerDTO player2 = new PlayerDTO(1);
 		player2.setFolded(false);
-		final Player player3 = new Player(2);
+		final PlayerDTO player3 = new PlayerDTO(2);
 		player3.setFolded(false);
 		players.add(player1);
 		players.add(player2);
@@ -705,7 +705,7 @@ public class ServerTests {
 		chap.set(t, server);
 		final Field chap2 = c.getDeclaredField("pokerTable");
 		chap2.setAccessible(true);
-		final PokerTable table = new PokerTable();
+		final PokerTableDTO table = new PokerTableDTO();
 		chap2.set(t, table);
 		final Field chap3 = c.getDeclaredField("maxBetOnTable");
 		chap3.setAccessible(true);
@@ -741,7 +741,7 @@ public class ServerTests {
 	@Test
 	public final void testHandleReceivedFold() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -751,7 +751,7 @@ public class ServerTests {
 			}
 		}
 		final Object t = c.newInstance();
-		final Player player1 = new Player(0);
+		final PlayerDTO player1 = new PlayerDTO(0);
 		players.add(player1);
 		final Field chap4 = c.getDeclaredField("players");
 		chap4.setAccessible(true);
@@ -778,7 +778,7 @@ public class ServerTests {
 	@Test
 	public final void testHandleReceivedAllIn() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -788,9 +788,9 @@ public class ServerTests {
 			}
 		}
 		final Object t = c.newInstance();
-		final Player player1 = new Player(0);
+		final PlayerDTO player1 = new PlayerDTO(0);
 		player1.setChipsAmount(1500);
-		final Player player2 = new Player(1);
+		final PlayerDTO player2 = new PlayerDTO(1);
 		player1.setChipsAmount(1500);
 		players.add(player1);
 		players.add(player2);
@@ -808,7 +808,7 @@ public class ServerTests {
 		chap1.set(t, 2);
 		final Field chap2 = c.getDeclaredField("pokerTable");
 		chap2.setAccessible(true);
-		final PokerTable table = new PokerTable();
+		final PokerTableDTO table = new PokerTableDTO();
 		chap2.set(t, table);
 		final List<String> options = new ArrayList<String>();
 		options.add("ALLIN");
@@ -840,7 +840,7 @@ public class ServerTests {
 	@Test
 	public final void testHandleReceivedRaise() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -850,9 +850,9 @@ public class ServerTests {
 			}
 		}
 		final Object t = c.newInstance();
-		final Player player1 = new Player(0);
+		final PlayerDTO player1 = new PlayerDTO(0);
 		player1.setChipsAmount(1500);
-		final Player player2 = new Player(1);
+		final PlayerDTO player2 = new PlayerDTO(1);
 		player2.setChipsAmount(1500);
 		players.add(player1);
 		players.add(player2);
@@ -870,7 +870,7 @@ public class ServerTests {
 		chap1.set(t, 2);
 		final Field chap2 = c.getDeclaredField("pokerTable");
 		chap2.setAccessible(true);
-		final PokerTable table = new PokerTable();
+		final PokerTableDTO table = new PokerTableDTO();
 		chap2.set(t, table);
 		final List<String> options = new ArrayList<String>();
 		options.add("RAISE");
@@ -901,7 +901,7 @@ public class ServerTests {
 	@Test
 	public final void testCheckOptions() throws InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException {
-		final List<Player> players = new ArrayList<Player>();
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
 		Method method = null;
 		final Server server = Mockito.mock(Server.class);
 		for (final Method methodz : allMethods) {
@@ -911,14 +911,14 @@ public class ServerTests {
 			}
 		}
 		final Object t = c.newInstance();
-		final PokerTable table = new PokerTable();
+		final PokerTableDTO table = new PokerTableDTO();
 		table.setLimitType("fixed-limit");
 		table.setRaiseCount(3);
 		table.setFixedRaiseCount(5);
 		final Field chap2 = c.getDeclaredField("pokerTable");
 		chap2.setAccessible(true);
 		chap2.set(t, table);
-		final Player player1 = new Player(0);
+		final PlayerDTO player1 = new PlayerDTO(0);
 		player1.setChipsAmount(1500);
 		player1.setBetAmountThisRound(500);
 		players.add(player1);
@@ -988,11 +988,11 @@ public class ServerTests {
 		Object o = method.invoke(t, conn);
 		final Field po = c.getDeclaredField("players");
 		po.setAccessible(true);
-		List<Player> players = (List<Player>) po.get(t);
+		List<PlayerDTO> players = (List<PlayerDTO>) po.get(t);
 		assertEquals(2, players.size());
 		o = method.invoke(t, conn);
 		chap2.set(t, 5);
-		players = (List<Player>) po.get(t);
+		players = (List<PlayerDTO>) po.get(t);
 		assertEquals(3, players.size());
 	}
 
@@ -1000,8 +1000,8 @@ public class ServerTests {
 	public final void testHandleDisconnected() throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
 		final Server server = Mockito.mock(Server.class);
-		final List<Player> players = new ArrayList<Player>();
-		final Player player1 = new Player(0);
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		final PlayerDTO player1 = new PlayerDTO(0);
 		final Connection conn = Mockito.mock(Connection.class);
 		player1.setConnectionId(conn.getID());
 		players.add(player1);
@@ -1026,8 +1026,8 @@ public class ServerTests {
 	public final void testSendBetResponse() throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchFieldException, SecurityException, InstantiationException {
 		final Server server = Mockito.mock(Server.class);
-		final List<Player> players = new ArrayList<Player>();
-		final Player player1 = new Player(0);
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		final PlayerDTO player1 = new PlayerDTO(0);
 		player1.setBetAmountThisRound(50);
 		players.add(player1);
 		Method method = null;
@@ -1041,7 +1041,7 @@ public class ServerTests {
 		final Field chap = c.getDeclaredField("server");
 		chap.setAccessible(true);
 		chap.set(t, server);
-		final PokerTable table = new PokerTable();
+		final PokerTableDTO table = new PokerTableDTO();
 		table.setLimitType("no-limit");
 		final Field chap2 = c.getDeclaredField("pokerTable");
 		chap2.setAccessible(true);

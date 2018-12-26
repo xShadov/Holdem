@@ -1,13 +1,10 @@
-package com.tp.holdem.model.game;
+package com.tp.holdem.logic.model;
 
-import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.tp.holdem.model.common.Hands;
+import io.vavr.collection.List;
+import lombok.Value;
 
-import java.util.List;
-
-@Data
-@AllArgsConstructor
+@Value
 public class HandRank {
 	private Hands hand;
 	private List<Card> cardsThatMakeHand;
@@ -17,6 +14,6 @@ public class HandRank {
 	}
 
 	public static HandRank empty(Hands hand) {
-		return new HandRank(hand, Lists.newArrayList());
+		return new HandRank(hand, List.empty());
 	}
 }

@@ -7,7 +7,10 @@ import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.tp.holdem.client.architecture.message.MessageBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.model.game.*;
+import com.tp.holdem.model.common.Honour;
+import com.tp.holdem.model.common.Moves;
+import com.tp.holdem.model.common.Suit;
+import com.tp.holdem.model.message.dto.*;
 import com.tp.holdem.model.message.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,10 +38,10 @@ public class KryoClient implements ServerObservable {
 		kryo.register(List.class, registerCount.getAndIncrement());
 		kryo.register(Honour.class, registerCount.getAndIncrement());
 		kryo.register(Suit.class, registerCount.getAndIncrement());
-		kryo.register(Player.class, registerCount.getAndIncrement());
-		kryo.register(Card.class, registerCount.getAndIncrement());
-		kryo.register(Deck.class, registerCount.getAndIncrement());
-		kryo.register(PokerTable.class, registerCount.getAndIncrement());
+		kryo.register(PlayerDTO.class, registerCount.getAndIncrement());
+		kryo.register(CurrentPlayerDTO.class, registerCount.getAndIncrement());
+		kryo.register(CardDTO.class, registerCount.getAndIncrement());
+		kryo.register(PokerTableDTO.class, registerCount.getAndIncrement());
 
 		kryo.register(Message.class, registerCount.getAndIncrement());
 		kryo.register(MessageType.class, registerCount.getAndIncrement());

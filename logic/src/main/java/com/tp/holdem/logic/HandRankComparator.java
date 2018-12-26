@@ -1,8 +1,8 @@
 package com.tp.holdem.logic;
 
-import com.tp.holdem.model.game.Card;
-import com.tp.holdem.model.game.HandRank;
-import com.tp.holdem.model.game.Hands;
+import com.tp.holdem.logic.model.Card;
+import com.tp.holdem.logic.model.HandRank;
+import com.tp.holdem.model.common.Hands;
 import io.vavr.collection.List;
 
 import java.util.Comparator;

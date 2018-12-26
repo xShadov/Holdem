@@ -1,9 +1,7 @@
 package com.tp.holdem.client.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,8 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tp.holdem.client.architecture.action.Action;
 import com.tp.holdem.client.architecture.action.ActionBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.model.game.Moves;
-import com.tp.holdem.model.game.Player;
+import com.tp.holdem.model.common.Moves;
+import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.model.message.dto.PlayerDTO;
 import com.tp.holdem.model.message.Message;
 import com.tp.holdem.model.message.MessageType;
 import com.tp.holdem.model.message.UpdateStateMessage;
@@ -153,7 +152,7 @@ public class GameElements implements ServerObservable {
 	private void handleUpdateState(Message message) {
 		final UpdateStateMessage content = message.instance(UpdateStateMessage.class);
 
-		final Player currentPlayer = content.getCurrentPlayer();
+		final CurrentPlayerDTO currentPlayer = content.getCurrentPlayer();
 		final List<Moves> options = List.ofAll(currentPlayer.getPossibleMoves());
 
 		options.flatMap(moveButtons::get)

@@ -4,11 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 public class PokerTableTests {
 /*
-	transient PokerTable table;
+	transient PokerTableDTO table;
 
 	@Before
 	public void setUp() {
-		table = new PokerTable();
+		table = new PokerTableDTO();
 	}
 
 	@After
@@ -28,13 +28,13 @@ public class PokerTableTests {
 	@Test
 	public final void testCardsOnTable() {
 		assertEquals(0, table.getCardsOnTable().size());
-		table.addCard(new Card("Jack", "Spade"));
-		table.addCard(new Card("Queen", "Heart"));
+		table.addCard(new CardDTO("Jack", "Spade"));
+		table.addCard(new CardDTO("Queen", "Heart"));
 		assertEquals(2, table.getCardsOnTable().size());
-		final List<Card> cards = new ArrayList<Card>();
-		cards.add(new Card("2", "Spade"));
-		cards.add(new Card("3", "Spade"));
-		cards.add(new Card("4", "Spade"));
+		final List<CardDTO> cards = new ArrayList<CardDTO>();
+		cards.add(new CardDTO("2", "Spade"));
+		cards.add(new CardDTO("3", "Spade"));
+		cards.add(new CardDTO("4", "Spade"));
 		table.setCardsOnTable(cards);
 		assertEquals(3, table.getCardsOnTable().size());
 	}

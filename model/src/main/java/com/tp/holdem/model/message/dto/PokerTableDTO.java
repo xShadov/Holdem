@@ -1,10 +1,11 @@
-package com.tp.holdem.model.game;
+package com.tp.holdem.model.message.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,9 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PokerTable {
+public class PokerTableDTO {
 	private int potAmount;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
-	private List<Card> cardsOnTable;
+	@Builder.Default
+	private List<CardDTO> cardsOnTable = new ArrayList<>();
 }

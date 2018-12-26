@@ -2,11 +2,11 @@ package com.tp.holdem.client;
 
 public class DeckTests {
 /*
-	private transient Deck deck;
+	private transient DeckDTO deck;
 
 	@Before
 	public void setUp() {
-		deck = new Deck();
+		deck = new DeckDTO();
 	}
 
 	@After
@@ -21,20 +21,20 @@ public class DeckTests {
 
 	@Test
 	public final void testDeckGetCardsSize() {
-		final List<Card> cards = deck.getCards();
-		assertEquals("Deck has wrong cards", 52, cards.size());
+		final List<CardDTO> cards = deck.getCards();
+		assertEquals("DeckDTO has wrong cards", 52, cards.size());
 	}
 
 	@Test
 	public final void testDeckGetCardsHonour() {
-		final List<Card> cards = deck.getCards();
-		assertEquals("Deck has wrong cards", "2", cards.get(0).getHonour());
+		final List<CardDTO> cards = deck.getCards();
+		assertEquals("DeckDTO has wrong cards", "2", cards.get(0).getHonour());
 	}
 
 	@Test
 	public final void testDeckGetCardsSuit() {
-		final List<Card> cards = deck.getCards();
-		assertEquals("Deck has wrong cards", "Spade", cards.get(0).getSuit());
+		final List<CardDTO> cards = deck.getCards();
+		assertEquals("DeckDTO has wrong cards", "Spade", cards.get(0).getSuit());
 	}
 
 	@Test
@@ -47,11 +47,11 @@ public class DeckTests {
 
 	@Test
 	public final void testDeckDealingCardsHowManyLeft() {
-		final List<Player> players = new ArrayList<Player>();
-		players.add(new Player(1));
-		players.add(new Player(2));
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		players.add(new PlayerDTO(1));
+		players.add(new PlayerDTO(2));
 		deck.dealCards(6, players);
-		assertEquals("Deck is dealing wrong", 40, deck.howManyCardsLeft());
+		assertEquals("DeckDTO is dealing wrong", 40, deck.howManyCardsLeft());
 	}
 
 	@Test
@@ -64,29 +64,29 @@ public class DeckTests {
 
 	@Test
 	public final void testDeckDealingCardsFirstPlayer() {
-		final List<Player> players = new ArrayList<Player>();
-		players.add(new Player(1));
-		players.add(new Player(2));
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		players.add(new PlayerDTO(1));
+		players.add(new PlayerDTO(2));
 		deck.dealCards(6, players);
-		assertEquals("Deck is dealing cards wrong", 6, players.get(0).getHand().size());
+		assertEquals("DeckDTO is dealing cards wrong", 6, players.get(0).getHand().size());
 	}
 
 	@Test
 	public final void testDeckDealingCardsSecondPlayer() {
-		final List<Player> players = new ArrayList<Player>();
-		players.add(new Player(1));
-		players.add(new Player(2));
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		players.add(new PlayerDTO(1));
+		players.add(new PlayerDTO(2));
 		deck.dealCards(6, players);
-		assertEquals("Deck is dealing cards wrong", 6, players.get(1).getHand().size());
+		assertEquals("DeckDTO is dealing cards wrong", 6, players.get(1).getHand().size());
 	}
 
 	@Test
 	public final void testDeckEmptyCheck() {
-		final List<Player> players = new ArrayList<Player>();
-		assertFalse("Deck shouldnt be empty", deck.isEmpty());
-		players.add(new Player(1));
-		players.add(new Player(2));
+		final List<PlayerDTO> players = new ArrayList<PlayerDTO>();
+		assertFalse("DeckDTO shouldnt be empty", deck.isEmpty());
+		players.add(new PlayerDTO(1));
+		players.add(new PlayerDTO(2));
 		deck.dealCards(26, players);
-		assertTrue("Deck should be empty", deck.isEmpty());
+		assertTrue("DeckDTO should be empty", deck.isEmpty());
 	}*/
 }

@@ -8,7 +8,7 @@ public class FakeServer{// extends KryoServer {
 	private int bigBlindAmount;
 	private final int fixedChips = 40;
 	private final String limit = "no-limit";
-	private final PokerTable pokerTable = new PokerTable();
+	private final PokerTableDTO pokerTable = new PokerTableDTO();
 	private ClientMoveRequest request;
 
 	public FakeServer(final int maxBetOnTable, final int bigBlindAmount) {
@@ -17,7 +17,7 @@ public class FakeServer{// extends KryoServer {
 		this.bigBlindAmount = bigBlindAmount;
 	}
 
-	public void setCardsOnTable(final List<Card> tableCards) {
+	public void setCardsOnTable(final List<CardDTO> tableCards) {
 		pokerTable.setCardsOnTable(tableCards);
 	}
 
@@ -49,7 +49,7 @@ public class FakeServer{// extends KryoServer {
 		return maxBetOnTable;
 	}
 
-	public PokerTable getTable() {
+	public PokerTableDTO getTable() {
 		return pokerTable;
 	}
 

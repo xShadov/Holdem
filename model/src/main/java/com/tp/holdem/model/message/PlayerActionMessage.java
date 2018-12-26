@@ -1,6 +1,6 @@
 package com.tp.holdem.model.message;
 
-import com.tp.holdem.model.game.Moves;
+import com.tp.holdem.model.common.Moves;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

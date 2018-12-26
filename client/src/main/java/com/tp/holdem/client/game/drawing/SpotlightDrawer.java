@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.model.game.Player;
+import com.tp.holdem.model.message.dto.PlayerDTO;
 
 public class SpotlightDrawer {
 	private static final int[] boxPositionX = {274, 46, -69, -45, 78, 315, 507, 687, 723, 588};
@@ -22,7 +22,7 @@ public class SpotlightDrawer {
 	}
 
 	public void drawSpotlight() {
-		final Player spotlightedPlayer = gameState.hasWinner() ? gameState.getWinnerPlayer() : gameState.getBettingPlayer();
+		final PlayerDTO spotlightedPlayer = gameState.hasWinner() ? gameState.getWinnerPlayer() : gameState.getBettingPlayer();
 		final int relativeNumber = gameState.relativePlayerNumber(spotlightedPlayer);
 		batcher.draw(spotlight, boxPositionX[relativeNumber], boxPositionY[relativeNumber]);
 	}

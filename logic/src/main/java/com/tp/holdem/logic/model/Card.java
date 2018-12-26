@@ -1,15 +1,18 @@
-package com.tp.holdem.model.game;
+package com.tp.holdem.logic.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.tp.holdem.model.common.Honour;
+import com.tp.holdem.model.common.Suit;
+import com.tp.holdem.model.message.dto.CardDTO;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
+@Value
 public class Card {
 	private Suit suit;
 	private Honour honour;
 	private int value;
 
+	@Builder
 	private Card(final Suit suit, final Honour honour) {
 		this.suit = suit;
 		this.honour = honour;
@@ -24,7 +27,10 @@ public class Card {
 		return Card.from(Suit.coded(code.charAt(code.length() - 1)), Honour.coded(code.substring(0, code.length() - 1)));
 	}
 
-	public String code() {
-		return String.format("%s%s", honour.code(), suit.code());
+	public CardDTO toDTO() {
+		return CardDTO.builder()
+				.honour(honour)
+				.suit(suit)
+				.build();
 	}
 }

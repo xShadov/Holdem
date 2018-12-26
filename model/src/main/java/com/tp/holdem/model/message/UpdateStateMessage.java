@@ -1,7 +1,8 @@
 package com.tp.holdem.model.message;
 
-import com.tp.holdem.model.game.Player;
-import com.tp.holdem.model.game.PokerTable;
+import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.model.message.dto.PlayerDTO;
+import com.tp.holdem.model.message.dto.PokerTableDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class UpdateStateMessage implements ServerMessage {
-	private PokerTable table;
-	private Player currentPlayer;
-	private Player bettingPlayer;
-	private Player winnerPlayer;
-	private List<Player> allPlayers;
+	private PokerTableDTO table;
+	private CurrentPlayerDTO currentPlayer;
+	private PlayerDTO bettingPlayer;
+	private PlayerDTO winnerPlayer;
+	private List<PlayerDTO> allPlayers;
 }

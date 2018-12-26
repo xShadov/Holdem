@@ -1,13 +1,10 @@
 package com.tp.holdem.client.game.drawing;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.google.common.collect.Maps;
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.model.game.Player;
+import com.tp.holdem.model.message.dto.PlayerDTO;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
@@ -52,7 +49,7 @@ public class InfoBoxDrawer {
 		gameState.getAllPlayers().forEach(player -> drawPlayer(drawCount.getAndIncrement(), player));
 	}
 
-	private void drawPlayer(int index, Player player) {
+	private void drawPlayer(int index, PlayerDTO player) {
 		batcher.draw(boxFinder.apply(player.isInGame(), player.isFolded()), boxPositionX[index], boxPositionY[index]);
 		smallFont.draw(batcher, player.getName(), boxPositionX[index] + 18, boxPositionY[index] + 81);
 		smallFont.draw(batcher, String.format("Chips:%d", player.getChipsAmount()), boxPositionX[index] + 18, boxPositionY[index] + 54);

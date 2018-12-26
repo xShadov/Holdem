@@ -4,11 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.google.common.collect.Maps;
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.model.game.Player;
+import com.tp.holdem.model.message.dto.PlayerDTO;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ButtonsDrawer {
@@ -40,7 +38,7 @@ public class ButtonsDrawer {
 		gameState.getAllPlayers().forEach(player -> drawPlayer(drawCount.getAndIncrement(), player));
 	}
 
-	private void drawPlayer(int index, Player player) {
+	private void drawPlayer(int index, PlayerDTO player) {
 		if (player.isDealerButton())
 			batcher.draw(dealer, dealerPositionX[index], dealerPositionY[index]);
 		if (player.isBigBlind())

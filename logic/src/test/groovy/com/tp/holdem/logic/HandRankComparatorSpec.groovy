@@ -1,8 +1,8 @@
 package com.tp.holdem.logic
 
-import com.tp.holdem.model.game.Card
-import com.tp.holdem.model.game.HandRank
-import com.tp.holdem.model.game.Hands
+import com.tp.holdem.logic.model.Card
+import com.tp.holdem.logic.model.HandRank
+import com.tp.holdem.model.common.Hands
 import io.vavr.Tuple
 import io.vavr.collection.List
 import spock.lang.Specification
@@ -11,7 +11,7 @@ import spock.lang.Unroll
 @Unroll
 class HandRankComparatorSpec extends Specification {
     def mapHandRank = { tuple ->
-        return HandRank.from(tuple._2(), List.ofAll(tuple._1()).map({ code -> Card.coded(code) }).toJavaList())
+        return HandRank.from(tuple._2(), List.ofAll(tuple._1()).map({ code -> Card.coded(code) }))
     }
 
     def handRankComparator = HandRankComparator.INSTANCE

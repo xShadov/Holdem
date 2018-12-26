@@ -1,14 +1,14 @@
 package com.tp.holdem.logic;
 
-import com.tp.holdem.model.game.Card;
-import com.tp.holdem.model.game.Honour;
+import com.tp.holdem.logic.model.Card;
+import com.tp.holdem.model.common.Honour;
 import io.vavr.collection.List;
 
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import static com.tp.holdem.model.game.Honour.*;
-import static com.tp.holdem.model.game.Honour.ACE;
+import static com.tp.holdem.model.common.Honour.*;
+import static com.tp.holdem.model.common.Honour.ACE;
 
 class HandPredicates {
 	static final Predicate<List<Card>> REGULAR_STRAIGHT = values -> {

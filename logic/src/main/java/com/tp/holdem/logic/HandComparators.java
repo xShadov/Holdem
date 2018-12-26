@@ -1,6 +1,6 @@
 package com.tp.holdem.logic;
 
-import com.tp.holdem.model.game.Card;
+import com.tp.holdem.logic.model.Card;
 import io.vavr.collection.List;
 
 import java.util.Comparator;

@@ -1,10 +1,10 @@
 package com.tp.holdem.server;
 
-import com.google.common.collect.Lists;
-import com.tp.holdem.model.game.Deck;
-import com.tp.holdem.model.game.Player;
-import com.tp.holdem.model.game.PokerTable;
-import com.tp.holdem.model.message.UpdateStateMessage;
+import com.tp.holdem.logic.model.Deck;
+import com.tp.holdem.logic.model.Player;
+import com.tp.holdem.logic.model.PokerTable;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,30 +20,24 @@ public class GameHandler {
 		this.gameParams = gameParams;
 
 		this.players = List.empty();
-		this.deck = Deck.instance();
+		this.deck = Deck.brandNew();
 		this.table = PokerTable.builder()
 				.bigBlindAmount(gameParams.getBigBlindAmount())
 				.smallBlindAmount(gameParams.getSmallBlindAmount())
-				.cardsOnTable(Lists.newArrayList())
 				.build();
 	}
 
-	public UpdateStateMessage startGame() {
+	public Tuple2<List<Player>, PokerTable> startGame() {
 		if (players.size() != gameParams.getPlayerCount())
 			throw new RuntimeException("Game cannot be started - wrong number of players");
 
-		log.debug(String.format("Starting game with %d players", gameParams.getPlayerCount()));
+		log.debug(String.format("Starting dto with %d players", gameParams.getPlayerCount()));
 
-		players.forEach(player -> player.setInGame(true));
-		players.forEach(player -> player.setBetAmount((int) (Math.random() * 1000)));
+		players = players.map(player -> player.toBuilder().inGame(true).betAmount((int) (Math.random() * 1000)).build());
 
-		deck.dealCards(2, players);
+		players = deck.dealCards(2, players);
 
-		return UpdateStateMessage.builder()
-				.bettingPlayer(players.get(1))
-				.allPlayers(players.toJavaList())
-				.table(table)
-				.build();
+		return Tuple.of(players, table);
 	}
 
 	public Player connectPlayer() {

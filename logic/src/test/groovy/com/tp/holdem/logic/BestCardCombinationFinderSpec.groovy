@@ -1,9 +1,9 @@
 package com.tp.holdem.logic
 
-import com.tp.holdem.model.game.Card
-import com.tp.holdem.model.game.Hands
-import com.tp.holdem.model.game.Honour
-import com.tp.holdem.model.game.Suit
+import com.tp.holdem.logic.model.Card
+import com.tp.holdem.model.common.Hands
+import com.tp.holdem.model.common.Honour
+import com.tp.holdem.model.common.Suit
 import io.vavr.collection.List
 import spock.lang.Specification
 import spock.lang.Unroll

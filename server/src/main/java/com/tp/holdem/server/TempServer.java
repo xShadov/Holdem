@@ -4,8 +4,17 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.tp.holdem.model.game.*;
+import com.tp.holdem.logic.model.Player;
+import com.tp.holdem.logic.model.PokerTable;
+import com.tp.holdem.model.common.Honour;
+import com.tp.holdem.model.common.Moves;
+import com.tp.holdem.model.common.Suit;
 import com.tp.holdem.model.message.*;
+import com.tp.holdem.model.message.dto.CardDTO;
+import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.model.message.dto.PlayerDTO;
+import com.tp.holdem.model.message.dto.PokerTableDTO;
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
@@ -34,10 +43,10 @@ public class TempServer implements Runnable {
 		kryo.register(java.util.List.class, registerCount.getAndIncrement());
 		kryo.register(Honour.class, registerCount.getAndIncrement());
 		kryo.register(Suit.class, registerCount.getAndIncrement());
-		kryo.register(Player.class, registerCount.getAndIncrement());
-		kryo.register(Card.class, registerCount.getAndIncrement());
-		kryo.register(Deck.class, registerCount.getAndIncrement());
-		kryo.register(PokerTable.class, registerCount.getAndIncrement());
+		kryo.register(PlayerDTO.class, registerCount.getAndIncrement());
+		kryo.register(CurrentPlayerDTO.class, registerCount.getAndIncrement());
+		kryo.register(CardDTO.class, registerCount.getAndIncrement());
+		kryo.register(PokerTableDTO.class, registerCount.getAndIncrement());
 
 		kryo.register(Message.class, registerCount.getAndIncrement());
 		kryo.register(MessageType.class, registerCount.getAndIncrement());
@@ -109,21 +118,28 @@ public class TempServer implements Runnable {
 		final Player player = gameHandler.connectPlayer();
 		connectedPlayers = connectedPlayers.put(con, player.getNumber());
 
-		final PlayerConnectMessage connectionResponse = PlayerConnectMessage.success(player);
+		final PlayerConnectMessage connectionResponse = PlayerConnectMessage.success(player.toCurrentPlayerDTO());
 		server.sendToTCP(con.getID(), Message.from(MessageType.PLAYER_CONNECTION, connectionResponse));
 		return true;
 	}
 
 	private void startGame() {
-		final UpdateStateMessage response = gameHandler.startGame();
+		final Tuple2<List<Player>, PokerTable> response = gameHandler.startGame();
+
+		final UpdateStateMessage message = UpdateStateMessage.builder()
+				.bettingPlayer(response._1.get(1).toPlayerDTO())
+				.allPlayers(response._1.map(Player::toPlayerDTO).toJavaList())
+				.table(response._2.toDTO())
+				.build();
 
 		connectedPlayers.forEach((connection, playerNumber) -> {
-			final Player currentPlayer = List.ofAll(response.getAllPlayers())
-					.find(player -> Objects.equals(playerNumber, player.getNumber()))
-					.getOrElseThrow(() -> new IllegalStateException("List of all players does not contain current player"));
+			final CurrentPlayerDTO currentPlayerDTO = response._1
+					.find(player -> Objects.equals(player.getNumber(), playerNumber))
+					.map(Player::toCurrentPlayerDTO)
+					.getOrElseThrow(() -> new IllegalStateException("There is no current player in list of all players"));
 
-			final UpdateStateMessage modifiedResponse = response.toBuilder()
-					.currentPlayer(currentPlayer)
+			final UpdateStateMessage modifiedResponse = message.toBuilder()
+					.currentPlayer(currentPlayerDTO)
 					.build();
 
 			server.sendToTCP(connection.getID(), Message.from(MessageType.UPDATE_STATE, modifiedResponse));
