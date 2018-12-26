@@ -17,6 +17,10 @@ public class PokerTableDTO {
 	private int potAmount;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
+	private PlayerDTO bettingPlayer;
+	private PlayerDTO winnerPlayer;
+	@Builder.Default
+	private List<PlayerDTO> allPlayers = new ArrayList<>();
 	@Builder.Default
 	private List<CardDTO> cardsOnTable = new ArrayList<>();
 }

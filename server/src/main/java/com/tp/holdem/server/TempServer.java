@@ -14,9 +14,7 @@ import com.tp.holdem.model.message.dto.CardDTO;
 import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
 import com.tp.holdem.model.message.dto.PlayerDTO;
 import com.tp.holdem.model.message.dto.PokerTableDTO;
-import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
-import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -124,16 +122,14 @@ public class TempServer implements Runnable {
 	}
 
 	private void startGame() {
-		final Tuple2<List<Player>, PokerTable> response = gameHandler.startGame();
+		final PokerTable response = gameHandler.startGame();
 
 		final UpdateStateMessage message = UpdateStateMessage.builder()
-				.bettingPlayer(response._1.get(1).toPlayerDTO())
-				.allPlayers(response._1.map(Player::toPlayerDTO).toJavaList())
-				.table(response._2.toDTO())
+				.table(response.toDTO())
 				.build();
 
 		connectedPlayers.forEach((connection, playerNumber) -> {
-			final CurrentPlayerDTO currentPlayerDTO = response._1
+			final CurrentPlayerDTO currentPlayerDTO = response.getAllPlayers()
 					.find(player -> Objects.equals(player.getNumber(), playerNumber))
 					.map(Player::toCurrentPlayerDTO)
 					.getOrElseThrow(() -> new IllegalStateException("There is no current player in list of all players"));

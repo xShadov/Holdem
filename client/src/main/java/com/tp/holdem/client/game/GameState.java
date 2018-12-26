@@ -2,14 +2,14 @@ package com.tp.holdem.client.game;
 
 import com.google.common.base.Preconditions;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.model.message.dto.CardDTO;
-import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
-import com.tp.holdem.model.message.dto.PlayerDTO;
-import com.tp.holdem.model.message.dto.PokerTableDTO;
 import com.tp.holdem.model.message.Message;
 import com.tp.holdem.model.message.MessageType;
 import com.tp.holdem.model.message.PlayerConnectMessage;
 import com.tp.holdem.model.message.UpdateStateMessage;
+import com.tp.holdem.model.message.dto.CardDTO;
+import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.model.message.dto.PlayerDTO;
+import com.tp.holdem.model.message.dto.PokerTableDTO;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,9 +27,6 @@ import java.util.stream.Collectors;
 public class GameState implements ServerObservable {
 	private PokerTableDTO table;
 	private CurrentPlayerDTO currentPlayer;
-	private PlayerDTO bettingPlayer;
-	private PlayerDTO winnerPlayer;
-	private List<PlayerDTO> allPlayers;
 
 	public List<PlayerDTO> getOtherPlayers() {
 		return getAllPlayers().stream()
@@ -45,7 +42,7 @@ public class GameState implements ServerObservable {
 	}
 
 	public List<PlayerDTO> getAllPlayers() {
-		final List<PlayerDTO> players = allPlayers;
+		final List<PlayerDTO> players = table.getAllPlayers();
 
 		while (players.get(0).getNumber() != currentPlayer.getNumber())
 			Collections.rotate(players, 1);
@@ -54,7 +51,7 @@ public class GameState implements ServerObservable {
 	}
 
 	public boolean isCurrentPlayerWinner() {
-		return winnerPlayer.getNumber() == currentPlayer.getNumber();
+		return table.getWinnerPlayer().getNumber() == currentPlayer.getNumber();
 	}
 
 	public boolean isCurrentPlayerWaiting() {
@@ -74,11 +71,11 @@ public class GameState implements ServerObservable {
 	}
 
 	public boolean hasWinner() {
-		return getWinnerPlayer() != null;
+		return table != null && table.getWinnerPlayer() != null;
 	}
 
 	public boolean isSomeoneBetting() {
-		return getBettingPlayer() != null;
+		return table != null && table.getBettingPlayer() != null;
 	}
 
 	public List<CardDTO> getCardsOnTable() {
@@ -95,6 +92,14 @@ public class GameState implements ServerObservable {
 
 	public int getBigBlindAmount() {
 		return table.getBigBlindAmount();
+	}
+
+	public PlayerDTO getWinnerPlayer() {
+		return table.getWinnerPlayer();
+	}
+
+	public PlayerDTO getBettingPlayer() {
+		return table.getBettingPlayer();
 	}
 
 	@Override
@@ -130,15 +135,10 @@ public class GameState implements ServerObservable {
 
 		final UpdateStateMessage response = message.instance(UpdateStateMessage.class);
 		copyProperties(response);
-
-		log.debug(String.format("Staring dto with %d players", allPlayers.size()));
 	}
 
 	public void copyProperties(UpdateStateMessage response) {
 		this.currentPlayer = response.getCurrentPlayer();
-		this.allPlayers = response.getAllPlayers();
-		this.bettingPlayer = response.getBettingPlayer();
 		this.table = response.getTable();
-		this.winnerPlayer = response.getWinnerPlayer();
 	}
 }
