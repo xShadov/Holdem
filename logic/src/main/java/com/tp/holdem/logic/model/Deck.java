@@ -4,7 +4,9 @@ package com.tp.holdem.logic.model;
 import com.tp.holdem.model.common.Honour;
 import com.tp.holdem.model.common.Suit;
 import io.vavr.collection.List;
+import lombok.ToString;
 
+@ToString
 public class Deck {
 	private List<Card> cards = List.of(Honour.values())
 			.flatMap(honour ->
@@ -26,6 +28,12 @@ public class Deck {
 				.filter(Player::playing)
 				.map(player -> player.withCards(List.fill(numberOfCards, this::drawCard)))
 				.appendAll(players.filter(Player::notPlaying));
+	}
+
+	public List<Card> drawCards(int number) {
+		final List<Card> drawn = cards.take(number);
+		cards = cards.removeAll(drawn);
+		return drawn;
 	}
 
 	public Card drawCard() {

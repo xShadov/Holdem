@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CardDrawer {
-	private static final int[] tableCardsPositionX = {315, 397, 479, 561, 643};
+	private static final int[] tableCardsPositionX = {315, 407, 499, 591, 683};
 	private static final int tableCardsPositionY = 360;
 
 	private static final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};

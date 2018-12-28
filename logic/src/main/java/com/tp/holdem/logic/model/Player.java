@@ -15,6 +15,7 @@ public class Player {
 	private int minimumBet;
 	private int maximumBet;
 	private int betAmount;
+	private int betAmountThisPhase;
 	private int chipsAmount;
 
 	private boolean inGame;
@@ -48,35 +49,7 @@ public class Player {
 	}
 
 	public int availableChips() {
-		return chipsAmount - betAmount;
-	}
-
-	public PlayerDTO toPlayerDTO() {
-		return PlayerDTO.builder()
-				.allIn(allIn)
-				.betAmount(betAmount)
-				.chipsAmount(chipsAmount)
-				.folded(folded)
-				.inGame(inGame)
-				.name(name)
-				.number(number)
-				.build();
-	}
-
-	public CurrentPlayerDTO toCurrentPlayerDTO() {
-		return CurrentPlayerDTO.builder()
-				.allIn(allIn)
-				.betAmount(betAmount)
-				.chipsAmount(chipsAmount)
-				.folded(folded)
-				.inGame(inGame)
-				.name(name)
-				.number(number)
-				.possibleMoves(possibleMoves.toJavaList())
-				.maximumBet(maximumBet)
-				.minimumBet(minimumBet)
-				.hand(hand.map(Card::toDTO).toJavaList())
-				.build();
+		return chipsAmount - betAmountThisPhase;
 	}
 
 	public Player allIn() {
@@ -96,7 +69,71 @@ public class Player {
 		if (availableChips() < bet)
 			throw new IllegalArgumentException("Player does not have enough chips");
 		return this.toBuilder()
-				.betAmount(bet)
+				.betAmountThisPhase(getBetAmountThisPhase() + bet)
+				.build();
+	}
+
+	public Player newPhase() {
+		return this.toBuilder()
+				.betAmount(getBetAmount() + getBetAmountThisPhase())
+				.betAmountThisPhase(0)
+				.chipsAmount(getChipsAmount() - getBetAmountThisPhase())
+				.allIn(false)
+				.folded(false)
+				.minimumBet(0)
+				.maximumBet(0)
+				.possibleMoves(List.empty())
+				.build();
+	}
+
+	public Player newRound() {
+		return this.toBuilder()
+				.betAmount(0)
+				.betAmountThisPhase(0)
+				.possibleMoves(List.empty())
+				.maximumBet(0)
+				.minimumBet(0)
+				.folded(false)
+				.allIn(false)
+				.hand(List.empty())
+				.build();
+	}
+
+	public PlayerDTO toPlayerDTO() {
+		return PlayerDTO.builder()
+				.allIn(allIn)
+				.betAmount(betAmount)
+				.betAmountThisPhase(betAmountThisPhase)
+				.chipsAmount(chipsAmount)
+				.folded(folded)
+				.inGame(inGame)
+				.name(name)
+				.number(number)
+				.build();
+	}
+
+	public CurrentPlayerDTO toCurrentPlayerDTO() {
+		return CurrentPlayerDTO.builder()
+				.allIn(allIn)
+				.betAmount(betAmount)
+				.betAmountThisPhase(betAmountThisPhase)
+				.chipsAmount(chipsAmount)
+				.folded(folded)
+				.inGame(inGame)
+				.name(name)
+				.number(number)
+				.possibleMoves(possibleMoves.toJavaList())
+				.maximumBet(maximumBet)
+				.minimumBet(minimumBet)
+				.hand(hand.map(Card::toDTO).toJavaList())
+				.build();
+	}
+
+	public Player bettingTurnOver() {
+		return this.toBuilder()
+				.minimumBet(0)
+				.maximumBet(0)
+				.possibleMoves(List.empty())
 				.build();
 	}
 }

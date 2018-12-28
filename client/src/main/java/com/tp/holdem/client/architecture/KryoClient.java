@@ -9,6 +9,7 @@ import com.tp.holdem.client.architecture.message.MessageBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
 import com.tp.holdem.model.common.Honour;
 import com.tp.holdem.model.common.Moves;
+import com.tp.holdem.model.common.Phase;
 import com.tp.holdem.model.common.Suit;
 import com.tp.holdem.model.message.dto.*;
 import com.tp.holdem.model.message.*;
@@ -38,6 +39,7 @@ public class KryoClient implements ServerObservable {
 		kryo.register(List.class, registerCount.getAndIncrement());
 		kryo.register(Honour.class, registerCount.getAndIncrement());
 		kryo.register(Suit.class, registerCount.getAndIncrement());
+		kryo.register(Phase.class, registerCount.getAndIncrement());
 		kryo.register(PlayerDTO.class, registerCount.getAndIncrement());
 		kryo.register(CurrentPlayerDTO.class, registerCount.getAndIncrement());
 		kryo.register(CardDTO.class, registerCount.getAndIncrement());

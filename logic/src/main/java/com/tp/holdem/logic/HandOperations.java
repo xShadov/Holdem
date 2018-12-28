@@ -22,4 +22,9 @@ public class HandOperations {
 
 		return new HandRank(playerHand, bestCardsThatMakeHand);
 	}
+
+	public static Player findWinner(List<Player> allPlayers) {
+		//TODO implement
+		return allPlayers.get(0);
+	}
 }

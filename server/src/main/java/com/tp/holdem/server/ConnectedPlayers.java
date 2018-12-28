@@ -26,6 +26,13 @@ class ConnectedPlayers {
 		return connectedMap.containsKey(connectionId);
 	}
 
+	Option<Integer> getConnectionId(int playerNumber) {
+		return connectedMap
+				.mapValues(Tuple2::_2)
+				.find(value -> value._2.equals(playerNumber))
+				.map(Tuple2::_1);
+	}
+
 	Option<Integer> getConnected(int connectionId) {
 		return connectedMap.get(connectionId)
 				.filter(Tuple2::_1)

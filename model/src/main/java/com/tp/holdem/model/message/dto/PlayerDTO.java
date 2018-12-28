@@ -13,6 +13,7 @@ public class PlayerDTO {
 	private int number;
 
 	private int betAmount;
+	private int betAmountThisPhase;
 	private int chipsAmount;
 
 	private boolean inGame;

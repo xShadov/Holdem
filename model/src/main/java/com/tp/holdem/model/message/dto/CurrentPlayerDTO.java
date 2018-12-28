@@ -19,6 +19,7 @@ public class CurrentPlayerDTO {
 	private int minimumBet;
 	private int maximumBet;
 	private int betAmount;
+	private int betAmountThisPhase;
 	private int chipsAmount;
 
 	private boolean inGame;

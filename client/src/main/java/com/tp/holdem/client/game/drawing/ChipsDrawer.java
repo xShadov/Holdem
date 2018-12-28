@@ -1,9 +1,7 @@
 package com.tp.holdem.client.game.drawing;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
@@ -19,6 +17,7 @@ public class ChipsDrawer {
 	private final GameState gameState;
 	private final TextureAtlas commonTextures;
 
+	private final BitmapFont smallFont;
 	private final TextureRegion smallStack;
 	private final TextureRegion semiStack;
 	private final TextureRegion bigStack;
@@ -28,6 +27,9 @@ public class ChipsDrawer {
 		this.batcher = batcher;
 		this.gameState = gameState;
 		this.commonTextures = commonTextures;
+
+		this.smallFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
+		this.smallFont.getData().setScale(.6f);
 
 		this.smallStack = getRegion("smallStack");
 		this.semiStack = getRegion("mediumStack");
@@ -41,14 +43,21 @@ public class ChipsDrawer {
 	}
 
 	public void drawChips() {
+		drawPot();
+
 		final AtomicInteger drawCount = new AtomicInteger(0);
 		gameState.getAllPlayers()
 				.forEach(player -> {
-					if (player.getBetAmount() > 0)
-						batcher.draw(amountToTexture.get(player.getBetAmount()), chipsPositionX[drawCount.get()], chipsPositionY[drawCount.get()]);
+					if (player.getBetAmountThisPhase() > 0)
+						batcher.draw(amountToTexture.get(player.getBetAmountThisPhase()), chipsPositionX[drawCount.get()], chipsPositionY[drawCount.get()]);
 
 					drawCount.incrementAndGet();
 				});
+	}
+
+	private void drawPot() {
+		smallFont.draw(batcher, String.format("Whole pot: %d", gameState.getTable().getPotAmount()), 350, 550);
+		smallFont.draw(batcher, String.format("Phase pot: %d", gameState.getTable().getPotAmountThisPhase()), 350, 520);
 	}
 
 	private TextureRegion getRegion(String code) {

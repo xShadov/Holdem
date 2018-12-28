@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.tp.holdem.model.common.Honour;
 import com.tp.holdem.model.common.Moves;
+import com.tp.holdem.model.common.Phase;
 import com.tp.holdem.model.common.Suit;
 import com.tp.holdem.model.message.*;
 import com.tp.holdem.model.message.dto.CardDTO;
@@ -33,6 +34,7 @@ class TempServer implements Runnable {
 		kryo.register(java.util.List.class, registerCount.getAndIncrement());
 		kryo.register(Honour.class, registerCount.getAndIncrement());
 		kryo.register(Suit.class, registerCount.getAndIncrement());
+		kryo.register(Phase.class, registerCount.getAndIncrement());
 		kryo.register(PlayerDTO.class, registerCount.getAndIncrement());
 		kryo.register(CurrentPlayerDTO.class, registerCount.getAndIncrement());
 		kryo.register(CardDTO.class, registerCount.getAndIncrement());
