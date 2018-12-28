@@ -10,11 +10,13 @@ import java.util.Objects;
 @Value
 @Builder(toBuilder = true)
 public class PokerTable {
-	private int potAmount;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
 	private Player bettingPlayer;
 	private Player winnerPlayer;
+	private Player dealer;
+	private Player bigBlind;
+	private Player smallBlind;
 	@Builder.Default
 	private List<Player> allPlayers = List.empty();
 	@Builder.Default
@@ -37,11 +39,22 @@ public class PokerTable {
 		return this.toBuilder().allPlayers(modifiedPlayers).build();
 	}
 
+	public int highestBet() {
+		return Math.max(bigBlindAmount, allPlayers.map(Player::getBetAmount).max().getOrElse(bigBlindAmount));
+	}
+
+	public int getPotAmount() {
+		return allPlayers.map(Player::getBetAmount).sum().intValue();
+	}
+
 	public PokerTableDTO toDTO() {
 		return PokerTableDTO.builder()
-				.potAmount(potAmount)
+				.potAmount(getPotAmount())
 				.smallBlindAmount(smallBlindAmount)
 				.bigBlindAmount(bigBlindAmount)
+				.dealer(dealer.toPlayerDTO())
+				.bigBlind(bigBlind.toPlayerDTO())
+				.smallBlind(smallBlind.toPlayerDTO())
 				.allPlayers(allPlayers.map(Player::toPlayerDTO).toJavaList())
 				.bettingPlayer(bettingPlayer.toPlayerDTO())
 				.cardsOnTable(cardsOnTable.map(Card::toDTO).toJavaList())

@@ -20,9 +20,6 @@ public class Player {
 	private boolean inGame;
 	private boolean allIn;
 	private boolean folded;
-	private boolean dealerButton;
-	private boolean bigBlind;
-	private boolean smallBlind;
 
 	private String name;
 
@@ -50,18 +47,19 @@ public class Player {
 		return !playing();
 	}
 
+	public int availableChips() {
+		return chipsAmount - betAmount;
+	}
+
 	public PlayerDTO toPlayerDTO() {
 		return PlayerDTO.builder()
 				.allIn(allIn)
 				.betAmount(betAmount)
-				.bigBlind(bigBlind)
 				.chipsAmount(chipsAmount)
-				.dealerButton(dealerButton)
 				.folded(folded)
 				.inGame(inGame)
 				.name(name)
 				.number(number)
-				.smallBlind(smallBlind)
 				.build();
 	}
 
@@ -69,18 +67,36 @@ public class Player {
 		return CurrentPlayerDTO.builder()
 				.allIn(allIn)
 				.betAmount(betAmount)
-				.bigBlind(bigBlind)
 				.chipsAmount(chipsAmount)
-				.dealerButton(dealerButton)
 				.folded(folded)
 				.inGame(inGame)
 				.name(name)
 				.number(number)
-				.smallBlind(smallBlind)
 				.possibleMoves(possibleMoves.toJavaList())
 				.maximumBet(maximumBet)
 				.minimumBet(minimumBet)
 				.hand(hand.map(Card::toDTO).toJavaList())
+				.build();
+	}
+
+	public Player allIn() {
+		return this.toBuilder()
+				.allIn(true)
+				.betAmount(chipsAmount)
+				.build();
+	}
+
+	public Player fold() {
+		return this.toBuilder()
+				.folded(true)
+				.build();
+	}
+
+	public Player bet(int bet) {
+		if (availableChips() < bet)
+			throw new IllegalArgumentException("Player does not have enough chips");
+		return this.toBuilder()
+				.betAmount(bet)
 				.build();
 	}
 }

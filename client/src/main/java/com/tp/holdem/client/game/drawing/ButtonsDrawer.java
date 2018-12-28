@@ -39,11 +39,11 @@ public class ButtonsDrawer {
 	}
 
 	private void drawPlayer(int index, PlayerDTO player) {
-		if (player.isDealerButton())
+		if (gameState.getTable().getDealer().getNumber() == player.getNumber())
 			batcher.draw(dealer, dealerPositionX[index], dealerPositionY[index]);
-		if (player.isBigBlind())
+		if (gameState.getTable().getBigBlind().getNumber() == player.getNumber())
 			batcher.draw(bigBlind, blindPositionX[index], blindPositionY[index]);
-		if (player.isSmallBlind())
+		if (gameState.getTable().getSmallBlind().getNumber() == player.getNumber())
 			batcher.draw(smallBlind, blindPositionX[index], blindPositionY[index]);
 	}
 

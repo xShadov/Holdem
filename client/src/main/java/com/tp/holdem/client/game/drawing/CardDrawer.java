@@ -16,7 +16,7 @@ public class CardDrawer {
 	private static final int tableCardsPositionY = 360;
 
 	private static final int[] positionX = {529, 163, 64, 79, 210, 442, 637, 816, 828, 708};
-	private static final int[] positionY = {133, 121, 314, 497, 632, 617, 628, 512, 293, 127};
+	private static final int[] positionY = {113, 101, 294, 497, 632, 617, 628, 512, 293, 107};
 	private static final int offsetX = 20;
 	private static final int offsetY = -15;
 

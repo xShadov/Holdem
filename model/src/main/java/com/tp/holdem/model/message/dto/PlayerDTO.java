@@ -18,9 +18,6 @@ public class PlayerDTO {
 	private boolean inGame;
 	private boolean allIn;
 	private boolean folded;
-	private boolean dealerButton;
-	private boolean bigBlind;
-	private boolean smallBlind;
 
 	private String name;
 

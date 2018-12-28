@@ -14,11 +14,10 @@ import com.tp.holdem.client.architecture.action.Action;
 import com.tp.holdem.client.architecture.action.ActionBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
 import com.tp.holdem.model.common.Moves;
-import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
-import com.tp.holdem.model.message.dto.PlayerDTO;
 import com.tp.holdem.model.message.Message;
 import com.tp.holdem.model.message.MessageType;
 import com.tp.holdem.model.message.UpdateStateMessage;
+import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
@@ -165,6 +164,7 @@ public class GameElements implements ServerObservable {
 			slider.setDisabled(false);
 			slider.setVisible(true);
 
+			slider.setStepSize(content.getTable().getSmallBlindAmount());
 			slider.setRange(
 					currentPlayer.getMinimumBet(),
 					currentPlayer.getMaximumBet()

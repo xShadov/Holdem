@@ -17,6 +17,9 @@ public class PokerTableDTO {
 	private int potAmount;
 	private int smallBlindAmount;
 	private int bigBlindAmount;
+	private PlayerDTO dealer;
+	private PlayerDTO bigBlind;
+	private PlayerDTO smallBlind;
 	private PlayerDTO bettingPlayer;
 	private PlayerDTO winnerPlayer;
 	@Builder.Default
