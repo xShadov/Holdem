@@ -24,7 +24,7 @@ public class HandOperations {
 		return new HandRank(playerHand, bestCardsThatMakeHand);
 	}
 
-	public static Tuple2<Player, HandRank> findWinner(List<Player> allPlayers, PokerTable pokerTable) {
+	public static Player findWinner(List<Player> allPlayers, PokerTable pokerTable) {
 		final Map<Player, HandRank> hands = allPlayers.filter(Player::playing)
 				.toMap(Function.identity(), player -> findHandRank(player, pokerTable));
 
@@ -32,6 +32,7 @@ public class HandOperations {
 
 		return hands.values().maxBy(HandRankComparator.INSTANCE)
 				.flatMap(handRank -> hands.find(tuple -> tuple._2.equals(handRank)))
+				.map(Tuple2::_1)
 				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 	}
 }

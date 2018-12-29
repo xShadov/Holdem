@@ -55,7 +55,7 @@ public class Player {
 	public Player allIn() {
 		return this.toBuilder()
 				.allIn(true)
-				.betAmount(chipsAmount)
+				.betAmountThisPhase(availableChips())
 				.build();
 	}
 
@@ -67,22 +67,10 @@ public class Player {
 
 	public Player bet(int bet) {
 		if (availableChips() < bet)
-			throw new IllegalArgumentException("Player does not have enough chips");
-		return this.toBuilder()
-				.betAmountThisPhase(getBetAmountThisPhase() + bet)
-				.build();
-	}
-
-	public Player newPhase() {
-		return this.toBuilder()
-				.betAmount(getBetAmount() + getBetAmountThisPhase())
-				.betAmountThisPhase(0)
-				.chipsAmount(getChipsAmount() - getBetAmountThisPhase())
-				.allIn(false)
-				.folded(false)
-				.minimumBet(0)
-				.maximumBet(0)
-				.possibleMoves(List.empty())
+			throw new IllegalArgumentException(String.format("Player does not have enough chips: %d vs. %d", availableChips(), bet));
+		final Player afterBet = this.toBuilder().betAmountThisPhase(getBetAmountThisPhase() + bet).build();
+		return afterBet.toBuilder()
+				.allIn(afterBet.availableChips() == 0)
 				.build();
 	}
 
@@ -94,7 +82,22 @@ public class Player {
 				.build();
 	}
 
-	public Player newRound() {
+	public Player bettingTurnOver() {
+		return this.toBuilder()
+				.minimumBet(0)
+				.maximumBet(0)
+				.possibleMoves(List.empty())
+				.build();
+	}
+
+	public Player prepareForNewGame(int startingChips) {
+		return this.toBuilder()
+				.chipsAmount(startingChips)
+				.inGame(true)
+				.build();
+	}
+
+	public Player prepareForNewRound() {
 		return this.toBuilder()
 				.betAmount(0)
 				.betAmountThisPhase(0)
@@ -104,6 +107,17 @@ public class Player {
 				.folded(false)
 				.allIn(false)
 				.hand(List.empty())
+				.build();
+	}
+
+	public Player prepareForNewPhase() {
+		return this.toBuilder()
+				.betAmount(getBetAmount() + getBetAmountThisPhase())
+				.betAmountThisPhase(0)
+				.chipsAmount(getChipsAmount() - getBetAmountThisPhase())
+				.minimumBet(0)
+				.maximumBet(0)
+				.possibleMoves(List.empty())
 				.build();
 	}
 
@@ -134,21 +148,6 @@ public class Player {
 				.maximumBet(maximumBet)
 				.minimumBet(minimumBet)
 				.hand(hand.map(Card::toDTO).toJavaList())
-				.build();
-	}
-
-	public Player bettingTurnOver() {
-		return this.toBuilder()
-				.minimumBet(0)
-				.maximumBet(0)
-				.possibleMoves(List.empty())
-				.build();
-	}
-
-	public Player prepareForNewGame(int startingChips) {
-		return this.toBuilder()
-				.chipsAmount(startingChips)
-				.inGame(true)
 				.build();
 	}
 }

@@ -34,9 +34,9 @@ public class ChipsDrawer {
 		this.bigStack = getRegion(commonTextures, "bigStack");
 
 		this.amountToTexture = ImmutableRangeMap.<Integer, TextureRegion>builder()
-				.put(Range.open(1, 300), smallStack)
-				.put(Range.open(300, 1500), semiStack)
-				.put(Range.open(1500, Integer.MAX_VALUE), bigStack)
+				.put(Range.closed(1, 300), smallStack)
+				.put(Range.closed(301, 1500), semiStack)
+				.put(Range.closed(1501, Integer.MAX_VALUE), bigStack)
 				.build();
 	}
 

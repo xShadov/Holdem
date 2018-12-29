@@ -13,10 +13,6 @@ import com.tp.holdem.model.message.PlayerConnectMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 @RequiredArgsConstructor
 class HoldemServerListener extends Listener {
@@ -26,8 +22,6 @@ class HoldemServerListener extends Listener {
 
 	private ConnectedPlayers connectedPlayers = ConnectedPlayers.empty();
 	private int expectActionFrom;
-
-	private final ScheduledExecutorService delayer = Executors.newSingleThreadScheduledExecutor();
 
 	@Override
 	public synchronized void received(final Connection connection, final Object object) {
@@ -47,7 +41,26 @@ class HoldemServerListener extends Listener {
 
 				final PlayerActionMessage content = message.instance(PlayerActionMessage.class);
 
-				final PokerTable response = gameHandler.handlePlayerMove(playerNumber, content);
+				PokerTable response = gameHandler.handlePlayerMove(playerNumber, content);
+
+				if(response.isShowdown()) {
+					log.debug("Starting showdown");
+
+					while(response.getPhase() != Phase.RIVER) {
+						response = response.nextPhase();
+
+						sender.sendStateUpdate(connectedPlayers, response);
+						expectActionFrom = findExpectedResponder(response);
+
+						try {
+							Thread.sleep(1500);
+						} catch (InterruptedException e) {
+							log.debug("Waiting interrupted");
+						}
+					}
+
+					response = response.roundOver();
+				}
 
 				sender.sendStateUpdate(connectedPlayers, response);
 				expectActionFrom = findExpectedResponder(response);
@@ -55,7 +68,13 @@ class HoldemServerListener extends Listener {
 				if (response.getPhase() == Phase.OVER) {
 					log.debug("Current round is over, sleeping for 5s and staring new round");
 
-					delayer.schedule(this::startRound, 5, TimeUnit.SECONDS);
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						log.debug("Sleep interrupted");
+					}
+
+					startRound();
 				}
 			}
 		}

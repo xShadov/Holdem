@@ -16,6 +16,7 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Value
@@ -63,10 +64,7 @@ public class PokerTable {
 	}
 
 	public int highestBetThisPhase() {
-		final Integer maxBet = allPlayers.map(Player::getBetAmountThisPhase).max().getOrElse(0);
-		if (phase == Phase.PRE_FLOP)
-			return Math.max(bigBlindAmount, maxBet);
-		return maxBet;
+		return allPlayers.map(Player::getBetAmountThisPhase).max().getOrElse(0);
 	}
 
 	public int potAmount() {
@@ -101,7 +99,7 @@ public class PokerTable {
 	}
 
 	private PokerTable goToNextPhase(int cards) {
-		final List<Player> preparedPlayers = getAllPlayers().map(Player::newPhase);
+		final List<Player> preparedPlayers = getAllPlayers().map(Player::prepareForNewPhase);
 		final Player smallBlindPlayer = preparedPlayers
 				.find(player -> Objects.equals(player.getNumber(), getSmallBlind().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND).getNumber()))
 				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
@@ -121,23 +119,14 @@ public class PokerTable {
 				.build();
 	}
 
-	public PokerTable playerActed(Player playerAfterAction, Moves move) {
-		final Player beforeAction = allPlayers
-				.find(PlayerFunctions.byNumber(playerAfterAction.getNumber()))
-				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
-
-		return this.toBuilder()
-				.allPlayers(allPlayers.replace(beforeAction, playerAfterAction.bettingTurnOver()))
-				.movesThisPhase(movesThisPhase.put(beforeAction.getNumber(), move))
-				.build();
-	}
-
 	public PhaseStatus phaseStatus() {
 		int notAllInCount = allPlayers
 				.filter(Player::playing)
 				.count(player -> !player.isAllIn());
 
-		if (notAllInCount == 1)
+		boolean allPlayersMoved = movesThisPhase.size() == allPlayers.filter(Player::playing).size();
+
+		if (notAllInCount <= 1 && allPlayersMoved)
 			return PhaseStatus.EVERYBODY_ALL_IN;
 
 		int notFoldedCount = allPlayers
@@ -146,8 +135,6 @@ public class PokerTable {
 
 		if (notFoldedCount == 1)
 			return PhaseStatus.EVERYBODY_FOLDED;
-
-		boolean allPlayersMoved = movesThisPhase.size() == allPlayers.filter(Player::playing).size();
 
 		boolean allBetsAreEqual = allPlayers
 				.filter(Player::playing)
@@ -173,10 +160,7 @@ public class PokerTable {
 				.allPlayers(playersAfterRound)
 				.build();
 
-		final Tuple2<Player, HandRank> winningPair = HandOperations.findWinner(playersAfterRound, updatedTable);
-		final Player winner = winningPair._1;
-		final HandRank winningHand = winningPair._2;
-		log.debug("Found winner with hand: " + winningHand);
+		final Player winner = HandOperations.findWinner(playersAfterRound, updatedTable);
 
 		final Player prizedWinner = winner.toBuilder()
 				.chipsAmount(winner.getChipsAmount() + updatedTable.potAmount())
@@ -190,6 +174,7 @@ public class PokerTable {
 	}
 
 	public PokerTable dealCards() {
+		log.debug("Dealing cards to players");
 		final List<Player> playersWithCards = deck.dealCards(2, allPlayers);
 		return this.toBuilder()
 				.allPlayers(playersWithCards)
@@ -236,6 +221,73 @@ public class PokerTable {
 				.bettingPlayer(getBettingPlayer().map(Player::toPlayerDTO).getOrNull())
 				.cardsOnTable(cardsOnTable.map(Card::toDTO).toJavaList())
 				.winnerPlayer(getWinnerPlayer().map(Player::toPlayerDTO).getOrNull())
+				.build();
+	}
+
+	public PokerTable newRound(AtomicLong handCount) {
+		log.debug("Preparing players for new round");
+		final List<Player> playersWithCleanBets = getAllPlayers().map(Player::prepareForNewRound);
+
+		final Player dealerPlayer = playersWithCleanBets.get((int) (handCount.get() % playersWithCleanBets.size()));
+
+		final Player smallBlindPlayer = playersWithCleanBets.get((int) ((handCount.get() + 1) % playersWithCleanBets.size()));
+		log.debug(String.format("Taking small blind from player: %d", smallBlindPlayer.getNumber()));
+		final Player newSmallBlindPlayer = PlayerFunctions.SMALL_BLIND_TIME.apply(smallBlindPlayer, this);
+
+		final Player bigBlindPlayer = playersWithCleanBets.get((int) ((handCount.get() + 2) % playersWithCleanBets.size()));
+		log.debug(String.format("Taking big blind from player: %d", bigBlindPlayer.getNumber()));
+		final Player newBigBlindPlayer = PlayerFunctions.BIG_BLIND_TIME.apply(bigBlindPlayer, this);
+
+		final PokerTable updatedTable = toBuilder()
+				.deck(Deck.brandNew())
+				.cardsOnTable(List.empty())
+				.phase(Phase.START)
+				.showdown(false)
+				.movesThisPhase(HashMap.empty())
+				.allPlayers(playersWithCleanBets.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer))
+				.winnerPlayer(PlayerNumber.empty())
+				.bettingPlayer(PlayerNumber.empty())
+				.dealer(PlayerNumber.of(dealerPlayer.getNumber()))
+				.bigBlind(PlayerNumber.of(newBigBlindPlayer.getNumber()))
+				.smallBlind(PlayerNumber.of(newSmallBlindPlayer.getNumber()))
+				.build();
+
+		return updatedTable.dealCards();
+	}
+
+	public PokerTable playerMove(Integer playerNumber, Moves move, int betAmount) {
+		final Player actionPlayer = getAllPlayers()
+				.find(PlayerFunctions.byNumber(playerNumber))
+				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
+
+		final Player playerAfterAction;
+
+		switch (move) {
+			case FOLD:
+				playerAfterAction = actionPlayer.fold();
+				break;
+			case ALLIN:
+				playerAfterAction = actionPlayer.allIn();
+				break;
+			case BET:
+				playerAfterAction = actionPlayer.bet(betAmount);
+				break;
+			case CHECK:
+				playerAfterAction = actionPlayer;
+				break;
+			case CALL:
+				playerAfterAction = actionPlayer.bet(highestBetThisPhase() - actionPlayer.getBetAmountThisPhase());
+				break;
+			case RAISE:
+				playerAfterAction = actionPlayer.bet(highestBetThisPhase() - actionPlayer.getBetAmountThisPhase()).bet(betAmount);
+				break;
+			default:
+				throw new IllegalArgumentException(String.format("Unsupported action type: %s", move));
+		}
+
+		return this.toBuilder()
+				.allPlayers(allPlayers.replace(actionPlayer, playerAfterAction.bettingTurnOver()))
+				.movesThisPhase(movesThisPhase.put(actionPlayer.getNumber(), move))
 				.build();
 	}
 }

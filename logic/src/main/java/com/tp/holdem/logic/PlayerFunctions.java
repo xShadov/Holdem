@@ -16,7 +16,7 @@ public class PlayerFunctions {
 
 	public static final BiFunction<Player, PokerTable, Player> BET_IN_PHASE = (player, table) -> {
 		final Player modifiedPlayer = player.toBuilder()
-				.minimumBet(table.getBigBlindAmount())
+				.minimumBet(Math.min(player.availableChips(), table.getBigBlindAmount()))
 				.maximumBet(player.availableChips())
 				.build();
 
@@ -28,6 +28,8 @@ public class PlayerFunctions {
 		if (modifiedPlayer.getBetAmountThisPhase() < table.highestBetThisPhase())
 			return modifiedPlayer.toBuilder()
 					.possibleMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
+					.minimumBet(Math.min(table.getBigBlindAmount(), player.availableChips() - (table.highestBetThisPhase() - player.getBetAmountThisPhase())))
+					.maximumBet(player.availableChips() - (table.highestBetThisPhase() - player.getBetAmountThisPhase()))
 					.build();
 
 		return modifiedPlayer.toBuilder()
@@ -35,21 +37,12 @@ public class PlayerFunctions {
 				.build();
 	};
 
-	public static final BiFunction<Player, PokerTable, Player> FIRST_BET_IN_ROUND = (player, table) -> {
-		final Player modifiedPlayer = player.toBuilder()
-				.minimumBet(table.getBigBlindAmount())
-				.maximumBet(player.availableChips())
-				.build();
-
-		if (modifiedPlayer.getBetAmount() < table.highestBetThisPhase())
-			return modifiedPlayer.toBuilder()
+	public static final BiFunction<Player, PokerTable, Player> FIRST_BET_IN_ROUND = (player, table) ->
+			player.toBuilder()
+					.minimumBet(Math.min(player.availableChips(), table.getBigBlindAmount()))
+					.maximumBet(player.availableChips() - (table.highestBetThisPhase() - player.getBetAmountThisPhase()))
 					.possibleMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
 					.build();
-
-		return modifiedPlayer.toBuilder()
-				.possibleMoves(List.of(Moves.CHECK, Moves.RAISE, Moves.FOLD))
-				.build();
-	};
 
 	public static final BiFunction<Player, PokerTable, Player> SMALL_BLIND_TIME = (player, table) -> {
 		if (player.availableChips() < table.getSmallBlindAmount())

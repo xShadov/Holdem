@@ -21,6 +21,7 @@ public class InfoBoxDrawer {
 	private final TextureRegion boxOff;
 	private final TextureRegion boxFold;
 	private final BitmapFont smallFont;
+	private final BitmapFont redFont;
 
 	private final BiFunction<Boolean, Boolean, TextureRegion> boxFinder;
 
@@ -34,6 +35,7 @@ public class InfoBoxDrawer {
 		this.boxFold = getRegion("infoBoxFold");
 
 		this.smallFont = Fonts.builder().type(Fonts.Types.JMH).size(14).color(Color.WHITE).generate();
+		this.redFont = Fonts.builder().type(Fonts.Types.JMH).size(14).color(Color.RED).generate();
 
 		this.boxFinder = (inGame, folded) -> {
 			if (inGame && !folded)
@@ -54,6 +56,9 @@ public class InfoBoxDrawer {
 		smallFont.draw(batcher, player.getName(), boxPositionX[index] + 18, boxPositionY[index] + 81);
 		smallFont.draw(batcher, String.format("Chips:%d", player.getChipsAmount()), boxPositionX[index] + 18, boxPositionY[index] + 54);
 		smallFont.draw(batcher, String.format("Bet:%d/%d", player.getBetAmountThisPhase(), player.getChipsAmount()), boxPositionX[index] + 18, boxPositionY[index] + 27);
+
+		if (player.isAllIn())
+			redFont.draw(batcher, "ALL IN", boxPositionX[index] + 85, boxPositionY[index] + 81);
 	}
 
 	private TextureRegion getRegion(String code) {
