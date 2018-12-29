@@ -1,6 +1,5 @@
 package com.tp.holdem.logic.model;
 
-import com.tp.holdem.model.common.Hands;
 import io.vavr.collection.List;
 import lombok.Value;
 

@@ -144,4 +144,11 @@ public class Player {
 				.possibleMoves(List.empty())
 				.build();
 	}
+
+	public Player prepareForNewGame(int startingChips) {
+		return this.toBuilder()
+				.chipsAmount(startingChips)
+				.inGame(true)
+				.build();
+	}
 }

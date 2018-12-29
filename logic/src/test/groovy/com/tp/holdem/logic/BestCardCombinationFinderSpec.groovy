@@ -1,7 +1,7 @@
 package com.tp.holdem.logic
 
 import com.tp.holdem.logic.model.Card
-import com.tp.holdem.model.common.Hands
+import com.tp.holdem.logic.model.Hands
 import com.tp.holdem.model.common.Honour
 import com.tp.holdem.model.common.Suit
 import io.vavr.collection.List

@@ -1,4 +1,4 @@
-package com.tp.holdem.model.common;
+package com.tp.holdem.logic.model;
 
 public enum PhaseStatus {
 	KEEP_GOING(false), READY_FOR_NEXT(false), EVERYBODY_FOLDED(true), EVERYBODY_ALL_IN(true);

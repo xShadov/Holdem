@@ -5,9 +5,15 @@ import com.tp.holdem.logic.model.PokerTable;
 import com.tp.holdem.model.common.Moves;
 import io.vavr.collection.List;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 public class PlayerFunctions {
+	public static Predicate<Player> byNumber(Integer playerNumber) {
+		return player -> Objects.equals(player.getNumber(), playerNumber);
+	}
+
 	public static final BiFunction<Player, PokerTable, Player> BET_IN_PHASE = (player, table) -> {
 		final Player modifiedPlayer = player.toBuilder()
 				.minimumBet(table.getBigBlindAmount())

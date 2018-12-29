@@ -1,7 +1,7 @@
 package com.tp.holdem.logic;
 
 import com.tp.holdem.logic.model.Card;
-import com.tp.holdem.model.common.Hands;
+import com.tp.holdem.logic.model.Hands;
 import io.vavr.collection.List;
 
 import java.util.Comparator;

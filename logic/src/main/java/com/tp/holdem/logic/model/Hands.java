@@ -1,4 +1,4 @@
-package com.tp.holdem.model.common;
+package com.tp.holdem.logic.model;
 
 public enum Hands {
 	ROYAL_FLUSH(10),

@@ -1,6 +1,8 @@
 package com.tp.holdem.server;
 
 import com.esotericsoftware.kryonet.Server;
+import com.tp.holdem.logic.PlayerExceptions;
+import com.tp.holdem.logic.PlayerFunctions;
 import com.tp.holdem.logic.model.Player;
 import com.tp.holdem.logic.model.PokerTable;
 import com.tp.holdem.model.message.Message;
@@ -9,8 +11,6 @@ import com.tp.holdem.model.message.UpdateStateMessage;
 import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
@@ -29,9 +29,9 @@ class MessageSender {
 			log.debug(String.format("Sending message to player: %d", playerNumber));
 
 			final CurrentPlayerDTO currentPlayerDTO = table.getAllPlayers()
-					.find(player -> Objects.equals(player.getNumber(), playerNumber))
+					.find(PlayerFunctions.byNumber(playerNumber))
 					.map(Player::toCurrentPlayerDTO)
-					.getOrElseThrow(() -> new IllegalStateException("There is no current player in list of all players"));
+					.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 
 			final UpdateStateMessage modifiedResponse = message.toBuilder()
 					.currentPlayer(currentPlayerDTO)
@@ -41,9 +41,9 @@ class MessageSender {
 		});
 	}
 
-	void sendSingle(int id, Message message) {
-		log.debug(String.format("Sending message %s to single connection: %d", message.getMessageType(), id));
+	void sendSingle(int connectionId, Message message) {
+		log.debug(String.format("Sending message %s to single connection: %d", message.getMessageType(), connectionId));
 
-		server.sendToTCP(id, message);
+		server.sendToTCP(connectionId, message);
 	}
 }

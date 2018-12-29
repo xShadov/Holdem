@@ -1,30 +1,33 @@
 package com.tp.holdem.logic.model;
 
 import com.tp.holdem.logic.HandOperations;
+import com.tp.holdem.logic.PlayerExceptions;
 import com.tp.holdem.logic.PlayerFunctions;
 import com.tp.holdem.model.common.Moves;
 import com.tp.holdem.model.common.Phase;
-import com.tp.holdem.model.common.PhaseStatus;
 import com.tp.holdem.model.message.dto.PokerTableDTO;
+import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
+@Slf4j
 @Value
 @Builder(toBuilder = true)
 public class PokerTable {
-	private static final Supplier<IllegalArgumentException> PLAYER_NOT_FOUND = () -> new IllegalArgumentException("Player was not found");
-
 	private int smallBlindAmount;
 	private int bigBlindAmount;
 	private boolean showdown;
-	private Deck deck;
+	@Builder.Default
+	private Deck deck = Deck.brandNew();
+	@Builder.Default
+	private Phase phase = Phase.START;
 	@Builder.Default
 	private PlayerNumber bettingPlayer = PlayerNumber.empty();
 	@Builder.Default
@@ -35,7 +38,6 @@ public class PokerTable {
 	private PlayerNumber bigBlind = PlayerNumber.empty();
 	@Builder.Default
 	private PlayerNumber smallBlind = PlayerNumber.empty();
-	private Phase phase;
 	@Builder.Default
 	private List<Player> allPlayers = List.empty();
 	@Builder.Default
@@ -49,10 +51,10 @@ public class PokerTable {
 				.build();
 	}
 
-	public PokerTable playerLeft(Integer playerNumber) {
+	public PokerTable playerLeft(PlayerNumber playerNumber) {
 		final Player foundPlayer = allPlayers
-				.find(player -> Objects.equals(player.getNumber(), playerNumber))
-				.getOrElseThrow(() -> new IllegalArgumentException("Player not found"));
+				.find(PlayerFunctions.byNumber(playerNumber.getNumber()))
+				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 
 		final List<Player> modifiedPlayers = allPlayers
 				.replace(foundPlayer, foundPlayer.toBuilder().inGame(false).build());
@@ -87,7 +89,7 @@ public class PokerTable {
 	}
 
 	private PokerTable goToPreFlopPhase() {
-		final Player smallBlindPlayer = getSmallBlind().getOrElseThrow(PLAYER_NOT_FOUND);
+		final Player smallBlindPlayer = getSmallBlind().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 		final Player bettingPlayer = PlayerFunctions.FIRST_BET_IN_ROUND.apply(smallBlindPlayer, this);
 
 		return this.toBuilder()
@@ -100,8 +102,9 @@ public class PokerTable {
 
 	private PokerTable goToNextPhase(int cards) {
 		final List<Player> preparedPlayers = getAllPlayers().map(Player::newPhase);
-		final Player smallBlindPlayer = preparedPlayers.find(player -> Objects.equals(player.getNumber(), getSmallBlind().getOrElseThrow(PLAYER_NOT_FOUND).getNumber()))
-				.getOrElseThrow(() -> new IllegalStateException("Could not find small blind player"));
+		final Player smallBlindPlayer = preparedPlayers
+				.find(player -> Objects.equals(player.getNumber(), getSmallBlind().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND).getNumber()))
+				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 
 		final PokerTable updatedTable = this.toBuilder()
 				.phase(getPhase().nextPhase())
@@ -119,8 +122,9 @@ public class PokerTable {
 	}
 
 	public PokerTable playerActed(Player playerAfterAction, Moves move) {
-		final Player beforeAction = allPlayers.find(player -> Objects.equals(player.getNumber(), playerAfterAction.getNumber()))
-				.getOrElseThrow(() -> new IllegalStateException("Unregistered player acted"));
+		final Player beforeAction = allPlayers
+				.find(PlayerFunctions.byNumber(playerAfterAction.getNumber()))
+				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 
 		return this.toBuilder()
 				.allPlayers(allPlayers.replace(beforeAction, playerAfterAction.bettingTurnOver()))
@@ -153,7 +157,7 @@ public class PokerTable {
 	}
 
 	public PokerTable nextPlayerToBet() {
-		final Player newBettingPlayer = allPlayers.get((allPlayers.indexOf(getBettingPlayer().getOrElseThrow(PLAYER_NOT_FOUND)) + 1) % allPlayers.size());
+		final Player newBettingPlayer = allPlayers.get((allPlayers.indexOf(getBettingPlayer().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND)) + 1) % allPlayers.size());
 		final Player modifiedNewBettingPlayer = PlayerFunctions.BET_IN_PHASE.apply(newBettingPlayer, this);
 
 		return this.toBuilder()
@@ -169,7 +173,11 @@ public class PokerTable {
 				.allPlayers(playersAfterRound)
 				.build();
 
-		final Player winner = HandOperations.findWinner(playersAfterRound);
+		final Tuple2<Player, HandRank> winningPair = HandOperations.findWinner(playersAfterRound, updatedTable);
+		final Player winner = winningPair._1;
+		final HandRank winningHand = winningPair._2;
+		log.debug("Found winner with hand: " + winningHand);
+
 		final Player prizedWinner = winner.toBuilder()
 				.chipsAmount(winner.getChipsAmount() + updatedTable.potAmount())
 				.build();
@@ -188,24 +196,30 @@ public class PokerTable {
 				.build();
 	}
 
+	public PokerTable preparePlayersForNewGame(int startingChips) {
+		return toBuilder()
+				.allPlayers(getAllPlayers().map(player -> player.prepareForNewGame(startingChips)))
+				.build();
+	}
+
 	public Option<Player> getBettingPlayer() {
-		return allPlayers.find(player -> Objects.equals(player.getNumber(), bettingPlayer.getNumber()));
+		return allPlayers.find(PlayerFunctions.byNumber(bettingPlayer.getNumber()));
 	}
 
 	public Option<Player> getWinnerPlayer() {
-		return allPlayers.find(player -> Objects.equals(player.getNumber(), winnerPlayer.getNumber()));
+		return allPlayers.find(PlayerFunctions.byNumber(winnerPlayer.getNumber()));
 	}
 
 	public Option<Player> getDealer() {
-		return allPlayers.find(player -> Objects.equals(player.getNumber(), dealer.getNumber()));
+		return allPlayers.find(PlayerFunctions.byNumber(dealer.getNumber()));
 	}
 
 	public Option<Player> getBigBlind() {
-		return allPlayers.find(player -> Objects.equals(player.getNumber(), bigBlind.getNumber()));
+		return allPlayers.find(PlayerFunctions.byNumber(bigBlind.getNumber()));
 	}
 
 	public Option<Player> getSmallBlind() {
-		return allPlayers.find(player -> Objects.equals(player.getNumber(), smallBlind.getNumber()));
+		return allPlayers.find(PlayerFunctions.byNumber(smallBlind.getNumber()));
 	}
 
 	public PokerTableDTO toDTO() {

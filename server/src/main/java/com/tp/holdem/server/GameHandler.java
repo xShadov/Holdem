@@ -6,7 +6,7 @@ import com.tp.holdem.logic.model.Player;
 import com.tp.holdem.logic.model.PlayerNumber;
 import com.tp.holdem.logic.model.PokerTable;
 import com.tp.holdem.model.common.Phase;
-import com.tp.holdem.model.common.PhaseStatus;
+import com.tp.holdem.logic.model.PhaseStatus;
 import com.tp.holdem.model.message.PlayerActionMessage;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
@@ -37,17 +37,7 @@ class GameHandler {
 
 		log.debug(String.format("Starting game with %d players", gameParams.getPlayerCount()));
 
-		final List<Player> readyPlayers = table.getAllPlayers()
-				.map(player -> player
-						.toBuilder()
-						.inGame(true)
-						.chipsAmount(gameParams.getStartingChips())
-						.build()
-				);
-
-		this.table = table.toBuilder()
-				.allPlayers(readyPlayers)
-				.build();
+		this.table = table.preparePlayersForNewGame(gameParams.getStartingChips());
 
 		return startRound();
 	}
@@ -176,7 +166,7 @@ class GameHandler {
 	}
 
 	PokerTable disconnectPlayer(Integer playerNumber) {
-		table = table.playerLeft(playerNumber);
+		this.table = table.playerLeft(PlayerNumber.of(playerNumber));
 		return table;
 	}
 }

@@ -8,7 +8,8 @@ public class Application {
 		final Server server = new Server();
 		final MessageSender sender = new MessageSender(server);
 
-		final GameParams gameParams = GameParams.builder().bigBlindAmount(40)
+		final GameParams gameParams = GameParams.builder()
+				.bigBlindAmount(40)
 				.smallBlindAmount(20)
 				.playerCount(2)
 				.port(54555)

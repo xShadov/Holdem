@@ -1,21 +1,18 @@
 package com.tp.holdem.client.game.drawing;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.google.common.collect.Maps;
 import com.tp.holdem.client.game.GameState;
+import com.tp.holdem.client.game.animation.TableCardsAnimation;
 import com.tp.holdem.model.message.dto.CardDTO;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CardDrawer {
-	private static final int[] tableCardsPositionX = {275, 367, 459, 551, 643};
-	private static final int tableCardsPositionY = 360;
-
 	private static final int[] positionX = {539, 163, 64, 79, 210, 442, 637, 816, 828, 708};
 	private static final int[] positionY = {113, 101, 294, 497, 632, 617, 628, 512, 293, 107};
 	private static final int offsetX = 20;
@@ -25,6 +22,7 @@ public class CardDrawer {
 	private final GameState gameState;
 	private final TextureAtlas cardTextures;
 	private final TextureRegion cardReverse;
+	private final TableCardsAnimation tableCardsAnimation;
 	private final Map<String, TextureAtlas.AtlasRegion> cardRegionMap = Maps.newHashMap();
 
 	public CardDrawer(SpriteBatch batcher, GameState gameState, TextureAtlas textures) {
@@ -32,6 +30,7 @@ public class CardDrawer {
 		this.gameState = gameState;
 		this.cardTextures = textures;
 		this.cardReverse = getRegion("red_back");
+		this.tableCardsAnimation = new TableCardsAnimation(20, gameState);
 	}
 
 	public void drawCards() {
@@ -40,8 +39,8 @@ public class CardDrawer {
 	}
 
 	private void drawTableCards() {
-		AtomicInteger drawCount = new AtomicInteger(0);
-		gameState.getCardsOnTable().forEach(card -> drawCard(card, tableCardsPositionX[drawCount.getAndIncrement()], tableCardsPositionY));
+		tableCardsAnimation.positions()
+				.forEach((card, positions) -> drawCard(card, positions._1, positions._2));
 	}
 
 	private void drawPlayersCards() {

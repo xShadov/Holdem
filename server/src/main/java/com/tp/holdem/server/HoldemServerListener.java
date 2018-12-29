@@ -2,6 +2,7 @@ package com.tp.holdem.server;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.tp.holdem.logic.PlayerExceptions;
 import com.tp.holdem.logic.model.Player;
 import com.tp.holdem.logic.model.PokerTable;
 import com.tp.holdem.model.common.Phase;
@@ -31,13 +32,13 @@ class HoldemServerListener extends Listener {
 	@Override
 	public synchronized void received(final Connection connection, final Object object) {
 		if (object instanceof Message) {
-			log.debug("Received message from " + connection.getID() + ": " + object);
+			log.debug(String.format("Received message from %d: %s", connection.getID(), object));
 
 			if (connection.getID() != expectActionFrom)
 				throw new IllegalStateException("Unexpected player sent action");
 
 			final Integer playerNumber = connectedPlayers.getConnected(connection.getID())
-					.getOrElseThrow(() -> new IllegalStateException("Message from not-connected player"));
+					.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 
 			final Message message = (Message) object;
 
@@ -128,16 +129,14 @@ class HoldemServerListener extends Listener {
 	}
 
 	private int findExpectedResponder(PokerTable response) {
-		int value = -1;
+		if (response.getPhase() == Phase.OVER)
+			return -1;
 
-		if (response.getPhase() != Phase.OVER) {
-			value = connectedPlayers.getConnectionId(response.getBettingPlayer().map(Player::getNumber).getOrElseThrow(() -> new IllegalArgumentException("Player not found")))
-					.getOrElseThrow(() -> new IllegalArgumentException("Expecting action from non-existing player"));
-		}
-
-		log.debug(String.format("Expecting next action from: %d", value));
-
-		return value;
+		return response
+				.getBettingPlayer()
+				.map(Player::getNumber)
+				.flatMap(connectedPlayers::getConnectionId)
+				.getOrElse(-1);
 	}
 
 	private boolean enoughPlayers() {
