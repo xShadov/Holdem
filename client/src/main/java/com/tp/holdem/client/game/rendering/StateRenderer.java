@@ -1,6 +1,7 @@
 package com.tp.holdem.client.game.rendering;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,10 +30,8 @@ public class StateRenderer implements Renderer {
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
 
-		mediumFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		mediumFont.getData().setScale(.80f);
-		bigFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		bigFont.getData().setScale(1.5f);
+		mediumFont = Fonts.builder().type(Fonts.Types.JMH).size(30).color(Color.WHITE).generate();
+		bigFont = Fonts.builder().type(Fonts.Types.JMH).size(45).color(Color.WHITE).generate();
 
 		final TextureAtlas cardTextures = new TextureAtlas(Gdx.files.internal("data/cards.pack"));
 		final TextureAtlas commonTextures = new TextureAtlas(Gdx.files.internal("data/common.pack"));

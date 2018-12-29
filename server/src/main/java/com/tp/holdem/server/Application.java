@@ -19,7 +19,7 @@ public class Application {
 
 		final Listener listener = new HoldemServerListener(sender, gameParams, gameHandler);
 
-		final TempServer gameServer = new TempServer(server, gameParams, listener);
+		final KryoServer gameServer = new KryoServer(server, gameParams, listener);
 		gameServer.start();
 	}
 }

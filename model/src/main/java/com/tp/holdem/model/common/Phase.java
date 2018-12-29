@@ -1,7 +1,7 @@
 package com.tp.holdem.model.common;
 
 public enum Phase {
-	START, PRE_FLOP, FLOP, TURN, RIVER, SHOWDOWN, OVER;
+	START, PRE_FLOP, FLOP, TURN, RIVER, OVER;
 
 	public Phase nextPhase() {
 		if (this == OVER)

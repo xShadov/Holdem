@@ -86,6 +86,10 @@ public class GameState implements ServerObservable {
 		return table.getPotAmount();
 	}
 
+	public int getPotAmountThisPhase() {
+		return table.getPotAmountThisPhase();
+	}
+
 	public int getSmallBlindAmount() {
 		return table.getSmallBlindAmount();
 	}

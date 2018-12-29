@@ -86,6 +86,14 @@ public class Player {
 				.build();
 	}
 
+	public Player roundOver() {
+		return this.toBuilder()
+				.betAmount(getBetAmount() + getBetAmountThisPhase())
+				.betAmountThisPhase(0)
+				.chipsAmount(getChipsAmount() - getBetAmountThisPhase())
+				.build();
+	}
+
 	public Player newRound() {
 		return this.toBuilder()
 				.betAmount(0)

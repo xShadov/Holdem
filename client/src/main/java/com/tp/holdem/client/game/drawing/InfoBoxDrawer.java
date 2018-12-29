@@ -1,8 +1,9 @@
 package com.tp.holdem.client.game.drawing;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.tp.holdem.client.game.GameState;
+import com.tp.holdem.client.game.rendering.Fonts;
 import com.tp.holdem.model.message.dto.PlayerDTO;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,8 +33,7 @@ public class InfoBoxDrawer {
 		this.boxOff = getRegion("infoBoxOff");
 		this.boxFold = getRegion("infoBoxFold");
 
-		this.smallFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		this.smallFont.getData().setScale(.4f);
+		this.smallFont = Fonts.builder().type(Fonts.Types.JMH).size(14).color(Color.WHITE).generate();
 
 		this.boxFinder = (inGame, folded) -> {
 			if (inGame && !folded)

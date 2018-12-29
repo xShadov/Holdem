@@ -1,12 +1,14 @@
 package com.tp.holdem.server;
 
-import com.tp.holdem.logic.HandOperations;
 import com.tp.holdem.logic.PlayerFunctions;
 import com.tp.holdem.logic.model.Deck;
 import com.tp.holdem.logic.model.Player;
+import com.tp.holdem.logic.model.PlayerNumber;
 import com.tp.holdem.logic.model.PokerTable;
 import com.tp.holdem.model.common.Phase;
+import com.tp.holdem.model.common.PhaseStatus;
 import com.tp.holdem.model.message.PlayerActionMessage;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,17 +19,13 @@ import java.util.concurrent.atomic.AtomicLong;
 class GameHandler {
 	private final GameParams gameParams;
 
-	private Deck deck;
 	private PokerTable table;
 	private AtomicLong handCount = new AtomicLong(0);
 
 	GameHandler(GameParams gameParams) {
 		this.gameParams = gameParams;
 
-		this.deck = Deck.brandNew();
 		this.table = PokerTable.builder()
-				.deck(deck)
-				.phase(Phase.START)
 				.bigBlindAmount(gameParams.getBigBlindAmount())
 				.smallBlindAmount(gameParams.getSmallBlindAmount())
 				.build();
@@ -57,31 +55,35 @@ class GameHandler {
 	PokerTable startRound() {
 		log.debug("Starting new round");
 
-		this.deck = Deck.brandNew();
-
 		log.debug("Preparing players for new round");
 		final List<Player> playersWithCleanBets = table.getAllPlayers().map(Player::newRound);
 
-		log.debug("Dealing cards to players");
-		final List<Player> playersWithCards = deck.dealCards(2, playersWithCleanBets);
+		final Player dealerPlayer = playersWithCleanBets.get((int) (handCount.get() % playersWithCleanBets.size()));
 
-		final Player dealerPlayer = playersWithCards.get((int) (handCount.get() % playersWithCards.size()));
-
-		final Player smallBlindPlayer = playersWithCards.get((int) (handCount.get() + 1 % playersWithCards.size()));
+		final Player smallBlindPlayer = playersWithCleanBets.get((int) (handCount.get() + 1 % playersWithCleanBets.size()));
 		log.debug(String.format("Taking small blind from player: %d", smallBlindPlayer.getNumber()));
 		final Player newSmallBlindPlayer = PlayerFunctions.SMALL_BLIND_TIME.apply(smallBlindPlayer, table);
 
-		final Player bigBlindPlayer = playersWithCards.get((int) (handCount.get() + 2 % playersWithCards.size()));
+		final Player bigBlindPlayer = playersWithCleanBets.get((int) (handCount.get() + 2 % playersWithCleanBets.size()));
 		log.debug(String.format("Taking big blind from player: %d", bigBlindPlayer.getNumber()));
 		final Player newBigBlindPlayer = PlayerFunctions.BIG_BLIND_TIME.apply(bigBlindPlayer, table);
 
 		this.table = table.toBuilder()
-				.deck(this.deck)
-				.allPlayers(playersWithCards.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer))
-				.dealer(dealerPlayer)
-				.bigBlind(newBigBlindPlayer)
-				.smallBlind(newSmallBlindPlayer)
+				.deck(Deck.brandNew())
+				.cardsOnTable(List.empty())
+				.phase(Phase.START)
+				.movesThisPhase(HashMap.empty())
+				.showdown(false)
+				.allPlayers(playersWithCleanBets.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer))
+				.winnerPlayer(PlayerNumber.empty())
+				.bettingPlayer(PlayerNumber.empty())
+				.dealer(PlayerNumber.of(dealerPlayer.getNumber()))
+				.bigBlind(PlayerNumber.of(newBigBlindPlayer.getNumber()))
+				.smallBlind(PlayerNumber.of(newSmallBlindPlayer.getNumber()))
 				.build();
+
+		log.debug("Dealing cards to players");
+		this.table = table.dealCards();
 
 		log.debug(String.format("Players ready for new round: %s", table.getAllPlayers().map(Player::getNumber)));
 
@@ -130,12 +132,17 @@ class GameHandler {
 
 		this.table = this.table.playerActed(playerAfterAction, content.getMove());
 
-		if (table.isPhaseOver()) {
+		final PhaseStatus phaseStatus = table.phaseStatus();
+
+		log.debug(String.format("Phase status is: %s", phaseStatus));
+
+		if (phaseStatus.roundEnding() || (phaseStatus == PhaseStatus.READY_FOR_NEXT && table.getPhase() == Phase.RIVER)) {
+			log.debug("Table round is over");
+			return roundOver();
+		}
+
+		if (phaseStatus == PhaseStatus.READY_FOR_NEXT) {
 			log.debug("Table phase is over");
-			if (table.getPhase() == Phase.RIVER) {
-				log.debug("Table round is over");
-				return roundOver();
-			}
 			return startPhase();
 		}
 
@@ -148,10 +155,7 @@ class GameHandler {
 	private PokerTable roundOver() {
 		log.debug("Performing roundOver operation");
 
-		this.table = this.table.toBuilder()
-				.winnerPlayer(HandOperations.findWinner(table.getAllPlayers()))
-				.phase(Phase.OVER)
-				.build();
+		this.table = this.table.roundOver();
 
 		return table;
 	}

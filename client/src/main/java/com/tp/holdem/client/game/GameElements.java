@@ -1,6 +1,7 @@
 package com.tp.holdem.client.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tp.holdem.client.architecture.action.Action;
 import com.tp.holdem.client.architecture.action.ActionBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
+import com.tp.holdem.client.game.rendering.Fonts;
 import com.tp.holdem.model.common.Moves;
 import com.tp.holdem.model.message.Message;
 import com.tp.holdem.model.message.MessageType;
@@ -32,13 +34,13 @@ public class GameElements implements ServerObservable {
 		final Table table = new Table(buttonsSkin);
 		table.setBounds(380, 19, 250, 50);
 
-		final BitmapFont font = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
+		final BitmapFont font = Fonts.builder().type(Fonts.Types.JMH).size(20).color(Color.WHITE).generate();
 		final Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 
 		slider = new Slider(0, 1500, 1, false, skin);
 		slider.setAnimateDuration(0.01f);
-		slider.setPosition(300, 80);
-		slider.setWidth(400);
+		slider.setPosition(750, 100);
+		slider.setWidth(236);
 
 		final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
 		textButtonStyle.up = buttonsSkin.getDrawable("button_up");
@@ -54,12 +56,12 @@ public class GameElements implements ServerObservable {
 		final TextButton allInButton = new TextButton("ALL IN", textButtonStyle);
 		final TextButton raiseButton = new TextButton("RAISE", textButtonStyle);
 
-		checkButton.setBounds(460, 19, 78, 40);
-		foldButton.setBounds(380, 19, 78, 40);
-		betButton.setBounds(540, 19, 78, 40);
-		callButton.setBounds(460, 19, 78, 40);
-		allInButton.setBounds(460, 19, 78, 40);
-		raiseButton.setBounds(540, 19, 78, 40);
+		checkButton.setBounds(830, 12, 78, 40);
+		foldButton.setBounds(750, 12, 78, 40);
+		betButton.setBounds(920, 12, 78, 40);
+		callButton.setBounds(830, 12, 78, 40);
+		allInButton.setBounds(830, 12, 78, 40);
+		raiseButton.setBounds(910, 12, 78, 40);
 
 		moveButtons = HashMap.of(
 				Moves.RAISE, raiseButton,
@@ -71,7 +73,6 @@ public class GameElements implements ServerObservable {
 		);
 		moveButtons.values().forEach(button -> {
 			button.pad(10);
-			button.getLabel().setFontScale(0.45f);
 		});
 		setButtonsInvisible();
 

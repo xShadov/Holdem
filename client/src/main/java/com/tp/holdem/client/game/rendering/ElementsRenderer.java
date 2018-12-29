@@ -1,6 +1,6 @@
 package com.tp.holdem.client.game.rendering;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,7 +15,7 @@ public class ElementsRenderer implements Renderer {
 	private GameElements gameElements;
 
 	private final SpriteBatch batcher;
-	private final BitmapFont smallFont, mediumFont, bigFont;
+	private final BitmapFont smallFont;
 
 	private static final Function<Slider, String> SLIDER_VALUES = slider -> String.format("%d/%d", (int) slider.getValue(), (int) slider.getMaxValue());
 
@@ -25,12 +25,7 @@ public class ElementsRenderer implements Renderer {
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
 
-		smallFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		smallFont.getData().setScale(.4f);
-		mediumFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		mediumFont.getData().setScale(.80f);
-		bigFont = new BitmapFont(Gdx.files.internal("data/font.fnt"), false);
-		bigFont.getData().setScale(1.5f);
+		smallFont = Fonts.builder().type(Fonts.Types.JMH).size(20).color(Color.WHITE).generate();
 
 		this.gameElements = gameElements;
 	}
@@ -42,7 +37,7 @@ public class ElementsRenderer implements Renderer {
 		batcher.enableBlending();
 
 		if (gameElements.slider().isVisible())
-			smallFont.draw(batcher, SLIDER_VALUES.apply(gameElements.slider()), 470, 85);
+			smallFont.draw(batcher, String.format("Bet amount: %s", SLIDER_VALUES.apply(gameElements.slider())), 750, 95);
 
 		batcher.end();
 	}

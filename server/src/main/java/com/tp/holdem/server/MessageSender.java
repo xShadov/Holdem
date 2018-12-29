@@ -18,7 +18,7 @@ class MessageSender {
 	private Server server;
 
 	void sendStateUpdate(ConnectedPlayers connectedPlayers, PokerTable table) {
-		log.debug("Sending state update to everyone");
+		log.debug(String.format("Sending state update to everyone"));
 
 		final UpdateStateMessage message = UpdateStateMessage.builder()
 				.table(table.toDTO())

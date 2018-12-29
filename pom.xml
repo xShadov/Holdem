@@ -75,6 +75,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-freetype-platform</artifactId>
+			<version>1.9.9</version>
+			<classifier>natives-desktop</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-backend-lwjgl</artifactId>
 			<version>1.9.9</version>
 		</dependency>

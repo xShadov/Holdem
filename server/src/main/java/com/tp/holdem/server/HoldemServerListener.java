@@ -9,9 +9,12 @@ import com.tp.holdem.model.message.Message;
 import com.tp.holdem.model.message.MessageType;
 import com.tp.holdem.model.message.PlayerActionMessage;
 import com.tp.holdem.model.message.PlayerConnectMessage;
-import io.vavr.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,9 +26,7 @@ class HoldemServerListener extends Listener {
 	private ConnectedPlayers connectedPlayers = ConnectedPlayers.empty();
 	private int expectActionFrom;
 
-	private static final Try<Void> sleepAfterRoundEnds = Try.run(() -> {
-		Thread.sleep(5000);
-	});
+	private final ScheduledExecutorService delayer = Executors.newSingleThreadScheduledExecutor();
 
 	@Override
 	public synchronized void received(final Connection connection, final Object object) {
@@ -53,7 +54,7 @@ class HoldemServerListener extends Listener {
 				if (response.getPhase() == Phase.OVER) {
 					log.debug("Current round is over, sleeping for 5s and staring new round");
 
-					sleepAfterRoundEnds.andThen(this::startRound);
+					delayer.schedule(this::startRound, 5, TimeUnit.SECONDS);
 				}
 			}
 		}
@@ -130,7 +131,7 @@ class HoldemServerListener extends Listener {
 		int value = -1;
 
 		if (response.getPhase() != Phase.OVER) {
-			value = connectedPlayers.getConnectionId(response.getBettingPlayer().getNumber())
+			value = connectedPlayers.getConnectionId(response.getBettingPlayer().map(Player::getNumber).getOrElseThrow(() -> new IllegalArgumentException("Player not found")))
 					.getOrElseThrow(() -> new IllegalArgumentException("Expecting action from non-existing player"));
 		}
 
