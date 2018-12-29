@@ -1,20 +1,15 @@
 package com.tp.holdem.client.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tp.holdem.client.architecture.action.Action;
 import com.tp.holdem.client.architecture.action.ActionBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.client.game.rendering.Fonts;
 import com.tp.holdem.model.common.Moves;
 import com.tp.holdem.model.message.Message;
 import com.tp.holdem.model.message.MessageType;
@@ -141,6 +136,8 @@ public class GameElements implements ServerObservable {
 
 		final CurrentPlayerDTO currentPlayer = content.getCurrentPlayer();
 		final List<Moves> options = List.ofAll(currentPlayer.getPossibleMoves());
+
+		setButtonsInvisible();
 
 		options.flatMap(moveButtons::get)
 				.forEach(button -> {

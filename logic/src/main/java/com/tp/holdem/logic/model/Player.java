@@ -150,4 +150,13 @@ public class Player {
 				.hand(hand.map(Card::toDTO).toJavaList())
 				.build();
 	}
+
+	public Player gameOver() {
+		return this.toBuilder()
+				.minimumBet(0)
+				.maximumBet(0)
+				.inGame(false)
+				.possibleMoves(List.empty())
+				.build();
+	}
 }

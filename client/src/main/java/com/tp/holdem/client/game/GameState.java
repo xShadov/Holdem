@@ -66,6 +66,10 @@ public class GameState implements ServerObservable {
 		return getTable() != null;
 	}
 
+	public boolean isGameOver() {
+		return getTable() != null && getTable().isGameOver();
+	}
+
 	public int relativePlayerNumber(PlayerDTO player) {
 		return (player.getNumber() + getCurrentPlayer().getNumber()) % getAllPlayers().size();
 	}

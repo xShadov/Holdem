@@ -43,11 +43,11 @@ class HoldemServerListener extends Listener {
 
 				PokerTable response = gameHandler.handlePlayerMove(playerNumber, content);
 
-				if(response.isShowdown()) {
+				if (response.isShowdown()) {
 					log.debug("Starting showdown");
 
-					while(response.getPhase() != Phase.RIVER) {
-						response = response.nextPhase();
+					while (response.getPhase() != Phase.RIVER) {
+						response = gameHandler.startPhase();
 
 						sender.sendStateUpdate(connectedPlayers, response);
 						expectActionFrom = findExpectedResponder(response);
@@ -59,7 +59,7 @@ class HoldemServerListener extends Listener {
 						}
 					}
 
-					response = response.roundOver();
+					response = gameHandler.roundOver();
 				}
 
 				sender.sendStateUpdate(connectedPlayers, response);

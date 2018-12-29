@@ -15,6 +15,7 @@ public class PlayerFunctions {
 	}
 
 	public static final BiFunction<Player, PokerTable, Player> BET_IN_PHASE = (player, table) -> {
+		//TODO if player HAS TO all in show only all in and fold, not call and raise
 		final Player modifiedPlayer = player.toBuilder()
 				.minimumBet(Math.min(player.availableChips(), table.getBigBlindAmount()))
 				.maximumBet(player.availableChips())

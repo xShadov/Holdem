@@ -53,6 +53,9 @@ public class StateRenderer implements Renderer {
 		if (gameState.isCurrentPlayerWaiting())
 			mediumFont.draw(batcher, "Waiting for all players", 300, 500);
 
+		if (gameState.isGameOver())
+			mediumFont.draw(batcher, "Game over", 300, 320);
+
 		if (gameState.isGameStarted()) {
 			spotlightDrawer.drawSpotlight();
 
@@ -67,9 +70,9 @@ public class StateRenderer implements Renderer {
 
 		if (gameState.hasWinner()) {
 			if (gameState.isCurrentPlayerWinner())
-				bigFont.draw(batcher, "YOU WIN!", 320, 550);
+				bigFont.draw(batcher, "YOU WIN!", 250, 550);
 			else
-				bigFont.draw(batcher, String.format("%s WON!", gameState.getWinnerPlayer().getName()), 320, 550);
+				bigFont.draw(batcher, String.format("%s WON!", gameState.getWinnerPlayer().getName()), 250, 550);
 		}
 	}
 }

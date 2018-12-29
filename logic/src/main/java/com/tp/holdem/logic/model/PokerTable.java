@@ -6,7 +6,6 @@ import com.tp.holdem.logic.PlayerFunctions;
 import com.tp.holdem.model.common.Moves;
 import com.tp.holdem.model.common.Phase;
 import com.tp.holdem.model.message.dto.PokerTableDTO;
-import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
@@ -25,6 +24,7 @@ public class PokerTable {
 	private int smallBlindAmount;
 	private int bigBlindAmount;
 	private boolean showdown;
+	private boolean gameOver;
 	@Builder.Default
 	private Deck deck = Deck.brandNew();
 	@Builder.Default
@@ -210,6 +210,7 @@ public class PokerTable {
 	public PokerTableDTO toDTO() {
 		return PokerTableDTO.builder()
 				.phase(phase)
+				.gameOver(gameOver)
 				.potAmount(potAmount())
 				.potAmountThisPhase(potAmountThisPhase())
 				.smallBlindAmount(smallBlindAmount)
@@ -288,6 +289,21 @@ public class PokerTable {
 		return this.toBuilder()
 				.allPlayers(allPlayers.replace(actionPlayer, playerAfterAction.bettingTurnOver()))
 				.movesThisPhase(movesThisPhase.put(actionPlayer.getNumber(), move))
+				.build();
+	}
+
+	public boolean isNotPlayable() {
+		return allPlayers
+				.filter(Player::isInGame)
+				.filter(player -> player.getChipsAmount() > 0)
+				.length() < 2;
+	}
+
+	public PokerTable gameOver() {
+		return toBuilder()
+				.gameOver(true)
+				.phase(Phase.OVER)
+				.allPlayers(getAllPlayers().map(Player::gameOver))
 				.build();
 	}
 }

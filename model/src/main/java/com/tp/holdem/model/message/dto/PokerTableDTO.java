@@ -25,6 +25,7 @@ public class PokerTableDTO {
 	private PlayerDTO bettingPlayer;
 	private PlayerDTO winnerPlayer;
 	private Phase phase;
+	private boolean gameOver;
 	@Builder.Default
 	private List<PlayerDTO> allPlayers = new ArrayList<>();
 	@Builder.Default

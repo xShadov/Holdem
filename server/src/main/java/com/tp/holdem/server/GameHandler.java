@@ -38,6 +38,12 @@ class GameHandler {
 	}
 
 	PokerTable startRound() {
+		if (this.table.isNotPlayable()) {
+			log.debug("Game is over");
+			this.table = table.gameOver();
+			return this.table;
+		}
+
 		handCount.incrementAndGet();
 
 		log.debug(String.format("Starting new round number: %d", handCount.get()));
@@ -49,7 +55,7 @@ class GameHandler {
 		return startPhase();
 	}
 
-	private PokerTable startPhase() {
+	PokerTable startPhase() {
 		log.debug(String.format("Staring phase: %s", table.getPhase().nextPhase()));
 
 		this.table = table.nextPhase();
@@ -70,8 +76,8 @@ class GameHandler {
 			log.debug("Table round is over");
 			return roundOver();
 		}
-		
-		if(phaseStatus == PhaseStatus.EVERYBODY_ALL_IN) {
+
+		if (phaseStatus == PhaseStatus.EVERYBODY_ALL_IN) {
 			this.table = table.toBuilder().showdown(true).build();
 			return this.table;
 		}
@@ -87,7 +93,7 @@ class GameHandler {
 		return this.table;
 	}
 
-	private PokerTable roundOver() {
+	PokerTable roundOver() {
 		log.debug("Performing round-over operation");
 		this.table = table.roundOver();
 
