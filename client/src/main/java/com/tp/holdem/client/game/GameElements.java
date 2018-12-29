@@ -29,39 +29,26 @@ public class GameElements implements ServerObservable {
 	private final Slider slider;
 
 	public GameElements(ActionBus withWatcher) {
-		final TextureAtlas atlas = new TextureAtlas("data/button.pack");
-		final Skin buttonsSkin = new Skin(atlas);
-		final Table table = new Table(buttonsSkin);
-		table.setBounds(380, 19, 250, 50);
-
-		final BitmapFont font = Fonts.builder().type(Fonts.Types.JMH).size(20).color(Color.WHITE).generate();
 		final Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 
 		slider = new Slider(0, 1500, 1, false, skin);
 		slider.setAnimateDuration(0.01f);
-		slider.setPosition(750, 100);
-		slider.setWidth(236);
+		slider.setPosition(700, 100);
+		slider.setWidth(300);
 
-		final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-		textButtonStyle.up = buttonsSkin.getDrawable("button_up");
-		textButtonStyle.down = buttonsSkin.getDrawable("button_down");
-		textButtonStyle.pressedOffsetX = 1;
-		textButtonStyle.pressedOffsetY = 1;
-		textButtonStyle.font = font;
+		final TextButton checkButton = new TextButton("CHECK", skin);
+		final TextButton foldButton = new TextButton("FOLD", skin);
+		final TextButton betButton = new TextButton("BET", skin);
+		final TextButton callButton = new TextButton("CALL", skin);
+		final TextButton allInButton = new TextButton("ALL IN", skin);
+		final TextButton raiseButton = new TextButton("RAISE", skin);
 
-		final TextButton checkButton = new TextButton("CHECK", textButtonStyle);
-		final TextButton foldButton = new TextButton("FOLD", textButtonStyle);
-		final TextButton betButton = new TextButton("BET", textButtonStyle);
-		final TextButton callButton = new TextButton("CALL", textButtonStyle);
-		final TextButton allInButton = new TextButton("ALL IN", textButtonStyle);
-		final TextButton raiseButton = new TextButton("RAISE", textButtonStyle);
-
-		checkButton.setBounds(830, 12, 78, 40);
-		foldButton.setBounds(750, 12, 78, 40);
-		betButton.setBounds(920, 12, 78, 40);
-		callButton.setBounds(830, 12, 78, 40);
-		allInButton.setBounds(830, 12, 78, 40);
-		raiseButton.setBounds(910, 12, 78, 40);
+		checkButton.setBounds(800, 12, 100, 40);
+		foldButton.setBounds(700, 12, 100, 40);
+		betButton.setBounds(900, 12, 100, 40);
+		callButton.setBounds(800, 12, 100, 40);
+		allInButton.setBounds(800, 12, 100, 40);
+		raiseButton.setBounds(900, 12, 100, 40);
 
 		moveButtons = HashMap.of(
 				Moves.RAISE, raiseButton,

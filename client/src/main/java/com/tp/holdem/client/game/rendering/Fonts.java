@@ -33,10 +33,7 @@ public class Fonts {
 			final FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(type.file()));
 			final FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 			parameter.size = size;
-			parameter.borderWidth = 1;
 			parameter.color = color;
-			parameter.shadowOffsetX = 1;
-			parameter.shadowOffsetY = 1;
 
 			final BitmapFont font = generator.generateFont(parameter);
 			generator.dispose();

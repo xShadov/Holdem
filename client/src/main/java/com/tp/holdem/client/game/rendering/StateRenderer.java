@@ -24,11 +24,8 @@ public class StateRenderer implements Renderer {
 	private final SpriteBatch batcher;
 	private final BitmapFont mediumFont, bigFont;
 
-	public StateRenderer(GameState gameState) {
-		OrthographicCamera cam = new OrthographicCamera();
-		cam.setToOrtho(false, 1024, 780);
-		batcher = new SpriteBatch();
-		batcher.setProjectionMatrix(cam.combined);
+	public StateRenderer(GameState gameState, SpriteBatch batcher) {
+		this.batcher = batcher;
 
 		mediumFont = Fonts.builder().type(Fonts.Types.JMH).size(30).color(Color.WHITE).generate();
 		bigFont = Fonts.builder().type(Fonts.Types.JMH).size(45).color(Color.WHITE).generate();
@@ -47,24 +44,11 @@ public class StateRenderer implements Renderer {
 
 	@Override
 	public void render(final float delta, final float runTime) {
-		batcher.begin();
-
-		batcher.enableBlending();
-
 		drawGameState();
-
-		batcher.end();
 	}
 
 	private void drawGameState() {
 		tableDrawer.drawTable();
-
-		if (gameState.hasWinner()) {
-			if (gameState.isCurrentPlayerWinner())
-				bigFont.draw(batcher, "YOU WIN!", 320, 550);
-			else
-				bigFont.draw(batcher, String.format("%s WON!", gameState.getWinnerPlayer().getName()), 320, 550);
-		}
 
 		if (gameState.isCurrentPlayerWaiting())
 			mediumFont.draw(batcher, "Waiting for all players", 300, 500);
@@ -79,6 +63,13 @@ public class StateRenderer implements Renderer {
 			infoBoxDrawer.drawInfoBoxes();
 
 			chipsDrawer.drawChips();
+		}
+
+		if (gameState.hasWinner()) {
+			if (gameState.isCurrentPlayerWinner())
+				bigFont.draw(batcher, "YOU WIN!", 320, 550);
+			else
+				bigFont.draw(batcher, String.format("%s WON!", gameState.getWinnerPlayer().getName()), 320, 550);
 		}
 	}
 }

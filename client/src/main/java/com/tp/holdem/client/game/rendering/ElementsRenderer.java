@@ -19,11 +19,8 @@ public class ElementsRenderer implements Renderer {
 
 	private static final Function<Slider, String> SLIDER_VALUES = slider -> String.format("%d/%d", (int) slider.getValue(), (int) slider.getMaxValue());
 
-	public ElementsRenderer(GameElements gameElements) {
-		OrthographicCamera cam = new OrthographicCamera();
-		cam.setToOrtho(false, 1024, 780);
-		batcher = new SpriteBatch();
-		batcher.setProjectionMatrix(cam.combined);
+	public ElementsRenderer(GameElements gameElements, SpriteBatch batcher) {
+		this.batcher = batcher;
 
 		smallFont = Fonts.builder().type(Fonts.Types.JMH).size(20).color(Color.WHITE).generate();
 
@@ -32,13 +29,7 @@ public class ElementsRenderer implements Renderer {
 
 	@Override
 	public void render(final float delta, final float runTime) {
-		batcher.begin();
-
-		batcher.enableBlending();
-
 		if (gameElements.slider().isVisible())
-			smallFont.draw(batcher, String.format("Bet amount: %s", SLIDER_VALUES.apply(gameElements.slider())), 750, 95);
-
-		batcher.end();
+			smallFont.draw(batcher, String.format("Bet amount: %s", SLIDER_VALUES.apply(gameElements.slider())), 700, 95);
 	}
 }

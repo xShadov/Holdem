@@ -1,6 +1,8 @@
 package com.tp.holdem.client;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tp.holdem.client.architecture.KryoClient;
 import com.tp.holdem.client.architecture.action.ActionBus;
 import com.tp.holdem.client.architecture.message.MessageBus;
@@ -32,14 +34,16 @@ public class Holdem extends Game {
 		clientToWatcher.register(watcher);
 		elementsToWatcher.register(watcher);
 
-		final StateRenderer renderer = new StateRenderer(gameState);
-		final ElementsRenderer elementsRenderer = new ElementsRenderer(gameElements);
+		final SpriteBatch batcher = new SpriteBatch();
+
+		final StateRenderer renderer = new StateRenderer(gameState, batcher);
+		final ElementsRenderer elementsRenderer = new ElementsRenderer(gameElements, batcher);
 
 		final KryoClient client = new KryoClient(clientToWatcher);
 		watcherToClient.register(client);
 
 		client.start();
 
-		setScreen(new GameScreen(watcher, gameElements, gameState, CompositeRenderer.of(List.of(renderer, elementsRenderer))));
+		setScreen(new GameScreen(watcher, gameElements, gameState, CompositeRenderer.of(batcher, List.of(renderer, elementsRenderer))));
 	}
 }

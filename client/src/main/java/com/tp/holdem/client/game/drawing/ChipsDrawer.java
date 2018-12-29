@@ -67,7 +67,12 @@ public class ChipsDrawer {
 		gameState.getAllPlayers()
 				.forEach(player -> {
 					if (player.getBetAmountThisPhase() > 0) {
-						batcher.draw(amountToTexture.get(player.getBetAmountThisPhase()), chipsPositionX[drawCount.get()], chipsPositionY[drawCount.get()]);
+						final TextureRegion texture = amountToTexture.get(player.getBetAmountThisPhase());
+						batcher.draw(texture, chipsPositionX[drawCount.get()], chipsPositionY[drawCount.get()]);
+						smallFont.draw(batcher, String.valueOf(player.getBetAmountThisPhase()),
+								chipsPositionX[drawCount.get()] + texture.getRegionWidth() - 25,
+								chipsPositionY[drawCount.get()]
+						);
 					}
 
 					drawCount.incrementAndGet();
