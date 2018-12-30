@@ -11,7 +11,7 @@ public class Application {
 		final GameParams gameParams = GameParams.builder()
 				.bigBlindAmount(40)
 				.smallBlindAmount(20)
-				.playerCount(2)
+				.playerCount(3)
 				.port(54555)
 				.startingChips(1500)
 				.build();

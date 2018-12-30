@@ -23,7 +23,7 @@ public class SpotlightDrawer {
 
 	public void drawSpotlight() {
 		final PlayerDTO spotlightedPlayer = gameState.hasWinner() ? gameState.getWinnerPlayer() : gameState.getBettingPlayer();
-		final int relativeNumber = gameState.relativePlayerNumber(spotlightedPlayer);
+		final int relativeNumber = gameState.getAllPlayers().indexOf(spotlightedPlayer);
 		batcher.draw(spotlight, boxPositionX[relativeNumber], boxPositionY[relativeNumber]);
 	}
 }

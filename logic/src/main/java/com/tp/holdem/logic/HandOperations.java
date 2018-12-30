@@ -25,12 +25,18 @@ public class HandOperations {
 	}
 
 	public static Player findWinner(List<Player> allPlayers, PokerTable pokerTable) {
+		if (allPlayers.filter(player -> !player.isFolded()).size() == 1) {
+			log.debug("Everyone folded except one player, he's the winner");
+			return allPlayers.find(player -> !player.isFolded()).getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
+		}
+
 		final Map<Player, HandRank> hands = allPlayers.filter(Player::playing)
 				.toMap(Function.identity(), player -> findHandRank(player, pokerTable));
 
 		log.debug(String.format("Players to hands map: %s", hands));
 
-		return hands.values().maxBy(HandRankComparator.INSTANCE)
+		return hands.values()
+				.maxBy(HandRankComparator.INSTANCE)
 				.flatMap(handRank -> hands.find(tuple -> tuple._2.equals(handRank)))
 				.map(Tuple2::_1)
 				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);

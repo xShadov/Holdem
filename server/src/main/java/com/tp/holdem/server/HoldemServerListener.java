@@ -44,40 +44,48 @@ class HoldemServerListener extends Listener {
 				PokerTable response = gameHandler.handlePlayerMove(playerNumber, content);
 
 				if (response.isShowdown()) {
-					log.debug("Starting showdown");
-
-					while (response.getPhase() != Phase.RIVER) {
-						response = gameHandler.startPhase();
-
-						sender.sendStateUpdate(connectedPlayers, response);
-						expectActionFrom = findExpectedResponder(response);
-
-						try {
-							Thread.sleep(1500);
-						} catch (InterruptedException e) {
-							log.debug("Waiting interrupted");
-						}
-					}
-
-					response = gameHandler.roundOver();
+					response = handleShowdown(response);
 				}
 
 				sender.sendStateUpdate(connectedPlayers, response);
 				expectActionFrom = findExpectedResponder(response);
 
 				if (response.getPhase() == Phase.OVER) {
-					log.debug("Current round is over, sleeping for 5s and staring new round");
-
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						log.debug("Sleep interrupted");
-					}
-
-					startRound();
+					waitAndStartNewRound();
 				}
 			}
 		}
+	}
+
+	private PokerTable handleShowdown(PokerTable response) {
+		log.debug("Starting showdown");
+
+		while (response.getPhase() != Phase.RIVER) {
+			response = gameHandler.startPhase();
+
+			sender.sendStateUpdate(connectedPlayers, response);
+			expectActionFrom = findExpectedResponder(response);
+
+			try {
+				Thread.sleep(1500);
+			} catch (InterruptedException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+
+		return gameHandler.roundOver();
+	}
+
+	private void waitAndStartNewRound() {
+		log.debug("Current round is over, sleeping for 5s and staring new round");
+
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		startRound();
 	}
 
 	@Override

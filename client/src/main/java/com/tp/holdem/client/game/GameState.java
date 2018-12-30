@@ -13,7 +13,6 @@ import com.tp.holdem.model.message.dto.PokerTableDTO;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,13 +30,6 @@ public class GameState implements ServerObservable {
 	public List<PlayerDTO> getOtherPlayers() {
 		return getAllPlayers().stream()
 				.skip(1)
-				.collect(Collectors.toList());
-	}
-
-	public List<PlayerDTO> playersExcept(PlayerDTO... players) {
-		final List<Integer> numbers = Arrays.stream(players).map(PlayerDTO::getNumber).collect(Collectors.toList());
-		return getAllPlayers().stream()
-				.filter(player -> !numbers.contains(player.getNumber()))
 				.collect(Collectors.toList());
 	}
 
@@ -70,16 +62,8 @@ public class GameState implements ServerObservable {
 		return getTable() != null && getTable().isGameOver();
 	}
 
-	public int relativePlayerNumber(PlayerDTO player) {
-		return (player.getNumber() + getCurrentPlayer().getNumber()) % getAllPlayers().size();
-	}
-
 	public boolean hasWinner() {
 		return table != null && table.getWinnerPlayer() != null;
-	}
-
-	public boolean isSomeoneBetting() {
-		return table != null && table.getBettingPlayer() != null;
 	}
 
 	public List<CardDTO> getCardsOnTable() {
@@ -92,14 +76,6 @@ public class GameState implements ServerObservable {
 
 	public int getPotAmountThisPhase() {
 		return table.getPotAmountThisPhase();
-	}
-
-	public int getSmallBlindAmount() {
-		return table.getSmallBlindAmount();
-	}
-
-	public int getBigBlindAmount() {
-		return table.getBigBlindAmount();
 	}
 
 	public PlayerDTO getWinnerPlayer() {

@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
@@ -87,12 +86,12 @@ public class PokerTable {
 	}
 
 	private PokerTable goToPreFlopPhase() {
-		final Player smallBlindPlayer = getSmallBlind().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
-		final Player bettingPlayer = PlayerFunctions.FIRST_BET_IN_ROUND.apply(smallBlindPlayer, this);
+		final Player dealerPlayer = getDealer().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
+		final Player bettingPlayer = PlayerFunctions.FIRST_BET_IN_ROUND.apply(dealerPlayer, this);
 
 		return this.toBuilder()
 				.phase(getPhase().nextPhase())
-				.allPlayers(getAllPlayers().replace(smallBlindPlayer, bettingPlayer))
+				.allPlayers(getAllPlayers().replace(dealerPlayer, bettingPlayer))
 				.bettingPlayer(PlayerNumber.of(bettingPlayer.getNumber()))
 				.movesThisPhase(HashMap.empty())
 				.build();
@@ -100,37 +99,29 @@ public class PokerTable {
 
 	private PokerTable goToNextPhase(int cards) {
 		final List<Player> preparedPlayers = getAllPlayers().map(Player::prepareForNewPhase);
-		final Player smallBlindPlayer = preparedPlayers
-				.find(player -> Objects.equals(player.getNumber(), getSmallBlind().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND).getNumber()))
-				.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 
 		final PokerTable updatedTable = this.toBuilder()
 				.phase(getPhase().nextPhase())
 				.allPlayers(preparedPlayers)
 				.cardsOnTable(getCardsOnTable().appendAll(deck.drawCards(cards)))
-				.movesThisPhase(HashMap.empty())
+				.movesThisPhase(movesThisPhase.filterValues(Moves::goingToNextPhase))
 				.build();
 
-		final Player bettingPlayer = PlayerFunctions.BET_IN_PHASE.apply(smallBlindPlayer, updatedTable);
-
-		return updatedTable.toBuilder()
-				.allPlayers(updatedTable.getAllPlayers().replace(smallBlindPlayer, bettingPlayer))
-				.bettingPlayer(PlayerNumber.of(bettingPlayer.getNumber()))
-				.build();
+		return updatedTable.nextPlayerToBetAfter(bigBlind.getNumber());
 	}
 
 	public PhaseStatus phaseStatus() {
 		int notAllInCount = allPlayers
-				.filter(Player::playing)
+				.filter(Player::isInGame)
 				.count(player -> !player.isAllIn());
 
-		boolean allPlayersMoved = movesThisPhase.size() == allPlayers.filter(Player::playing).size();
+		boolean allPlayersMoved = movesThisPhase.size() == allPlayers.filter(Player::isInGame).size();
 
 		if (notAllInCount <= 1 && allPlayersMoved)
 			return PhaseStatus.EVERYBODY_ALL_IN;
 
 		int notFoldedCount = allPlayers
-				.filter(Player::playing)
+				.filter(Player::isInGame)
 				.count(player -> !player.isFolded());
 
 		if (notFoldedCount == 1)
@@ -144,7 +135,19 @@ public class PokerTable {
 	}
 
 	public PokerTable nextPlayerToBet() {
-		final Player newBettingPlayer = allPlayers.get((allPlayers.indexOf(getBettingPlayer().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND)) + 1) % allPlayers.size());
+		return nextPlayerToBetAfter(bettingPlayer.getNumber());
+	}
+
+	private PokerTable nextPlayerToBetAfter(Integer playerNumber) {
+		log.debug(String.format("Finding next to bet after: %d", playerNumber));
+
+		final int bettingPlayerIndex = allPlayers.indexWhere(PlayerFunctions.byNumber(playerNumber));
+		Player newBettingPlayer;
+		int count = 1;
+		do {
+			newBettingPlayer = allPlayers.get((bettingPlayerIndex + count++) % allPlayers.size());
+		} while (newBettingPlayer.isFolded());
+
 		final Player modifiedNewBettingPlayer = PlayerFunctions.BET_IN_PHASE.apply(newBettingPlayer, this);
 
 		return this.toBuilder()
@@ -229,13 +232,22 @@ public class PokerTable {
 		log.debug("Preparing players for new round");
 		final List<Player> playersWithCleanBets = getAllPlayers().map(Player::prepareForNewRound);
 
-		final Player dealerPlayer = playersWithCleanBets.get((int) (handCount.get() % playersWithCleanBets.size()));
-
 		final Player smallBlindPlayer = playersWithCleanBets.get((int) ((handCount.get() + 1) % playersWithCleanBets.size()));
 		log.debug(String.format("Taking small blind from player: %d", smallBlindPlayer.getNumber()));
 		final Player newSmallBlindPlayer = PlayerFunctions.SMALL_BLIND_TIME.apply(smallBlindPlayer, this);
 
-		final Player bigBlindPlayer = playersWithCleanBets.get((int) ((handCount.get() + 2) % playersWithCleanBets.size()));
+		final Player dealerPlayer;
+		if (allPlayers.size() == 2)
+			dealerPlayer = newSmallBlindPlayer;
+		else
+			dealerPlayer = playersWithCleanBets.get((int) (handCount.get() % playersWithCleanBets.size()));
+
+		final Player bigBlindPlayer;
+		if (allPlayers.size() == 2)
+			bigBlindPlayer = playersWithCleanBets.get((int) (handCount.get() % playersWithCleanBets.size()));
+		else
+			bigBlindPlayer = playersWithCleanBets.get((int) ((handCount.get() + 2) % playersWithCleanBets.size()));
+
 		log.debug(String.format("Taking big blind from player: %d", bigBlindPlayer.getNumber()));
 		final Player newBigBlindPlayer = PlayerFunctions.BIG_BLIND_TIME.apply(bigBlindPlayer, this);
 
