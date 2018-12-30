@@ -3,14 +3,14 @@ package com.tp.holdem.server
 import com.esotericsoftware.kryonet.Connection
 import com.esotericsoftware.kryonet.Listener
 import com.tp.holdem.common.lazyLogger
-import com.tp.holdem.common.logger
-import com.tp.holdem.logic.model.PokerTable
-import com.tp.holdem.logic.toCurrentPlayerDTO
+import com.tp.holdem.model.PokerTable
+import com.tp.holdem.logic.extensions.toCurrentPlayerDTO
 import com.tp.holdem.common.model.Phase
 import com.tp.holdem.common.message.Message
 import com.tp.holdem.common.message.MessageType
 import com.tp.holdem.common.message.PlayerActionMessage
 import com.tp.holdem.common.message.PlayerConnectMessage
+import com.tp.holdem.logic.extensions.getBettingPlayer
 
 internal class HoldemServerListener(
         private val sender: MessageSender,

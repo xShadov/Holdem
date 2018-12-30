@@ -2,13 +2,12 @@ package com.tp.holdem.server
 
 import com.esotericsoftware.kryonet.Server
 import com.tp.holdem.common.lazyLogger
-import com.tp.holdem.common.logger
-import com.tp.holdem.logic.model.PokerTable
-import com.tp.holdem.logic.toCurrentPlayerDTO
-import com.tp.holdem.logic.toDTO
 import com.tp.holdem.common.message.Message
 import com.tp.holdem.common.message.MessageType
 import com.tp.holdem.common.message.UpdateStateMessage
+import com.tp.holdem.model.PokerTable
+import com.tp.holdem.logic.extensions.toCurrentPlayerDTO
+import com.tp.holdem.logic.extensions.toDTO
 
 internal class MessageSender(private val server: Server) {
     private val log by lazyLogger()
@@ -21,7 +20,7 @@ internal class MessageSender(private val server: Server) {
                 .build()
 
         log.debug(String.format("Players on poker table: %s", table.allPlayers.map { it.number }))
-        connectedPlayers.forEach { connection, playerNumber ->
+        connectedPlayers.forEach { connection: Int, playerNumber: Int ->
             log.debug(String.format("Sending message to player: %d", playerNumber))
 
             val currentPlayerDTO = table.allPlayers
@@ -33,7 +32,7 @@ internal class MessageSender(private val server: Server) {
                     .currentPlayer(currentPlayerDTO)
                     .build()
 
-            server.sendToTCP(connection!!, Message.from(MessageType.UPDATE_STATE, modifiedResponse))
+            server.sendToTCP(connection, Message.from(MessageType.UPDATE_STATE, modifiedResponse))
         }
     }
 
