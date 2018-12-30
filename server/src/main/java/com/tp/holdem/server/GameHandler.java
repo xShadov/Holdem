@@ -4,8 +4,8 @@ import com.tp.holdem.logic.model.PhaseStatus;
 import com.tp.holdem.logic.model.Player;
 import com.tp.holdem.logic.model.PlayerNumber;
 import com.tp.holdem.logic.model.PokerTable;
-import com.tp.holdem.model.common.Phase;
-import com.tp.holdem.model.message.PlayerActionMessage;
+import com.tp.holdem.common.model.Phase;
+import com.tp.holdem.common.message.PlayerActionMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.atomic.AtomicLong;

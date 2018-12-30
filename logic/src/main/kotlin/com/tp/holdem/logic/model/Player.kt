@@ -1,8 +1,6 @@
 package com.tp.holdem.logic.model
 
-import com.tp.holdem.model.common.Moves
-import com.tp.holdem.model.message.dto.CurrentPlayerDTO
-import com.tp.holdem.model.message.dto.PlayerDTO
+import com.tp.holdem.common.model.Moves
 import io.vavr.collection.List
 
 data class Player(
@@ -115,36 +113,6 @@ data class Player(
                 maximumBet = 0,
                 possibleMoves = List.empty()
         )
-    }
-
-    fun toPlayerDTO(): PlayerDTO {
-        return PlayerDTO.builder()
-                .allIn(allIn)
-                .betAmount(betAmount)
-                .betAmountThisPhase(betAmountThisPhase)
-                .chipsAmount(chipsAmount)
-                .folded(folded)
-                .inGame(inGame)
-                .name(name)
-                .number(number)
-                .build()
-    }
-
-    fun toCurrentPlayerDTO(): CurrentPlayerDTO {
-        return CurrentPlayerDTO.builder()
-                .allIn(allIn)
-                .betAmount(betAmount)
-                .betAmountThisPhase(betAmountThisPhase)
-                .chipsAmount(chipsAmount)
-                .folded(folded)
-                .inGame(inGame)
-                .name(name)
-                .number(number)
-                .possibleMoves(possibleMoves.toJavaList())
-                .maximumBet(maximumBet)
-                .minimumBet(minimumBet)
-                .hand(hand.map { it.toDTO() }.toJavaList())
-                .build()
     }
 
     fun gameOver(): Player {

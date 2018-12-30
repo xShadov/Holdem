@@ -1,12 +1,10 @@
 package com.tp.holdem.logic.model
 
-import com.tp.holdem.logic.HandOperations
-import com.tp.holdem.logic.PlayerBettingFunctions
-import com.tp.holdem.logic.PlayerExceptions
-import com.tp.holdem.logic.PlayerFinders
-import com.tp.holdem.model.common.Moves
-import com.tp.holdem.model.common.Phase
-import com.tp.holdem.model.message.dto.PokerTableDTO
+import com.tp.holdem.common.lazyLogger
+import com.tp.holdem.common.logger
+import com.tp.holdem.logic.*
+import com.tp.holdem.common.model.Moves
+import com.tp.holdem.common.model.Phase
 import io.vavr.collection.HashMap
 import io.vavr.collection.List
 import io.vavr.collection.Map
@@ -29,9 +27,9 @@ data class PokerTable(
         val cardsOnTable: List<Card> = List.empty(),
         val movesThisPhase: Map<Int, Moves> = HashMap.empty()
 ) {
-    companion object {
-        val log = org.slf4j.LoggerFactory.getLogger(PokerTable.javaClass)
+    private val log by lazyLogger()
 
+    companion object {
         @JvmStatic
         fun withBlinds(bigBlindAmount: Int, smallBlindAmount: Int): PokerTable {
             return PokerTable(bigBlindAmount = bigBlindAmount, smallBlindAmount = smallBlindAmount)
@@ -51,9 +49,7 @@ data class PokerTable(
     }
 
     fun playerLeft(playerNumber: PlayerNumber): PokerTable {
-        val foundPlayer = allPlayers
-                .find(PlayerFinders.byNumber(playerNumber.number))
-                .getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND)
+        val foundPlayer = allPlayers.byNumber(playerNumber)
 
         val modifiedPlayers = allPlayers
                 .replace(foundPlayer, foundPlayer.copy(inGame = false))
@@ -87,8 +83,8 @@ data class PokerTable(
     }
 
     private fun goToPreFlopPhase(): PokerTable {
-        val dealerPlayer = getDealer().getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND)
-        val bettingPlayer = PlayerBettingFunctions.firstBetInRound(dealerPlayer, this)
+        val dealerPlayer = getDealer().assertFound()
+        val bettingPlayer = dealerPlayer.firstBetInRound(this)
 
         return this.copy(
                 phase = phase.nextPhase(),
@@ -139,17 +135,17 @@ data class PokerTable(
         return nextPlayerToBetAfter(bettingPlayer.number)
     }
 
-    private fun nextPlayerToBetAfter(playerNumber: Int?): PokerTable {
+    private fun nextPlayerToBetAfter(playerNumber: Int): PokerTable {
         log.debug(String.format("Finding next to bet after: %d", playerNumber))
 
-        val bettingPlayerIndex = allPlayers.indexWhere(PlayerFinders.byNumber(playerNumber))
+        val bettingPlayerIndex = allPlayers.indexOfNumber(playerNumber)
         var newBettingPlayer: Player
         var count = 1
         do {
             newBettingPlayer = allPlayers.get((bettingPlayerIndex + count++) % allPlayers.size())
         } while (newBettingPlayer.folded)
 
-        val modifiedNewBettingPlayer = PlayerBettingFunctions.betInPhase(newBettingPlayer, this)
+        val modifiedNewBettingPlayer = newBettingPlayer.betInPhase(this)
 
         return this.copy(
                 allPlayers = allPlayers.replace(newBettingPlayer, modifiedNewBettingPlayer),
@@ -192,41 +188,23 @@ data class PokerTable(
     }
 
     fun getBettingPlayer(): Option<Player> {
-        return allPlayers.find(PlayerFinders.byNumber(bettingPlayer.number))
+        return allPlayers.byNumberOption(bettingPlayer)
     }
 
     fun getWinnerPlayer(): Option<Player> {
-        return allPlayers.find(PlayerFinders.byNumber(winnerPlayer.number))
+        return allPlayers.byNumberOption(winnerPlayer)
     }
 
     fun getDealer(): Option<Player> {
-        return allPlayers.find(PlayerFinders.byNumber(dealer.number))
+        return allPlayers.byNumberOption(dealer)
     }
 
     fun getBigBlind(): Option<Player> {
-        return allPlayers.find(PlayerFinders.byNumber(bigBlind.number))
+        return allPlayers.byNumberOption(bigBlind)
     }
 
     fun getSmallBlind(): Option<Player> {
-        return allPlayers.find(PlayerFinders.byNumber(smallBlind.number))
-    }
-
-    fun toDTO(): PokerTableDTO {
-        return PokerTableDTO.builder()
-                .phase(phase)
-                .gameOver(gameOver)
-                .potAmount(potAmount())
-                .potAmountThisPhase(potAmountThisPhase())
-                .smallBlindAmount(smallBlindAmount)
-                .bigBlindAmount(bigBlindAmount)
-                .dealer(getDealer().map { it.toPlayerDTO() }.orNull)
-                .bigBlind(getBigBlind().map { it.toPlayerDTO() }.orNull)
-                .smallBlind(getSmallBlind().map { it.toPlayerDTO() }.orNull)
-                .allPlayers(allPlayers.map { it.toPlayerDTO() }.toJavaList())
-                .bettingPlayer(getBettingPlayer().map { it.toPlayerDTO() }.orNull)
-                .cardsOnTable(cardsOnTable.map { it.toDTO() }.toJavaList())
-                .winnerPlayer(getWinnerPlayer().map { it.toPlayerDTO() }.orNull)
-                .build()
+        return allPlayers.byNumberOption(smallBlind)
     }
 
     fun newRound(handCount: AtomicLong): PokerTable {
@@ -235,7 +213,7 @@ data class PokerTable(
 
         val smallBlindPlayer = playersWithCleanBets.get(((handCount.get() + 1) % playersWithCleanBets.size()).toInt())
         log.debug(String.format("Taking small blind from player: %d", smallBlindPlayer.number))
-        val newSmallBlindPlayer = PlayerBettingFunctions.smallBlindTime(smallBlindPlayer, this)
+        val newSmallBlindPlayer = smallBlindPlayer.betSmallBlind(this)
 
         val dealerPlayer: Player
         if (allPlayers.size() == 2)
@@ -250,7 +228,7 @@ data class PokerTable(
             bigBlindPlayer = playersWithCleanBets.get(((handCount.get() + 2) % playersWithCleanBets.size()).toInt())
 
         log.debug(String.format("Taking big blind from player: %d", bigBlindPlayer.number))
-        val newBigBlindPlayer = PlayerBettingFunctions.bigBlindTime(bigBlindPlayer, this)
+        val newBigBlindPlayer = bigBlindPlayer.betBigBlind(this)
 
         val updatedTable = this.copy(
                 deck = Deck.brandNew(),
@@ -269,10 +247,8 @@ data class PokerTable(
         return updatedTable.dealCards()
     }
 
-    fun playerMove(playerNumber: Int?, move: Moves, betAmount: Int): PokerTable {
-        val actionPlayer = allPlayers
-                .find(PlayerFinders.byNumber(playerNumber))
-                .getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND)
+    fun playerMove(playerNumber: Int, move: Moves, betAmount: Int): PokerTable {
+        val actionPlayer = allPlayers.byNumber(playerNumber)
 
         val playerAfterAction: Player
 

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.model.message.dto.PlayerDTO;
+import com.tp.holdem.common.message.dto.PlayerDTO;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -1,7 +1,7 @@
 package com.tp.holdem.client.game.animation;
 
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.model.message.dto.CardDTO;
+import com.tp.holdem.common.message.dto.CardDTO;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;

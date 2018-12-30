@@ -1,8 +1,8 @@
 package com.tp.holdem.logic.model
 
 
-import com.tp.holdem.model.common.Honour
-import com.tp.holdem.model.common.Suit
+import com.tp.holdem.common.model.Honour
+import com.tp.holdem.common.model.Suit
 import io.vavr.collection.List
 
 class Deck {
@@ -39,7 +39,7 @@ class Deck {
 
     fun drawCard(): Card {
         return cards.headOption()
-                .peek { (suit, honour, value) -> cards = cards.removeAt(0) }
+                .peek { cards = cards.removeAt(0) }
                 .getOrElseThrow { IllegalStateException("Card cannot be drawn - deck is empty") }
     }
 }

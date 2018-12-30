@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.google.common.collect.Maps;
 import com.tp.holdem.client.game.GameState;
 import com.tp.holdem.client.game.animation.TableCardsAnimation;
-import com.tp.holdem.model.message.dto.CardDTO;
+import com.tp.holdem.common.message.dto.CardDTO;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,11 +1,11 @@
 package com.tp.holdem.logic.model
 
-data class PlayerNumber(val number: Int? = null) {
+data class PlayerNumber(val number: Int = -1) {
     companion object {
 
         @JvmStatic
         fun empty(): PlayerNumber {
-            return PlayerNumber(null)
+            return PlayerNumber(-1)
         }
 
         @JvmStatic
@@ -15,6 +15,6 @@ data class PlayerNumber(val number: Int? = null) {
     }
 
     fun exists(): Boolean {
-        return number != null
+        return number != -1
     }
 }

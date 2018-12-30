@@ -4,9 +4,9 @@ import com.tp.holdem.client.architecture.action.Action;
 import com.tp.holdem.client.architecture.action.GameObservable;
 import com.tp.holdem.client.architecture.message.MessageBus;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.model.message.Message;
-import com.tp.holdem.model.message.MessageType;
-import com.tp.holdem.model.message.PlayerActionMessage;
+import com.tp.holdem.common.message.Message;
+import com.tp.holdem.common.message.MessageType;
+import com.tp.holdem.common.message.PlayerActionMessage;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

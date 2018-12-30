@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.tp.holdem.client.game.GameState;
-import com.tp.holdem.model.message.dto.PlayerDTO;
+import com.tp.holdem.common.message.dto.PlayerDTO;
 
 public class SpotlightDrawer {
 	private static final int[] boxPositionX = {274, 46, -69, -45, 78, 315, 507, 687, 723, 588};

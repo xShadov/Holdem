@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.tp.holdem.client.game.GameState;
 import com.tp.holdem.client.game.rendering.Fonts;
-import com.tp.holdem.model.message.dto.PlayerDTO;
+import com.tp.holdem.common.message.dto.PlayerDTO;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;

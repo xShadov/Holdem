@@ -2,14 +2,14 @@ package com.tp.holdem.client.game;
 
 import com.google.common.base.Preconditions;
 import com.tp.holdem.client.architecture.message.ServerObservable;
-import com.tp.holdem.model.message.Message;
-import com.tp.holdem.model.message.MessageType;
-import com.tp.holdem.model.message.PlayerConnectMessage;
-import com.tp.holdem.model.message.UpdateStateMessage;
-import com.tp.holdem.model.message.dto.CardDTO;
-import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
-import com.tp.holdem.model.message.dto.PlayerDTO;
-import com.tp.holdem.model.message.dto.PokerTableDTO;
+import com.tp.holdem.common.message.Message;
+import com.tp.holdem.common.message.MessageType;
+import com.tp.holdem.common.message.PlayerConnectMessage;
+import com.tp.holdem.common.message.UpdateStateMessage;
+import com.tp.holdem.common.message.dto.CardDTO;
+import com.tp.holdem.common.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.common.message.dto.PlayerDTO;
+import com.tp.holdem.common.message.dto.PokerTableDTO;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

@@ -43,13 +43,13 @@ class HandFinder {
 	static boolean isRoyalFlush(final List<Card> cards) {
 		return cards
 				.combinations(5)
-				.exists(HandPredicates.ROYAL_FLUSH);
+				.exists(HandPredicates.INSTANCE.getROYAL_FLUSH());
 	}
 
 	static boolean isStraightFlush(final List<Card> cards) {
 		return cards
 				.combinations(5)
-				.exists(HandPredicates.STRAIGHT_FLUSH);
+				.exists(HandPredicates.INSTANCE.getSTRAIGHT_FLUSH());
 	}
 
 	static boolean isFourOfAKind(final List<Card> cards) {
@@ -67,7 +67,7 @@ class HandFinder {
 		return cards
 				.distinctBy(Card::getHonour)
 				.combinations(5)
-				.exists(HandPredicates.STRAIGHT);
+				.exists(HandPredicates.INSTANCE.getSTRAIGHT());
 	}
 
 	static boolean isFlush(final List<Card> cards) {

@@ -142,8 +142,8 @@ class HandComparators {
 
 	public static Comparator<List<Card>> highestStraightKicker() {
 		return (a, b) -> {
-			final boolean aAceStraight = HandPredicates.ACE_STRAIGHT.test(a);
-			final boolean bAceStraight = HandPredicates.ACE_STRAIGHT.test(b);
+			final boolean aAceStraight = HandPredicates.INSTANCE.getACE_STRAIGHT().test(a);
+			final boolean bAceStraight = HandPredicates.INSTANCE.getACE_STRAIGHT().test(b);
 
 			if (aAceStraight && bAceStraight)
 				return 0;

@@ -3,15 +3,15 @@ package com.tp.holdem.server;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.tp.holdem.model.common.Honour;
-import com.tp.holdem.model.common.Moves;
-import com.tp.holdem.model.common.Phase;
-import com.tp.holdem.model.common.Suit;
-import com.tp.holdem.model.message.*;
-import com.tp.holdem.model.message.dto.CardDTO;
-import com.tp.holdem.model.message.dto.CurrentPlayerDTO;
-import com.tp.holdem.model.message.dto.PlayerDTO;
-import com.tp.holdem.model.message.dto.PokerTableDTO;
+import com.tp.holdem.common.model.Honour;
+import com.tp.holdem.common.model.Moves;
+import com.tp.holdem.common.model.Phase;
+import com.tp.holdem.common.model.Suit;
+import com.tp.holdem.common.message.UpdateStateMessage;
+import com.tp.holdem.common.message.dto.CardDTO;
+import com.tp.holdem.common.message.dto.CurrentPlayerDTO;
+import com.tp.holdem.common.message.dto.PlayerDTO;
+import com.tp.holdem.common.message.dto.PokerTableDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,12 +40,12 @@ class KryoServer implements Runnable {
 		kryo.register(CardDTO.class, registerCount.getAndIncrement());
 		kryo.register(PokerTableDTO.class, registerCount.getAndIncrement());
 
-		kryo.register(Message.class, registerCount.getAndIncrement());
-		kryo.register(MessageType.class, registerCount.getAndIncrement());
-		kryo.register(PlayerConnectMessage.class, registerCount.getAndIncrement());
+		kryo.register(com.tp.holdem.common.message.Message.class, registerCount.getAndIncrement());
+		kryo.register(com.tp.holdem.common.message.MessageType.class, registerCount.getAndIncrement());
+		kryo.register(com.tp.holdem.common.message.PlayerConnectMessage.class, registerCount.getAndIncrement());
 		kryo.register(UpdateStateMessage.class, registerCount.getAndIncrement());
 		kryo.register(Moves.class, registerCount.getAndIncrement());
-		kryo.register(PlayerActionMessage.class, registerCount.getAndIncrement());
+		kryo.register(com.tp.holdem.common.message.PlayerActionMessage.class, registerCount.getAndIncrement());
 	}
 
 	void start() {
