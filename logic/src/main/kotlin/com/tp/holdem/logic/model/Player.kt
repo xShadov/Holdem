@@ -19,8 +19,8 @@ data class Player(
         val folded: Boolean = false,
 
         val name: String = "Player$number",
-        val possibleMoves: List<Moves> = List.empty<Moves>(),
-        val hand: List<Card> = List.empty<Card>()
+        val possibleMoves: List<Moves> = List.empty(),
+        val hand: List<Card> = List.empty()
 ) {
     companion object {
         fun numbered(number: Int): Player {
@@ -82,7 +82,7 @@ data class Player(
         return this.copy(
                 minimumBet = 0,
                 maximumBet = 0,
-                possibleMoves = List.empty<Moves>()
+                possibleMoves = List.empty()
         )
     }
 
@@ -97,12 +97,12 @@ data class Player(
         return this.copy(
                 betAmount = 0,
                 betAmountThisPhase = 0,
-                possibleMoves = List.empty<Moves>(),
+                possibleMoves = List.empty(),
                 maximumBet = 0,
                 minimumBet = 0,
                 folded = false,
                 allIn = false,
-                hand = List.empty<Card>()
+                hand = List.empty()
         )
     }
 
@@ -113,7 +113,7 @@ data class Player(
                 chipsAmount = chipsAmount - betAmountThisPhase,
                 minimumBet = 0,
                 maximumBet = 0,
-                possibleMoves = List.empty<Moves>()
+                possibleMoves = List.empty()
         )
     }
 
@@ -152,7 +152,7 @@ data class Player(
                 minimumBet = 0,
                 maximumBet = 0,
                 inGame = false,
-                possibleMoves = List.empty<Moves>()
+                possibleMoves = List.empty()
         )
     }
 

@@ -25,8 +25,8 @@ data class PokerTable(
         private val dealer: PlayerNumber = PlayerNumber.empty(),
         private val bigBlind: PlayerNumber = PlayerNumber.empty(),
         private val smallBlind: PlayerNumber = PlayerNumber.empty(),
-        val allPlayers: List<Player> = List.empty<Player>(),
-        val cardsOnTable: List<Card> = List.empty<Card>(),
+        val allPlayers: List<Player> = List.empty(),
+        val cardsOnTable: List<Card> = List.empty(),
         val movesThisPhase: Map<Int, Moves> = HashMap.empty()
 ) {
     companion object {
@@ -94,7 +94,7 @@ data class PokerTable(
                 phase = phase.nextPhase(),
                 allPlayers = allPlayers.replace(dealerPlayer, bettingPlayer),
                 bettingPlayer = PlayerNumber.of(bettingPlayer.number),
-                movesThisPhase = HashMap.empty<Int, Moves>()
+                movesThisPhase = HashMap.empty()
         )
     }
 
@@ -257,7 +257,7 @@ data class PokerTable(
                 cardsOnTable = List.empty(),
                 phase = Phase.START,
                 showdown = false,
-                movesThisPhase = HashMap.empty<Int, Moves>(),
+                movesThisPhase = HashMap.empty(),
                 allPlayers = playersWithCleanBets.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer),
                 winnerPlayer = PlayerNumber.empty(),
                 bettingPlayer = PlayerNumber.empty(),
