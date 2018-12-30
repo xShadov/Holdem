@@ -25,9 +25,9 @@ public class HandOperations {
 	}
 
 	public static Player findWinner(List<Player> allPlayers, PokerTable pokerTable) {
-		if (allPlayers.filter(player -> !player.isFolded()).size() == 1) {
+		if (allPlayers.filter(player -> !player.getFolded()).size() == 1) {
 			log.debug("Everyone folded except one player, he's the winner");
-			return allPlayers.find(player -> !player.isFolded()).getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
+			return allPlayers.find(player -> !player.getFolded()).getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 		}
 
 		final Map<Player, HandRank> hands = allPlayers.filter(Player::playing)

@@ -43,7 +43,7 @@ class HoldemServerListener extends Listener {
 
 				PokerTable response = gameHandler.handlePlayerMove(playerNumber, content);
 
-				if (response.isShowdown()) {
+				if (response.getShowdown()) {
 					response = handleShowdown(response);
 				}
 

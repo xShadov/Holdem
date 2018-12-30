@@ -20,10 +20,7 @@ class GameHandler {
 	GameHandler(GameParams gameParams) {
 		this.gameParams = gameParams;
 
-		this.table = PokerTable.builder()
-				.bigBlindAmount(gameParams.getBigBlindAmount())
-				.smallBlindAmount(gameParams.getSmallBlindAmount())
-				.build();
+		this.table = PokerTable.withBlinds(gameParams.getBigBlindAmount(), gameParams.getSmallBlindAmount());
 	}
 
 	PokerTable startGame() {
@@ -78,7 +75,7 @@ class GameHandler {
 		}
 
 		if (phaseStatus == PhaseStatus.EVERYBODY_ALL_IN) {
-			this.table = table.toBuilder().showdown(true).build();
+			this.table = table.showdownMode();
 			return this.table;
 		}
 
@@ -118,7 +115,7 @@ class GameHandler {
 				.lastOption()
 				.map(Player::getNumber)
 				.map(number -> number + 1)
-				.map(Player::numbered)
-				.getOrElse(() -> Player.numbered(0));
+				.map(Player.Companion::numbered)
+				.getOrElse(() -> Player.Companion.numbered(0));
 	}
 }

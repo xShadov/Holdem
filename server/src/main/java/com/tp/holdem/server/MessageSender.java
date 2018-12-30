@@ -2,7 +2,7 @@ package com.tp.holdem.server;
 
 import com.esotericsoftware.kryonet.Server;
 import com.tp.holdem.logic.PlayerExceptions;
-import com.tp.holdem.logic.PlayerFunctions;
+import com.tp.holdem.logic.PlayerFinders;
 import com.tp.holdem.logic.model.Player;
 import com.tp.holdem.logic.model.PokerTable;
 import com.tp.holdem.model.message.Message;
@@ -29,7 +29,7 @@ class MessageSender {
 			log.debug(String.format("Sending message to player: %d", playerNumber));
 
 			final CurrentPlayerDTO currentPlayerDTO = table.getAllPlayers()
-					.find(PlayerFunctions.byNumber(playerNumber))
+					.find(PlayerFinders.byNumber(playerNumber))
 					.map(Player::toCurrentPlayerDTO)
 					.getOrElseThrow(PlayerExceptions.PLAYER_NOT_FOUND);
 
