@@ -44,27 +44,18 @@ internal class KryoServer(
     }
 
     fun start() {
-        try {
-            server.addListener(serverListener)
+        server.addListener(serverListener)
 
-            server.bind(port)
-            server.start()
+        server.bind(port)
+        server.start()
 
-            val gameThread = Thread(this)
-            gameThread.start()
-        } catch (ex: Exception) {
-            throw RuntimeException(ex)
-        }
+        Thread(this).start()
     }
 
     @Synchronized
     override fun run() {
-        try {
-            while (true) {
-                Thread.sleep(500)
-            }
-        } catch (ex: InterruptedException) {
-            throw RuntimeException(ex)
+        while (true) {
+            Thread.sleep(500)
         }
     }
 }

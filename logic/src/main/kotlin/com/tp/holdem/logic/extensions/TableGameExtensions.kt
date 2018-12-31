@@ -51,7 +51,8 @@ fun PokerTable.dealCards(): PokerTable {
 }
 
 fun PokerTable.roundOver(): PokerTable {
-    val playersAfterRound = allPlayers.map<Player> { it.roundOver() }
+    log.debug("Cards in deck after round: ${deck.cards.size()}")
+    val playersAfterRound = allPlayers.map { it.roundOver() }
 
     val updatedTable = this.copy(
             allPlayers = playersAfterRound

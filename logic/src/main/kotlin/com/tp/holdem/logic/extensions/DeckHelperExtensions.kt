@@ -1,24 +1,24 @@
 package com.tp.holdem.logic.extensions
 
+import com.tp.holdem.common.chunks
 import com.tp.holdem.model.Card
 import com.tp.holdem.model.Deck
 import com.tp.holdem.model.Player
 import io.vavr.Tuple
 import io.vavr.Tuple2
 import io.vavr.collection.List
-import io.vavr.kotlin.toVavrList
+import io.vavr.kotlin.component1
+import io.vavr.kotlin.component2
 
 fun Deck.dealCards(numberOfCards: Int, players: List<Player>): Tuple2<Deck, List<Player>> {
-    val playingPlayers = players.filter { it.playing() }
+    val playingPlayers = players.playing()
 
-    val afterDrawing = drawCards(playingPlayers.size() * numberOfCards)
+    val (deck, cards) = drawCards(playingPlayers.size() * numberOfCards)
 
-    val drawnCardsPartitioned = afterDrawing._2.chunked(numberOfCards).toVavrList().map { it.toVavrList() }
+    val playersWithCards = playingPlayers.zip(cards.chunks(numberOfCards))
+            .map { (player, hisCards) -> player.withCards(hisCards) }
 
-    val playersWithCards = playingPlayers.zip(drawnCardsPartitioned)
-            .map { playerAndCards -> playerAndCards._1.withCards(playerAndCards._2) }
-
-    return Tuple.of(afterDrawing._1, playersWithCards.appendAll(players.filter { it.notPlaying() }))
+    return Tuple.of(deck, playersWithCards.appendAll(players.notPlaying()))
 }
 
 fun Deck.drawCards(number: Int): Tuple2<Deck, List<Card>> {

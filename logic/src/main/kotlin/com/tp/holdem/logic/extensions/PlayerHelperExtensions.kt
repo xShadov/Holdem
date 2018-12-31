@@ -33,3 +33,15 @@ fun Player.notPlaying(): Boolean {
 fun Player.availableChips(): Int {
     return chipsAmount - betAmountThisPhase
 }
+
+fun List<Player>.playing(): List<Player> {
+    return this.filter { it.playing() }
+}
+
+fun List<Player>.notPlaying(): List<Player> {
+    return this.filter { it.notPlaying() }
+}
+
+fun List<Player>.notBroke(): List<Player> {
+    return this.filter { it.chipsAmount > 0 }
+}

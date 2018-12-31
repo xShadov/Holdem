@@ -17,10 +17,11 @@ fun Player.fold(): Player {
 
 fun Player.bet(bet: Int): Player {
     if (availableChips() < bet)
-        throw IllegalArgumentException(String.format("Player does not have enough chips: %d vs. %d", availableChips(), bet))
+        throw IllegalArgumentException("Player does not have enough chips: ${availableChips()} vs. $bet")
 
-    val afterBet = this.copy(betAmountThisPhase = betAmountThisPhase + bet)
-    return afterBet.copy(
-            allIn = afterBet.availableChips() == 0
+    val newBetAmount = betAmountThisPhase + bet
+    return this.copy(
+            betAmountThisPhase = newBetAmount,
+            allIn = availableChips() - newBetAmount == 0
     )
 }

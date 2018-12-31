@@ -14,9 +14,9 @@ fun PokerTable.potAmountThisPhase(): Int {
     return allPlayers.map { it.betAmountThisPhase }.sum().toInt()
 }
 
-fun PokerTable.isNotPlayable(): Boolean {
+fun PokerTable.notEnoughPlayersWithChips(): Boolean {
     return allPlayers
-            .filter { it.inGame }
-            .filter { player -> player.chipsAmount > 0 }
+            .playing()
+            .notBroke()
             .length() < 2
 }

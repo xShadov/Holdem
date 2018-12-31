@@ -11,7 +11,7 @@ internal class ConnectedPlayers(private val connectedMap: Map<Int, Tuple2<Boolea
     companion object {
         @JvmStatic
         fun empty(): ConnectedPlayers {
-            return ConnectedPlayers(HashMap.empty<Int, Tuple2<Boolean, PlayerNumber>>())
+            return ConnectedPlayers(HashMap.empty())
         }
     }
 
@@ -22,6 +22,10 @@ internal class ConnectedPlayers(private val connectedMap: Map<Int, Tuple2<Boolea
 
     fun wasConnected(connectionId: Int): Boolean {
         return connectedMap.containsKey(connectionId)
+    }
+
+    fun getConnectionId(playerNumber: PlayerNumber): Option<Int> {
+        return if (playerNumber.exists()) getConnectionId(playerNumber.number) else Option.none()
     }
 
     fun getConnectionId(playerNumber: Int): Option<Int> {

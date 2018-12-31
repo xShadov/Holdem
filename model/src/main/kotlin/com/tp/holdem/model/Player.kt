@@ -4,7 +4,7 @@ import com.tp.holdem.common.model.Moves
 import io.vavr.collection.List
 
 data class Player(
-        val number: Int = 0,
+        val number: Int = -1,
 
         val minimumBet: Int = 0,
         val maximumBet: Int = 0,
@@ -23,7 +23,6 @@ data class Player(
     companion object {
         fun numbered(number: Int): Player {
             return Player(
-                    name = "Player$number",
                     number = number
             )
         }

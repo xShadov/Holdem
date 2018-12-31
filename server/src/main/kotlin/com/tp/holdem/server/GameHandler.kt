@@ -30,7 +30,7 @@ internal class GameHandler(
     }
 
     fun startRound(): PokerTable {
-        if (this.table.isNotPlayable()) {
+        if (this.table.notEnoughPlayersWithChips()) {
             log.debug("Game is over")
             this.table = table.gameOver()
             return this.table
@@ -38,17 +38,17 @@ internal class GameHandler(
 
         handCount.incrementAndGet()
 
-        log.debug(String.format("Starting new round number: %d", handCount.get()))
+        log.debug("Starting new round number: ${handCount.get()}")
 
         this.table = table.newRound(handCount)
 
-        log.debug(String.format("Players ready for new round: %s", table.allPlayers.map { it.name }))
+        log.debug("Players ready for new round: ${table.playerNames()}")
 
         return startPhase()
     }
 
     fun startPhase(): PokerTable {
-        log.debug(String.format("Staring phase: %s", table.phase.nextPhase()))
+        log.debug("Staring phase: ${table.phase.nextPhase()}")
 
         this.table = table.nextPhase()
 
@@ -56,13 +56,13 @@ internal class GameHandler(
     }
 
     fun handlePlayerMove(playerNumber: Int, content: PlayerActionMessage): PokerTable {
-        log.debug(String.format("Handling player %d move: %s", playerNumber, content.move))
+        log.debug("Handling player $playerNumber move: ${content.move}")
 
         this.table = table.playerMove(playerNumber, content.move, content.betAmount)
 
         val phaseStatus = table.phaseStatus()
 
-        log.debug(String.format("Phase status is: %s", phaseStatus))
+        log.debug("Phase status is: $phaseStatus")
 
         if (phaseStatus == PhaseStatus.EVERYBODY_FOLDED || (phaseStatus == PhaseStatus.READY_FOR_NEXT && table.phase == Phase.RIVER)) {
             log.debug("Table round is over")
@@ -100,7 +100,7 @@ internal class GameHandler(
     }
 
     fun disconnectPlayer(playerNumber: Int): PokerTable {
-        log.debug(String.format("Disconnecting player: %d", playerNumber))
+        log.debug("Disconnecting player: $playerNumber")
         this.table = table.playerLeft(PlayerNumber.of(playerNumber))
         return table
     }

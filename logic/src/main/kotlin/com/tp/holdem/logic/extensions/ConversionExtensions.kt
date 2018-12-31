@@ -1,12 +1,12 @@
 package com.tp.holdem.logic.extensions
 
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.Player
-import com.tp.holdem.model.PokerTable
 import com.tp.holdem.common.message.dto.CardDTO
 import com.tp.holdem.common.message.dto.CurrentPlayerDTO
 import com.tp.holdem.common.message.dto.PlayerDTO
 import com.tp.holdem.common.message.dto.PokerTableDTO
+import com.tp.holdem.model.Card
+import com.tp.holdem.model.Player
+import com.tp.holdem.model.PokerTable
 
 fun Card.toDTO(): CardDTO {
     return CardDTO.builder()
@@ -35,30 +35,30 @@ fun Player.toCurrentPlayerDTO(): CurrentPlayerDTO {
             .betAmountThisPhase(betAmountThisPhase)
             .chipsAmount(chipsAmount)
             .folded(folded)
+            .hand(hand.map { it.toDTO() }.toJavaList())
             .inGame(inGame)
+            .maximumBet(maximumBet)
+            .minimumBet(minimumBet)
             .name(name)
             .number(number)
             .possibleMoves(possibleMoves.toJavaList())
-            .maximumBet(maximumBet)
-            .minimumBet(minimumBet)
-            .hand(hand.map { it.toDTO() }.toJavaList())
             .build()
 }
 
 fun PokerTable.toDTO(): PokerTableDTO {
     return PokerTableDTO.builder()
-            .phase(phase)
-            .gameOver(gameOver)
-            .potAmount(potAmount())
-            .potAmountThisPhase(potAmountThisPhase())
-            .smallBlindAmount(smallBlindAmount)
-            .bigBlindAmount(bigBlindAmount)
-            .dealer(getDealer().map { it.toPlayerDTO() }.orNull)
-            .bigBlind(getBigBlind().map { it.toPlayerDTO() }.orNull)
-            .smallBlind(getSmallBlind().map { it.toPlayerDTO() }.orNull)
             .allPlayers(allPlayers.map { it.toPlayerDTO() }.toJavaList())
             .bettingPlayer(getBettingPlayer().map { it.toPlayerDTO() }.orNull)
+            .bigBlind(getBigBlind().map { it.toPlayerDTO() }.orNull)
+            .bigBlindAmount(bigBlindAmount)
             .cardsOnTable(cardsOnTable.map { it.toDTO() }.toJavaList())
+            .dealer(getDealer().map { it.toPlayerDTO() }.orNull)
+            .gameOver(gameOver)
+            .phase(phase)
+            .potAmount(potAmount())
+            .potAmountThisPhase(potAmountThisPhase())
+            .smallBlind(getSmallBlind().map { it.toPlayerDTO() }.orNull)
+            .smallBlindAmount(smallBlindAmount)
             .winnerPlayer(getWinnerPlayer().map { it.toPlayerDTO() }.orNull)
             .build()
 }

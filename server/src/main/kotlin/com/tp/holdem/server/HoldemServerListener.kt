@@ -3,14 +3,13 @@ package com.tp.holdem.server
 import com.esotericsoftware.kryonet.Connection
 import com.esotericsoftware.kryonet.Listener
 import com.tp.holdem.common.lazyLogger
-import com.tp.holdem.model.PokerTable
-import com.tp.holdem.logic.extensions.toCurrentPlayerDTO
-import com.tp.holdem.common.model.Phase
 import com.tp.holdem.common.message.Message
 import com.tp.holdem.common.message.MessageType
 import com.tp.holdem.common.message.PlayerActionMessage
 import com.tp.holdem.common.message.PlayerConnectMessage
-import com.tp.holdem.logic.extensions.getBettingPlayer
+import com.tp.holdem.common.model.Phase
+import com.tp.holdem.logic.extensions.toCurrentPlayerDTO
+import com.tp.holdem.model.PokerTable
 
 internal class HoldemServerListener(
         private val sender: MessageSender,
@@ -23,9 +22,9 @@ internal class HoldemServerListener(
     private val log by lazyLogger()
 
     @Synchronized
-    override fun received(connection: Connection, resp: Any) {
-        if (resp is Message) {
-            log.debug(String.format("Received message from %d: %s", connection.id, resp))
+    override fun received(connection: Connection, message: Any) {
+        if (message is Message) {
+            log.debug("Received message from ${connection.id}: ${message}")
 
             if (connection.id != expectActionFrom)
                 throw IllegalStateException("Unexpected player sent action")
@@ -33,10 +32,8 @@ internal class HoldemServerListener(
             val playerNumber = connectedPlayers.getConnected(connection.id)
                     .getOrElseThrow { IllegalStateException("Player not found") }
 
-            val message = resp
-
             if (message.messageType == MessageType.PLAYER_ACTION) {
-                log.debug(String.format("Received action of type %s from player %d", message.messageType, playerNumber))
+                log.debug("Received action of type ${message.messageType} from player $playerNumber")
 
                 val content = message.instance(PlayerActionMessage::class.java)
 
@@ -66,12 +63,7 @@ internal class HoldemServerListener(
             sender.sendStateUpdate(connectedPlayers, response)
             expectActionFrom = findExpectedResponder(response)
 
-            try {
-                Thread.sleep(1500)
-            } catch (ex: InterruptedException) {
-                throw RuntimeException(ex)
-            }
-
+            Thread.sleep(1500)
         }
 
         return gameHandler.roundOver()
@@ -80,18 +72,14 @@ internal class HoldemServerListener(
     private fun waitAndStartNewRound() {
         log.debug("Current round is over, sleeping for 5s and staring new round")
 
-        try {
-            Thread.sleep(5000)
-        } catch (ex: InterruptedException) {
-            throw RuntimeException(ex)
-        }
+        Thread.sleep(5000)
 
         startRound()
     }
 
     @Synchronized
     override fun connected(con: Connection) {
-        log.debug(String.format("Connection attempt: %d", con.id))
+        log.debug("Connection attempt: ${con.id}")
 
         val connected = tryConnectingPlayer(con)
 
@@ -108,13 +96,13 @@ internal class HoldemServerListener(
 
     @Synchronized
     override fun disconnected(con: Connection) {
-        log.debug(String.format("Dis-connection attempt: %d", con.id))
+        log.debug("Disconnection attempt: ${con.id}")
 
         if (!connectedPlayers.isConnected(con.id))
             throw IllegalStateException("Player is not connected")
 
         connectedPlayers.getConnected(con.id)
-                .map { gameHandler.disconnectPlayer(it) }
+                .map(gameHandler::disconnectPlayer)
                 .forEach { table -> sender.sendStateUpdate(connectedPlayers, table) }
     }
 
@@ -122,8 +110,7 @@ internal class HoldemServerListener(
         if (enoughPlayers()) {
             log.debug("Already enough players, could not connect")
 
-            val response = PlayerConnectMessage.failure()
-            sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, response))
+            sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, PlayerConnectMessage.failure()))
             return false
         }
 
@@ -133,10 +120,9 @@ internal class HoldemServerListener(
         val player = gameHandler.connectPlayer()
         connectedPlayers = connectedPlayers.connect(con.id, player.number)
 
-        log.debug(String.format("Connected player: %d", player.number))
+        log.debug("Connected player: ${player.number}")
 
-        val connectionResponse = PlayerConnectMessage.success(player.toCurrentPlayerDTO())
-        sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, connectionResponse))
+        sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, PlayerConnectMessage.success(player.toCurrentPlayerDTO())))
         return true
     }
 
@@ -156,16 +142,11 @@ internal class HoldemServerListener(
         expectActionFrom = findExpectedResponder(response)
     }
 
-    private fun findExpectedResponder(response: PokerTable): Int {
-        return if (response.phase == Phase.OVER) -1 else response
-                .getBettingPlayer()
-                .map { it.number }
-                .flatMap { connectedPlayers.getConnectionId(it) }
-                .getOrElse(-1)
+    private fun findExpectedResponder(response: PokerTable): Int =
+            when {
+                response.phase == Phase.OVER -> -1
+                else -> connectedPlayers.getConnectionId(response.bettingPlayer).getOrElse(-1)
+            }
 
-    }
-
-    private fun enoughPlayers(): Boolean {
-        return connectedPlayers.size() >= params.playerCount
-    }
+    private fun enoughPlayers(): Boolean = connectedPlayers.size() >= params.playerCount
 }

@@ -17,7 +17,10 @@ data class Card(
 
         @JvmStatic
         fun coded(code: String): Card {
-            return from(Suit.coded(code[code.length - 1]), Honour.coded(code.substring(0, code.length - 1)))
+            return from(
+                    Suit.coded(code[code.length - 1]),
+                    Honour.coded(code.substring(0, code.length - 1))
+            )
         }
     }
 }

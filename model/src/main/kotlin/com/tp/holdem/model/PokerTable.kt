@@ -28,7 +28,10 @@ data class PokerTable(
     companion object {
         @JvmStatic
         fun withBlinds(bigBlindAmount: Int, smallBlindAmount: Int): PokerTable {
-            return PokerTable(bigBlindAmount = bigBlindAmount, smallBlindAmount = smallBlindAmount)
+            return PokerTable(
+                    bigBlindAmount = bigBlindAmount,
+                    smallBlindAmount = smallBlindAmount
+            )
         }
     }
 }
