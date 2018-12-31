@@ -55,7 +55,6 @@ internal class GameHandler(
         return table
     }
 
-    @Throws(IllegalArgumentException::class)
     fun handlePlayerMove(playerNumber: Int, content: PlayerActionMessage): PokerTable {
         log.debug(String.format("Handling player %d move: %s", playerNumber, content.move))
 

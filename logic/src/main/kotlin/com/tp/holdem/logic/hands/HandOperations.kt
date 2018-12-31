@@ -1,6 +1,7 @@
 package com.tp.holdem.logic.hands
 
 import com.tp.holdem.common.lazyLogger
+import com.tp.holdem.logic.extensions.playing
 import com.tp.holdem.model.Card
 import com.tp.holdem.model.HandRank
 import com.tp.holdem.model.Player

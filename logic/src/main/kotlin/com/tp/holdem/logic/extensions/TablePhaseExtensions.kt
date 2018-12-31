@@ -33,10 +33,13 @@ private fun PokerTable.goToPreFlopPhase(): PokerTable {
 private fun PokerTable.goToNextPhase(cards: Int): PokerTable {
     val preparedPlayers = allPlayers.map<Player> { it.prepareForNewPhase() }
 
+    val drawing = deck.drawCards(cards)
+
     val updatedTable = this.copy(
             phase = phase.nextPhase(),
             allPlayers = preparedPlayers,
-            cardsOnTable = cardsOnTable.appendAll(deck.drawCards(cards)),
+            deck = drawing._1,
+            cardsOnTable = cardsOnTable.appendAll(drawing._2),
             movesThisPhase = movesThisPhase.filterValues { it.goingToNextPhase() }
     )
 

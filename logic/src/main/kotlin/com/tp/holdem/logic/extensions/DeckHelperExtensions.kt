@@ -1,0 +1,34 @@
+package com.tp.holdem.logic.extensions
+
+import com.tp.holdem.model.Card
+import com.tp.holdem.model.Deck
+import com.tp.holdem.model.Player
+import io.vavr.Tuple
+import io.vavr.Tuple2
+import io.vavr.collection.List
+import io.vavr.kotlin.toVavrList
+
+fun Deck.dealCards(numberOfCards: Int, players: List<Player>): Tuple2<Deck, List<Player>> {
+    val playingPlayers = players.filter { it.playing() }
+
+    val afterDrawing = drawCards(playingPlayers.size() * numberOfCards)
+
+    val drawnCardsPartitioned = afterDrawing._2.chunked(numberOfCards).toVavrList().map { it.toVavrList() }
+
+    val playersWithCards = playingPlayers.zip(drawnCardsPartitioned)
+            .map { playerAndCards -> playerAndCards._1.withCards(playerAndCards._2) }
+
+    return Tuple.of(afterDrawing._1, playersWithCards.appendAll(players.filter { it.notPlaying() }))
+}
+
+fun Deck.drawCards(number: Int): Tuple2<Deck, List<Card>> {
+    if (this.cards.size() < number)
+        throw IllegalStateException("Deck does not have enough cards")
+
+    val drawn = cards.take(number)
+    return Tuple.of(Deck(cards.removeAll(drawn)), drawn)
+}
+
+fun Deck.drawCard(): Tuple2<Deck, Card> {
+    return drawCards(1).map2 { it.head() }
+}

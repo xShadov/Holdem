@@ -30,10 +30,23 @@ fun PokerTable.addPlayer(player: Player): PokerTable {
     )
 }
 
+fun PokerTable.playerLeft(playerNumber: PlayerNumber): PokerTable {
+    val foundPlayer = allPlayers.byNumber(playerNumber)
+
+    val modifiedPlayers = allPlayers
+            .replace(foundPlayer, foundPlayer.copy(inGame = false))
+
+    return this.copy(
+            allPlayers = modifiedPlayers
+    )
+}
+
 fun PokerTable.dealCards(): PokerTable {
     log.debug("Dealing cards to players")
+    val drawing = deck.dealCards(2, allPlayers)
     return this.copy(
-            allPlayers = deck.dealCards(2, allPlayers)
+            deck = drawing._1,
+            allPlayers = drawing._2
     )
 }
 

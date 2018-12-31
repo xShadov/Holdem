@@ -7,7 +7,7 @@ import io.vavr.collection.List
 
 fun Player.betInPhase(table: PokerTable): Player {
     //TODO if player HAS TO all in show only all in and fold, not call and raise
-    val modifiedPlayer = this.betRanges(
+    val modifiedPlayer = this.withBetRanges(
             Math.min(this.availableChips(), table.bigBlindAmount),
             this.availableChips()
     )
@@ -19,7 +19,7 @@ fun Player.betInPhase(table: PokerTable): Player {
 
     return if (modifiedPlayer.betAmountThisPhase < table.highestBetThisPhase()) modifiedPlayer
             .withMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
-            .betRanges(
+            .withBetRanges(
                     Math.min(table.bigBlindAmount, this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)),
                     this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)
             ) else modifiedPlayer.withMoves(List.of(Moves.CHECK, Moves.RAISE, Moves.FOLD))
@@ -27,7 +27,7 @@ fun Player.betInPhase(table: PokerTable): Player {
 
 fun Player.firstBetInRound(table: PokerTable): Player {
     return this.withMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
-            .betRanges(
+            .withBetRanges(
                     Math.min(this.availableChips(), table.bigBlindAmount),
                     this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)
             )
