@@ -1,5 +1,7 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.table
 
+import com.tp.holdem.common.model.Phase
+import com.tp.holdem.logic.players.byNumberOption
 import com.tp.holdem.model.Player
 import com.tp.holdem.model.PokerTable
 import io.vavr.collection.List
@@ -27,4 +29,8 @@ fun PokerTable.getSmallBlind(): Option<Player> {
 
 fun PokerTable.playerNames(): List<String> {
     return this.allPlayers.map { it.name }
+}
+
+fun PokerTable.lastPlayingPhase(): Boolean {
+    return phase == Phase.RIVER
 }

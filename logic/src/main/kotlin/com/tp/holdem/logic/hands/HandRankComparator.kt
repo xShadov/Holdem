@@ -2,44 +2,28 @@ package com.tp.holdem.logic.hands
 
 import com.tp.holdem.model.HandRank
 import com.tp.holdem.model.Hands
-import io.vavr.collection.List
 import java.util.*
 
-internal class HandRankComparator private constructor() : Comparator<HandRank> {
-    companion object {
-        val INSTANCE = HandRankComparator()
-    }
-
+internal object HandRankComparator : Comparator<HandRank> {
     override fun compare(one: HandRank, two: HandRank): Int {
-        val compareHands = Comparator.comparing { hand: Hands -> hand.value() }.compare(one.hand, two.hand)
+        val compareHands = compareValuesBy(one.hand, two.hand, Hands::value)
 
         if (compareHands != 0)
             return compareHands
 
-        val firstHand = one.hand
-        val firstCards = List.ofAll(one.cardsThatMakeHand)
-        val secondHand = two.hand
-        val secondCards = List.ofAll(two.cardsThatMakeHand)
+        val comparator = when (one.hand) {
+            Hands.HIGH_CARD -> HandComparators.highestKicker
+            Hands.PAIR -> HandComparators.highestPair
+            Hands.TWO_PAIR -> HandComparators.highestPairs
+            Hands.THREE_OF_A_KIND -> HandComparators.highestThree
+            Hands.STRAIGHT -> HandComparators.highestStraightKicker
+            Hands.FLUSH -> HandComparators.highestKicker
+            Hands.FULL_HOUSE -> HandComparators.highestFullHouse
+            Hands.FOUR_OF_A_KIND -> HandComparators.highestFour
+            Hands.STRAIGHT_FLUSH -> HandComparators.highestKicker
+            Hands.ROYAL_FLUSH -> HandComparators.highestKicker
+        }
 
-        if (firstHand === Hands.HIGH_CARD)
-            return HandComparators.highestKicker().compare(firstCards, secondCards)
-        if (firstHand === Hands.PAIR)
-            return HandComparators.highestPair().compare(firstCards, secondCards)
-        if (firstHand === Hands.TWO_PAIR)
-            return HandComparators.highestPairs().compare(firstCards, secondCards)
-        if (firstHand === Hands.THREE_OF_A_KIND)
-            return HandComparators.highestThree().compare(firstCards, secondCards)
-        if (firstHand === Hands.STRAIGHT)
-            return HandComparators.highestStraightKicker().compare(firstCards, secondCards)
-        if (firstHand === Hands.FLUSH)
-            return HandComparators.highestKicker().compare(firstCards, secondCards)
-        if (firstHand === Hands.FULL_HOUSE)
-            return HandComparators.highestFullHouse().compare(firstCards, secondCards)
-        if (firstHand === Hands.FOUR_OF_A_KIND)
-            return HandComparators.highestFour().compare(firstCards, secondCards)
-        if (firstHand === Hands.STRAIGHT_FLUSH)
-            return HandComparators.highestKicker().compare(firstCards, secondCards)
-        return 0
-
+        return compareValuesBy(one, two, comparator, HandRank::cardsThatMakeHand)
     }
 }

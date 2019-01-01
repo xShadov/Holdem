@@ -1,8 +1,11 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.players
 
 import com.tp.holdem.common.model.Moves
+import com.tp.holdem.logic.hands.findHandRank
 import com.tp.holdem.model.Card
+import com.tp.holdem.model.HandRank
 import com.tp.holdem.model.Player
+import com.tp.holdem.model.PokerTable
 import io.vavr.collection.List
 
 fun Player.withCards(cards: List<Card>): Player {
@@ -34,14 +37,6 @@ fun Player.availableChips(): Int {
     return chipsAmount - betAmountThisPhase
 }
 
-fun List<Player>.playing(): List<Player> {
-    return this.filter { it.playing() }
-}
-
-fun List<Player>.notPlaying(): List<Player> {
-    return this.filter { it.notPlaying() }
-}
-
-fun List<Player>.notBroke(): List<Player> {
-    return this.filter { it.chipsAmount > 0 }
+fun Player.handRank(table: PokerTable) : HandRank {
+    return hand.appendAll(table.cardsOnTable).findHandRank()
 }

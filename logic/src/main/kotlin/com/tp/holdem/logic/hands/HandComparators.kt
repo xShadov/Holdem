@@ -1,158 +1,98 @@
 package com.tp.holdem.logic.hands
 
+import com.tp.holdem.logic.utils.extractHighest
+import com.tp.holdem.logic.utils.overallValue
 import com.tp.holdem.model.Card
+import io.vavr.Tuple
 import io.vavr.collection.List
+import io.vavr.kotlin.component1
+import io.vavr.kotlin.component2
 import java.util.*
 
 internal object HandComparators {
-    private val COMBO_NOT_FOUND = { IllegalStateException("Card combination could not be found") }
+    val highestOverallValue: Comparator<List<Card>> = compareBy(List<Card>::overallValue)
 
-    private fun extractHighestPair(cards: List<Card>): List<Card> {
-        return cards.combinations(2)
-                .filter { HandFinder.isPair(it) }
-                .maxBy(highestOverallValue())
-                .getOrElseThrow(COMBO_NOT_FOUND)
-    }
+    val highestFullHouse: Comparator<in List<Card>> = Comparator { a, b ->
+        val aFirstThree = a.extractHighest(3)
+        val bFirstThree = b.extractHighest(3)
 
-    private fun extractHighestThree(cards: List<Card>): List<Card> {
-        return cards.combinations(3)
-                .filter { HandFinder.isThreeOfAKind(it) }
-                .maxBy(highestOverallValue())
-                .getOrElseThrow(COMBO_NOT_FOUND)
-    }
-
-    private fun extractHighestFour(cards: List<Card>): List<Card> {
-        return cards.combinations(4)
-                .filter { HandFinder.isFourOfAKind(it) }
-                .maxBy(highestOverallValue())
-                .getOrElseThrow(COMBO_NOT_FOUND)
-    }
-
-    fun highestOverallValue(): Comparator<List<Card>> {
-        return Comparator.comparingInt { cards -> cards.map { it.value }.sum().toInt() }
-    }
-
-    fun highestFullHouse(): Comparator<in List<Card>> {
-        return Comparator { a, b ->
-            val aFirstThree = extractHighestThree(a)
-            val bFirstThree = extractHighestThree(b)
-
-            val compareFirstThrees = highestOverallValue().compare(aFirstThree, bFirstThree)
-            if (compareFirstThrees != 0)
-                return@Comparator compareFirstThrees
-
-            val aTrimmed = a.removeAll(aFirstThree)
-            val bTrimmed = b.removeAll(bFirstThree)
-
-            return@Comparator highestPair().compare(aTrimmed, bTrimmed)
+        val compare = highestOverallValue.compare(aFirstThree, bFirstThree)
+        return@Comparator when (compare) {
+            0 -> highestPair.compare(a.removeAll(aFirstThree), b.removeAll(bFirstThree))
+            else -> compare
         }
     }
 
-    fun highestFour(): Comparator<in List<Card>> {
-        return Comparator { a, b ->
-            val aFirstFour = extractHighestFour(a)
-            val bFirstFour = extractHighestFour(b)
+    val highestFour: Comparator<in List<Card>> = Comparator { a, b ->
+        val aFirstFour = a.extractHighest(4)
+        val bFirstFour = b.extractHighest(4)
 
-            val compareFirstFours = highestOverallValue().compare(aFirstFour, bFirstFour)
-            if (compareFirstFours != 0)
-                return@Comparator compareFirstFours
-
-            val aTrimmed = a.removeAll(aFirstFour)
-            val bTrimmed = b.removeAll(bFirstFour)
-
-            return@Comparator highestKicker().compare(aTrimmed, bTrimmed)
+        val compare = highestOverallValue.compare(aFirstFour, bFirstFour)
+        return@Comparator when (compare) {
+            0 -> highestKicker.compare(a.removeAll(aFirstFour), b.removeAll(bFirstFour))
+            else -> compare
         }
     }
 
-    fun highestThree(): Comparator<in List<Card>> {
-        return Comparator { a, b ->
-            val aFirstThree = extractHighestThree(a)
-            val bFirstThree = extractHighestThree(b)
+    val highestThree: Comparator<in List<Card>> = Comparator { a, b ->
+        val aFirstThree = a.extractHighest(3)
+        val bFirstThree = b.extractHighest(3)
 
-            val compareFirstThrees = highestOverallValue().compare(aFirstThree, bFirstThree)
-            if (compareFirstThrees != 0)
-                return@Comparator compareFirstThrees
-
-            val aTrimmed = a.removeAll(aFirstThree)
-            val bTrimmed = b.removeAll(bFirstThree)
-
-            return@Comparator highestKicker().compare(aTrimmed, bTrimmed)
+        val compare = highestOverallValue.compare(aFirstThree, bFirstThree)
+        return@Comparator when (compare) {
+            0 -> highestKicker.compare(a.removeAll(aFirstThree), b.removeAll(bFirstThree))
+            else -> compare
         }
     }
 
-    fun highestPair(): Comparator<in List<Card>> {
-        return Comparator { a, b ->
-            val aFirstPair = extractHighestPair(a)
-            val bFirstPair = extractHighestPair(b)
+    val highestPair: Comparator<in List<Card>> = Comparator { a, b ->
+        val aFirstPair = a.extractHighest(2)
+        val bFirstPair = b.extractHighest(2)
 
-            val compareFirstPairs = highestOverallValue().compare(aFirstPair, bFirstPair)
-            if (compareFirstPairs != 0)
-                return@Comparator compareFirstPairs
-
-            val aTrimmed = a.removeAll(aFirstPair)
-            val bTrimmed = b.removeAll(bFirstPair)
-
-            return@Comparator highestKicker().compare(aTrimmed, bTrimmed)
+        val compare = highestOverallValue.compare(aFirstPair, bFirstPair)
+        return@Comparator when (compare) {
+            0 -> highestKicker.compare(a.removeAll(aFirstPair), b.removeAll(bFirstPair))
+            else -> compare
         }
     }
 
-    fun highestPairs(): Comparator<List<Card>> {
-        return Comparator { a, b ->
-            val aFirstPair = extractHighestPair(a)
-            val bFirstPair = extractHighestPair(b)
+    val highestPairs: Comparator<List<Card>> = Comparator { a, b ->
+        val aFirstPair = a.extractHighest(2)
+        val bFirstPair = b.extractHighest(2)
 
-            val compareFirstPairs = highestOverallValue().compare(aFirstPair, bFirstPair)
-            if (compareFirstPairs != 0)
-                return@Comparator compareFirstPairs
+        val compareFirstPairs = highestOverallValue.compare(aFirstPair, bFirstPair)
+        if (compareFirstPairs != 0)
+            return@Comparator compareFirstPairs
 
-            val aTrimmed = a.removeAll(aFirstPair)
-            val bTrimmed = b.removeAll(bFirstPair)
+        val aTrimmed = a.removeAll(aFirstPair)
+        val bTrimmed = b.removeAll(bFirstPair)
 
-            val aSecondPair = extractHighestPair(aTrimmed)
-            val bSecondPair = extractHighestPair(bTrimmed)
+        val aSecondPair = aTrimmed.extractHighest(2)
+        val bSecondPair = bTrimmed.extractHighest(2)
 
-            val compareSecondPairs = highestOverallValue().compare(aSecondPair, bSecondPair)
-            if (compareSecondPairs != 0)
-                return@Comparator compareSecondPairs
-
-            val aHighestCard = aTrimmed.removeAll(aSecondPair)
-            val bHighestCard = bTrimmed.removeAll(bSecondPair)
-
-            return@Comparator highestOverallValue().compare(aHighestCard, bHighestCard)
+        val compare = highestOverallValue.compare(aSecondPair, bSecondPair)
+        return@Comparator when (compare) {
+            0 -> highestOverallValue.compare(aTrimmed.removeAll(aSecondPair), bTrimmed.removeAll(bSecondPair))
+            else -> compare
         }
     }
 
-    fun highestKicker(): Comparator<List<Card>> {
-        return Comparator { a, b ->
-            for (i in a.length() - 1 downTo 0) {
-                val firstValue = a.get(i).value
-                val secondValue = b.get(i).value
-
-                val compare = Integer.compare(firstValue, secondValue)
-
-                if (compare != 0)
-                    return@Comparator compare
-            }
-
-            return@Comparator 0
-        }
+    val highestKicker: Comparator<List<Card>> = Comparator { a, b ->
+        return@Comparator a.zip(b)
+                .toStream()
+                .reverse()
+                .map { (card1, card2) -> Tuple.of(card1.value, card2.value) }
+                .map { (first, second) -> Integer.compare(first, second) }
+                .find { value -> value != 0 }
+                .getOrElse(0)
     }
 
-    fun highestStraightKicker(): Comparator<List<Card>> {
-        return Comparator { a, b ->
-            val aAceStraight = HandPredicates.ACE_STRAIGHT.test(a)
-            val bAceStraight = HandPredicates.ACE_STRAIGHT.test(b)
-
-            if (aAceStraight && bAceStraight)
-                return@Comparator 0
-
-            if (aAceStraight)
-                return@Comparator -1
-
-            if (bAceStraight)
-                return@Comparator 1
-
-            return@Comparator highestKicker().compare(a, b)
+    val highestStraightKicker: Comparator<List<Card>> = Comparator { a, b ->
+        when (listOf(a.isAceStraight(), b.isAceStraight())) {
+            listOf(true, true) -> 0
+            listOf(true, false) -> -1
+            listOf(false, true) -> 1
+            else -> highestKicker.compare(a, b)
         }
     }
 }

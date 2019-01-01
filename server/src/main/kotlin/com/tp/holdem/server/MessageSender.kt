@@ -5,10 +5,10 @@ import com.tp.holdem.common.lazyLogger
 import com.tp.holdem.common.message.Message
 import com.tp.holdem.common.message.MessageType
 import com.tp.holdem.common.message.UpdateStateMessage
-import com.tp.holdem.logic.extensions.byNumber
-import com.tp.holdem.logic.extensions.playerNames
-import com.tp.holdem.logic.extensions.toCurrentPlayerDTO
-import com.tp.holdem.logic.extensions.toDTO
+import com.tp.holdem.logic.players.byNumber
+import com.tp.holdem.logic.table.playerNames
+import com.tp.holdem.logic.utils.toCurrentPlayerDTO
+import com.tp.holdem.logic.utils.toDTO
 import com.tp.holdem.model.PokerTable
 
 internal class MessageSender(private val server: Server) {
@@ -21,13 +21,11 @@ internal class MessageSender(private val server: Server) {
                 .table(table.toDTO())
                 .build()
 
-        log.debug("Players on poker table: ${table.playerNames()}")
         connectedPlayers.forEach { connection: Int, playerNumber: Int ->
-            log.debug("Sending message to player: $playerNumber")
-
             val currentPlayerDTO = table.allPlayers
                     .byNumber(playerNumber)
                     .toCurrentPlayerDTO()
+                    .also { log.debug("Sending message to player: ${it.name}") }
 
             val modifiedResponse = message.toBuilder()
                     .currentPlayer(currentPlayerDTO)
@@ -39,7 +37,6 @@ internal class MessageSender(private val server: Server) {
 
     fun sendSingle(connectionId: Int, message: Message) {
         log.debug("Sending message ${message.messageType} to single connection: $connectionId")
-
         server.sendToTCP(connectionId, message)
     }
 }

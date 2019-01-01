@@ -1,6 +1,9 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.utils
 
 import com.tp.holdem.common.chunks
+import com.tp.holdem.logic.players.notPlaying
+import com.tp.holdem.logic.players.playing
+import com.tp.holdem.logic.players.withCards
 import com.tp.holdem.model.Card
 import com.tp.holdem.model.Deck
 import com.tp.holdem.model.Player

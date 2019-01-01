@@ -12,7 +12,7 @@ import spock.lang.Unroll
 class HandFinderSpec extends Specification {
     def "test different (correct) hand combinations"() {
         expect:
-        HandFinder.INSTANCE.findHand(List.ofAll(cards).map({ code -> Card.coded(code) })) == hand
+        HandCheckersKt.findHand(List.ofAll(cards).map({ code -> Card.coded(code) })) == hand
 
         where:
         cards                                         || hand
@@ -57,7 +57,7 @@ class HandFinderSpec extends Specification {
 
     def "test with incorrect hand combinations"() {
         when:
-        HandFinder.INSTANCE.findHand(List.ofAll(cards))
+        HandCheckersKt.findHand(List.ofAll(cards))
 
         then:
         thrown IllegalArgumentException

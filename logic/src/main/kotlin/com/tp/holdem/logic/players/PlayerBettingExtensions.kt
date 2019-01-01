@@ -1,8 +1,10 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.players
 
 import com.tp.holdem.model.Player
 import com.tp.holdem.model.PokerTable
 import com.tp.holdem.common.model.Moves
+import com.tp.holdem.logic.table.highestBetThisPhase
+import com.tp.holdem.logic.table.potAmountThisPhase
 import io.vavr.collection.List
 
 fun Player.betInPhase(table: PokerTable): Player {
@@ -16,14 +18,14 @@ fun Player.betInPhase(table: PokerTable): Player {
         return modifiedPlayer.withMoves(List.of(Moves.BET, Moves.CHECK, Moves.FOLD))
     }
 
-    return if (modifiedPlayer.betAmountThisPhase < table.highestBetThisPhase()) {
-        modifiedPlayer
+    if (modifiedPlayer.betAmountThisPhase < table.highestBetThisPhase()) {
+        return modifiedPlayer
                 .withMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
                 .withBetRanges(
                         Math.min(table.bigBlindAmount, this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)),
                         this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)
                 )
-    } else modifiedPlayer.withMoves(List.of(Moves.CHECK, Moves.RAISE, Moves.FOLD))
+    } else return modifiedPlayer.withMoves(List.of(Moves.CHECK, Moves.RAISE, Moves.FOLD))
 }
 
 fun Player.firstBetInRound(table: PokerTable): Player {

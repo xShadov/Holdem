@@ -1,9 +1,10 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.utils
 
 import com.tp.holdem.common.message.dto.CardDTO
 import com.tp.holdem.common.message.dto.CurrentPlayerDTO
 import com.tp.holdem.common.message.dto.PlayerDTO
 import com.tp.holdem.common.message.dto.PokerTableDTO
+import com.tp.holdem.logic.table.*
 import com.tp.holdem.model.Card
 import com.tp.holdem.model.Player
 import com.tp.holdem.model.PokerTable

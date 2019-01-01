@@ -16,7 +16,7 @@ class BestCardCombinationFinderSpec extends Specification {
 
     def "test different (correct) hand combinations"() {
         expect:
-        BestCardCombinationFinder.INSTANCE.findBestCardsForHand(mapCards(cards), hand).toSet() == mapCards(result).toSet()
+        HandCombinationsKt.bestCardsForHand(mapCards(cards), hand).toSet() == mapCards(result).toSet()
 
         where:
         hand                  | cards                                         | result
@@ -58,7 +58,7 @@ class BestCardCombinationFinderSpec extends Specification {
 
     def "test with incorrect hand combinations"() {
         when:
-        BestCardCombinationFinder.INSTANCE.findBestCardsForHand(List.ofAll(cards), Hands.ROYAL_FLUSH)
+        HandCombinationsKt.bestCardsForHand(List.ofAll(cards), Hands.ROYAL_FLUSH)
 
         then:
         thrown IllegalArgumentException

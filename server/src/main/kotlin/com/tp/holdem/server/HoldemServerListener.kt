@@ -8,8 +8,10 @@ import com.tp.holdem.common.message.MessageType
 import com.tp.holdem.common.message.PlayerActionMessage
 import com.tp.holdem.common.message.PlayerConnectMessage
 import com.tp.holdem.common.model.Phase
-import com.tp.holdem.logic.extensions.toCurrentPlayerDTO
+import com.tp.holdem.logic.utils.toCurrentPlayerDTO
 import com.tp.holdem.model.PokerTable
+import jdk.nashorn.internal.runtime.regexp.joni.Config.log
+import sun.audio.AudioPlayer.player
 
 internal class HoldemServerListener(
         private val sender: MessageSender,
@@ -24,7 +26,7 @@ internal class HoldemServerListener(
     @Synchronized
     override fun received(connection: Connection, message: Any) {
         if (message is Message) {
-            log.debug("Received message from ${connection.id}: ${message}")
+            log.debug("Received message from ${connection.id}: $message")
 
             if (connection.id != expectActionFrom)
                 throw IllegalStateException("Unexpected player sent action")
@@ -44,7 +46,7 @@ internal class HoldemServerListener(
                 }
 
                 sender.sendStateUpdate(connectedPlayers, response)
-                expectActionFrom = findExpectedResponder(response)
+                        .also { expectActionFrom = findExpectedResponder(response) }
 
                 if (response.phase == Phase.OVER) {
                     waitAndStartNewRound()
@@ -59,11 +61,9 @@ internal class HoldemServerListener(
 
         while (response.phase != Phase.RIVER) {
             response = gameHandler.startPhase()
-
-            sender.sendStateUpdate(connectedPlayers, response)
-            expectActionFrom = findExpectedResponder(response)
-
-            Thread.sleep(1500)
+                    .also { sender.sendStateUpdate(connectedPlayers, response) }
+                    .also { expectActionFrom = findExpectedResponder(response) }
+                    .also { Thread.sleep(1500) }
         }
 
         return gameHandler.roundOver()
@@ -73,8 +73,7 @@ internal class HoldemServerListener(
         log.debug("Current round is over, sleeping for 5s and staring new round")
 
         Thread.sleep(5000)
-
-        startRound()
+                .also { startRound() }
     }
 
     @Synchronized
@@ -84,8 +83,7 @@ internal class HoldemServerListener(
         val connected = tryConnectingPlayer(con)
 
         if (!connected) {
-            log.debug("Could not connect player")
-            return
+            return log.debug("Could not connect player")
         }
 
         if (enoughPlayers()) {
@@ -108,38 +106,35 @@ internal class HoldemServerListener(
 
     private fun tryConnectingPlayer(con: Connection): Boolean {
         if (enoughPlayers()) {
-            log.debug("Already enough players, could not connect")
-
-            sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, PlayerConnectMessage.failure()))
-            return false
+            return sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, PlayerConnectMessage.failure()))
+                    .also { log.debug("Already enough players, could not connect") }
+                    .let { false }
         }
 
         if (connectedPlayers.isConnected(con.id))
             throw IllegalStateException("Player already connected")
 
-        val player = gameHandler.connectPlayer()
-        connectedPlayers = connectedPlayers.connect(con.id, player.number)
-
-        log.debug("Connected player: ${player.number}")
-
-        sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, PlayerConnectMessage.success(player.toCurrentPlayerDTO())))
-        return true
+        return gameHandler.connectPlayer()
+                .also { connectedPlayers = connectedPlayers.connect(con.id, it.number) }
+                .also { log.debug("Connected player: ${it.number}") }
+                .also { sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, PlayerConnectMessage.success(it.toCurrentPlayerDTO()))) }
+                .let { true }
     }
 
     private fun startGame() {
         log.debug("Staring new game")
 
-        val response = gameHandler.startGame()
-        sender.sendStateUpdate(connectedPlayers, response)
-        expectActionFrom = findExpectedResponder(response)
+        gameHandler.startGame()
+                .also { sender.sendStateUpdate(connectedPlayers, it) }
+                .also { expectActionFrom = findExpectedResponder(it) }
     }
 
     private fun startRound() {
         log.debug("Starting new round")
 
-        val response = gameHandler.startRound()
-        sender.sendStateUpdate(connectedPlayers, response)
-        expectActionFrom = findExpectedResponder(response)
+        gameHandler.startRound()
+                .also { sender.sendStateUpdate(connectedPlayers, it) }
+                .also { expectActionFrom = findExpectedResponder(it) }
     }
 
     private fun findExpectedResponder(response: PokerTable): Int =

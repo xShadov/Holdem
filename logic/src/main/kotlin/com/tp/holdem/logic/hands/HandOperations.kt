@@ -1,51 +1,41 @@
 package com.tp.holdem.logic.hands
 
 import com.tp.holdem.common.lazyLogger
-import com.tp.holdem.logic.extensions.playing
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.HandRank
+import com.tp.holdem.logic.players.handRank
+import com.tp.holdem.logic.players.notFolded
+import com.tp.holdem.logic.players.playing
 import com.tp.holdem.model.Player
 import com.tp.holdem.model.PokerTable
 import io.vavr.collection.List
 import io.vavr.control.Either
-import java.util.*
-import java.util.function.Function
 
 internal object HandOperations {
     private val log by lazyLogger()
 
-    private val CARD_COMPARATOR = Comparator.comparing { card: Card -> card.value }
-
     fun findWinner(allPlayers: List<Player>, pokerTable: PokerTable): Either<Player, List<Player>> {
-        if (allPlayers.filter { player -> !player.folded }.size() == 1) {
-            log.debug("Everyone folded except one player, he's the winner")
-            return Either.left(allPlayers.find { player -> !player.folded }.single())
+        val notFoldedPlayers = allPlayers.notFolded()
+
+        if (notFoldedPlayers.size() == 1) {
+            return Either.left<Player, List<Player>>(notFoldedPlayers.single())
+                    .also { log.debug("Everyone folded except one player, he's the winner") }
         }
 
-        val hands = allPlayers.filter { it.playing() }
-                .toMap<Player, HandRank>(Function.identity(), Function { player -> findHandRank(player, pokerTable) })
-
-        log.debug(String.format("Players to hands map: %s", hands))
+        val hands = allPlayers.playing()
+                .toMap({ it }, { player -> player.handRank(pokerTable) })
+                .also { log.debug("Players to hands map: $it") }
 
         val maxHandRank = hands.values()
-                .maxBy(HandRankComparator.INSTANCE)
+                .maxBy(HandRankComparator)
                 .single()
 
         val playersWithMaxHandRank = hands
-                .filter { player, hand -> HandRankComparator.INSTANCE.compare(hand, maxHandRank) == 0 }
+                .filter { _, hand -> HandRankComparator.compare(hand, maxHandRank) == 0 }
                 .map { tuple -> tuple._1 }
+                .toList()
 
-        return if (playersWithMaxHandRank.size() == 1) Either.left(playersWithMaxHandRank.head()) else Either.right(playersWithMaxHandRank.toList())
-    }
-
-    private fun findHandRank(player: Player, pokerTable: PokerTable): HandRank {
-        val cards = player.hand
-                .appendAll(pokerTable.cardsOnTable)
-                .sorted(CARD_COMPARATOR)
-
-        val playerHand = HandFinder.findHand(cards)
-        val bestCardsThatMakeHand = BestCardCombinationFinder.findBestCardsForHand(cards, playerHand)
-
-        return HandRank(playerHand, bestCardsThatMakeHand)
+        return when (playersWithMaxHandRank.size()) {
+            1 -> Either.left(playersWithMaxHandRank.head())
+            else -> Either.right(playersWithMaxHandRank)
+        }
     }
 }

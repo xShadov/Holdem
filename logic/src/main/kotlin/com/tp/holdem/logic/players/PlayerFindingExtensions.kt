@@ -1,4 +1,4 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.players
 
 import com.tp.holdem.logic.hands.HandOperations
 import com.tp.holdem.model.Player
@@ -40,4 +40,32 @@ fun List<Player>.indexOfNumber(number: Int): Int {
 
 fun List<Player>.winner(table: PokerTable): Either<Player, List<Player>> {
     return HandOperations.findWinner(this, table)
+}
+
+fun List<Player>.playing(): List<Player> {
+    return this.filter { it.playing() }
+}
+
+fun List<Player>.notPlaying(): List<Player> {
+    return this.filter { it.notPlaying() }
+}
+
+fun List<Player>.notBroke(): List<Player> {
+    return this.filter { it.chipsAmount > 0 }
+}
+
+fun List<Player>.folded(): List<Player> {
+    return this.filter { it.folded }
+}
+
+fun List<Player>.notFolded(): List<Player> {
+    return this.filter { !it.folded }
+}
+
+fun List<Player>.inGame(): List<Player> {
+    return this.filter { it.inGame }
+}
+
+fun List<Player>.notInGame(): List<Player> {
+    return this.filter { !it.inGame }
 }

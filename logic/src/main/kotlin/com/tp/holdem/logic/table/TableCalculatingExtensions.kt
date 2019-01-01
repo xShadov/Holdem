@@ -1,5 +1,7 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.table
 
+import com.tp.holdem.logic.players.notBroke
+import com.tp.holdem.logic.players.playing
 import com.tp.holdem.model.PokerTable
 
 fun PokerTable.highestBetThisPhase(): Int {

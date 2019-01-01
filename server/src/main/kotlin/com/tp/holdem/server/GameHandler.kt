@@ -1,13 +1,14 @@
 package com.tp.holdem.server
 
+import com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table
 import com.tp.holdem.common.lazyLogger
 import com.tp.holdem.common.message.PlayerActionMessage
-import com.tp.holdem.common.model.Phase
-import com.tp.holdem.logic.extensions.*
+import com.tp.holdem.logic.table.*
 import com.tp.holdem.model.PhaseStatus
 import com.tp.holdem.model.Player
 import com.tp.holdem.model.PlayerNumber
 import com.tp.holdem.model.PokerTable
+import jdk.nashorn.internal.runtime.regexp.joni.Config.log
 import java.util.concurrent.atomic.AtomicLong
 
 internal class GameHandler(
@@ -22,37 +23,31 @@ internal class GameHandler(
         if (table.allPlayers.size() != gameParams.playerCount)
             throw IllegalStateException("Game cannot be started - wrong number of players")
 
-        log.debug(String.format("Starting game with %d players", gameParams.playerCount))
-
-        this.table = table.preparePlayersForNewGame(gameParams.startingChips)
-
-        return startRound()
+        return this.table.preparePlayersForNewGame(gameParams.startingChips)
+                .also { log.debug("Starting game with ${gameParams.playerCount} players") }
+                .also { this.table = it }
+                .let { this.startRound() }
     }
 
     fun startRound(): PokerTable {
         if (this.table.notEnoughPlayersWithChips()) {
-            log.debug("Game is over")
-            this.table = table.gameOver()
-            return this.table
+            return this.table.gameOver()
+                    .also { log.debug("Game is over") }
+                    .also { this.table = it }
         }
 
-        handCount.incrementAndGet()
-
-        log.debug("Starting new round number: ${handCount.get()}")
-
-        this.table = table.newRound(handCount)
-
-        log.debug("Players ready for new round: ${table.playerNames()}")
-
-        return startPhase()
+        return handCount.incrementAndGet()
+                .also { log.debug("Starting new round number: ${handCount.get()}") }
+                .let { this.table.newRound(handCount) }
+                .also { log.debug("Players ready for new round: ${table.playerNames()}") }
+                .also { this.table = it }
+                .let { this.startPhase() }
     }
 
     fun startPhase(): PokerTable {
         log.debug("Staring phase: ${table.phase.nextPhase()}")
-
-        this.table = table.nextPhase()
-
-        return table
+        return this.table.nextPhase()
+                .also { this.table = it }
     }
 
     fun handlePlayerMove(playerNumber: Int, content: PlayerActionMessage): PokerTable {
@@ -60,49 +55,43 @@ internal class GameHandler(
 
         this.table = table.playerMove(playerNumber, content.move, content.betAmount)
 
-        val phaseStatus = table.phaseStatus()
-
-        log.debug("Phase status is: $phaseStatus")
-
-        if (phaseStatus == PhaseStatus.EVERYBODY_FOLDED || (phaseStatus == PhaseStatus.READY_FOR_NEXT && table.phase == Phase.RIVER)) {
-            log.debug("Table round is over")
-            return roundOver()
+        return when (this.table.phaseStatus().also { log.debug("Phase status is: $it") }) {
+            PhaseStatus.ROUND_OVER -> {
+                roundOver().also { log.debug("Table round is over") }
+            }
+            PhaseStatus.EVERYBODY_ALL_IN -> {
+                this.table.showdownMode()
+                        .also { log.debug("Table in showdown mode") }
+                        .also { this.table = it }
+            }
+            PhaseStatus.READY_FOR_NEXT -> {
+                startPhase().also { log.debug("Table phase is over") }
+            }
+            PhaseStatus.KEEP_GOING -> {
+                log.debug("Finding next player to bet")
+                this.table.nextPlayerToBet()
+                        .also { this.table = it }
+            }
         }
-
-        if (phaseStatus == PhaseStatus.EVERYBODY_ALL_IN) {
-            this.table = table.showdownMode()
-            return this.table
-        }
-
-        if (phaseStatus == PhaseStatus.READY_FOR_NEXT) {
-            log.debug("Table phase is over")
-            return startPhase()
-        }
-
-        log.debug("Finding next player to bet")
-        this.table = table.nextPlayerToBet()
-
-        return this.table
     }
 
     fun roundOver(): PokerTable {
         log.debug("Performing round-over operation")
-        this.table = table.roundOver()
-
-        return table
+        return table.roundOver()
+                .also { this.table = it }
     }
 
     fun connectPlayer(): Player {
-        log.debug("Connecting new player")
-        val newPlayer = numberedPlayer()
-        this.table = table.addPlayer(newPlayer)
-        return newPlayer
+        return numberedPlayer()
+                .also { log.debug("Connecting new player") }
+                .also { this.table = this.table.addPlayer(it) }
+
     }
 
     fun disconnectPlayer(playerNumber: Int): PokerTable {
         log.debug("Disconnecting player: $playerNumber")
-        this.table = table.playerLeft(PlayerNumber.of(playerNumber))
-        return table
+        return table.playerLeft(PlayerNumber.of(playerNumber))
+
     }
 
     private fun numberedPlayer(): Player {

@@ -1,21 +1,23 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.table
 
 import com.tp.holdem.common.model.Phase
+import com.tp.holdem.logic.players.*
+import com.tp.holdem.logic.utils.drawCards
 import com.tp.holdem.model.PhaseStatus
 import com.tp.holdem.model.Player
 import com.tp.holdem.model.PlayerNumber
 import com.tp.holdem.model.PokerTable
 import io.vavr.collection.HashMap
+import io.vavr.kotlin.component1
+import io.vavr.kotlin.component2
 
 fun PokerTable.nextPhase(): PokerTable {
-    val nextPhase = phase.nextPhase()
-    if (nextPhase == Phase.PRE_FLOP)
-        return goToPreFlopPhase()
-    if (nextPhase == Phase.FLOP)
-        return goToNextPhase(3)
-    if (nextPhase == Phase.TURN || nextPhase == Phase.RIVER)
-        return goToNextPhase(1)
-    throw IllegalStateException("There is no next phase")
+    return when (phase.nextPhase()) {
+        Phase.PRE_FLOP -> goToPreFlopPhase()
+        Phase.FLOP -> goToNextPhase(3)
+        Phase.TURN, Phase.RIVER -> goToNextPhase(1)
+        else -> throw IllegalStateException("There is no next phase")
+    }
 }
 
 private fun PokerTable.goToPreFlopPhase(): PokerTable {
@@ -31,15 +33,15 @@ private fun PokerTable.goToPreFlopPhase(): PokerTable {
 }
 
 private fun PokerTable.goToNextPhase(cards: Int): PokerTable {
-    val preparedPlayers = allPlayers.map<Player> { it.prepareForNewPhase() }
+    val preparedPlayers = allPlayers.map { it.prepareForNewPhase() }
 
-    val drawing = deck.drawCards(cards)
+    val (deck, cards) = deck.drawCards(cards)
 
     val updatedTable = this.copy(
             phase = phase.nextPhase(),
             allPlayers = preparedPlayers,
-            deck = drawing._1,
-            cardsOnTable = cardsOnTable.appendAll(drawing._2),
+            deck = deck,
+            cardsOnTable = cardsOnTable.appendAll(cards),
             movesThisPhase = movesThisPhase.filterValues { it.goingToNextPhase() }
     )
 
@@ -69,25 +71,27 @@ private fun PokerTable.nextPlayerToBetAfter(playerNumber: Int): PokerTable {
 }
 
 fun PokerTable.phaseStatus(): PhaseStatus {
-    val notAllInCount = allPlayers
-            .filter { it.inGame }
-            .count { player -> !player.allIn }
+    val playersInGame = allPlayers.inGame()
 
-    val allPlayersMoved = movesThisPhase.size() == allPlayers.filter { it.inGame }.size()
+    val notAllInCount = playersInGame.count { player -> !player.allIn }
+    val allPlayersMoved = movesThisPhase.size() == playersInGame.size()
 
     if (notAllInCount <= 1 && allPlayersMoved)
         return PhaseStatus.EVERYBODY_ALL_IN
 
-    val notFoldedCount = allPlayers
-            .filter { it.inGame }
-            .count { player -> !player.folded }
+    val notFoldedPlayers = playersInGame.notFolded()
+    val notFoldedCount = notFoldedPlayers.size()
 
     if (notFoldedCount == 1)
-        return PhaseStatus.EVERYBODY_FOLDED
+        return PhaseStatus.ROUND_OVER
 
-    val allBetsAreEqual = allPlayers
-            .filter { it.playing() }
+    val allBetsAreEqual = notFoldedPlayers
             .forAll { player -> player.allIn || player.betAmountThisPhase == highestBetThisPhase() }
 
-    return if (allPlayersMoved && allBetsAreEqual) PhaseStatus.READY_FOR_NEXT else PhaseStatus.KEEP_GOING
+    val readyForNext = allPlayersMoved && allBetsAreEqual
+    return when {
+        readyForNext && phase == Phase.RIVER -> PhaseStatus.ROUND_OVER
+        readyForNext -> PhaseStatus.READY_FOR_NEXT
+        else -> PhaseStatus.KEEP_GOING
+    }
 }

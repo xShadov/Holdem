@@ -7,7 +7,7 @@ public class MessageBus {
 	private List<ServerObservable> observables = List.empty();
 
 	public void register(ServerObservable observable) {
-		observables = observables.push(observable);
+		observables = observables.append(observable);
 	}
 
 	public void message(Message response) {

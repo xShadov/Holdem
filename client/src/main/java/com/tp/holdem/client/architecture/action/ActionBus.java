@@ -6,7 +6,7 @@ public class ActionBus {
 	private List<GameObservable> observables = List.empty();
 
 	public void register(GameObservable observable) {
-		observables = observables.push(observable);
+		observables = observables.append(observable);
 	}
 
 	public void message(Action action) {

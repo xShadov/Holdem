@@ -1,4 +1,4 @@
-package com.tp.holdem.logic.extensions
+package com.tp.holdem.logic.players
 
 import com.tp.holdem.model.Player
 
