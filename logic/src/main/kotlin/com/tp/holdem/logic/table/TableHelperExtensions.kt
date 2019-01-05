@@ -36,7 +36,6 @@ fun PokerTable.playerNames(): List<String> {
 fun PokerTable.playerNumbers(): List<PlayerNumber> {
     return this.allPlayers
             .map { it.number }
-            .map(::PlayerNumber)
 }
 
 fun PokerTable.playerCount(): Int {
@@ -48,7 +47,7 @@ fun PokerTable.currentPhase(): Phase {
 }
 
 fun PokerTable.latestPlayer(): Option<PlayerNumber> {
-    return this.allPlayers.lastOption().map { PlayerNumber.of(it.number) }
+    return this.allPlayers.lastOption().map { it.number }
 }
 
 fun PokerTable.currentlyBetting(): PlayerNumber {
@@ -60,5 +59,5 @@ fun PokerTable.inShowdownMode(): Boolean {
 }
 
 fun PokerTable.findPlayer(number: PlayerNumber): Player {
-    return allPlayers.byNumber(number.number)
+    return allPlayers.byNumber(number)
 }

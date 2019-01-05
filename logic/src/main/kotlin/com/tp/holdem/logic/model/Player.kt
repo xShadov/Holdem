@@ -4,7 +4,7 @@ import com.tp.holdem.common.model.Moves
 import io.vavr.collection.List
 
 data class Player(
-        internal val number: Int = -1,
+        internal val number: PlayerNumber = PlayerNumber.empty(),
 
         internal val minimumBet: Int = 0,
         internal val maximumBet: Int = 0,
@@ -16,13 +16,13 @@ data class Player(
         internal val allIn: Boolean = false,
         internal val folded: Boolean = false,
 
-        internal val name: String = "Player$number",
+        internal val name: String = "Player${number.number}",
         internal val possibleMoves: List<Moves> = List.empty(),
         internal val hand: List<Card> = List.empty()
 ) {
     companion object {
         @JvmStatic
-        fun numbered(number: Int): Player {
+        fun numbered(number: PlayerNumber): Player {
             return Player(
                     number = number
             )

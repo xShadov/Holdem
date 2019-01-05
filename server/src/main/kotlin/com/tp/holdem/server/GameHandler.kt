@@ -95,7 +95,7 @@ internal class GameHandler(
         return table.latestPlayer()
                 .map { it.number }
                 .map { number -> number + 1 }
-                .map { Player.numbered(it) }
-                .getOrElse { Player.numbered(0) }
+                .map { Player.numbered(PlayerNumber.of(it)) }
+                .getOrElse { Player.numbered(PlayerNumber.of(0)) }
     }
 }

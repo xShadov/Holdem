@@ -28,7 +28,7 @@ private fun PokerTable.goToPreFlopPhase(): PokerTable {
     return this.copy(
             phase = phase.nextPhase(),
             allPlayers = allPlayers.replace(dealerPlayer, bettingPlayer),
-            bettingPlayerNumber = PlayerNumber.of(bettingPlayer.number),
+            bettingPlayerNumber = bettingPlayer.number,
             latestMoves = HashMap.empty()
     )
 }
@@ -65,12 +65,12 @@ private fun PokerTable.nextPlayerToBetAfter(playerNumber: PlayerNumber): PokerTa
         newBettingPlayer = allPlayers.get((bettingPlayerIndex + count++) % allPlayers.size())
     } while (newBettingPlayer.notPlaying())
 
-    if (newBettingPlayer.number == playerNumber.number)
+    if (newBettingPlayer.number == playerNumber)
         throw IllegalStateException("New player to bet is the same as previous one")
 
     return this.copy(
             allPlayers = allPlayers.replace(newBettingPlayer, newBettingPlayer.betInPhase(this)),
-            bettingPlayerNumber = PlayerNumber.of(newBettingPlayer.number)
+            bettingPlayerNumber = newBettingPlayer.number
     )
 }
 
@@ -103,7 +103,7 @@ fun PokerTable.startShowdown(): PokerTable {
 fun PokerTable.playerMove(playerNumber: PlayerNumber, move: Moves, betAmount: Int = 0): PokerTable {
     val actionPlayer = allPlayers.byNumber(playerNumber)
 
-    if(bettingPlayerNumber.number != actionPlayer.number)
+    if(bettingPlayerNumber != actionPlayer.number)
         throw IllegalStateException("Different player has betting turn")
 
     if(actionPlayer.notPlaying())
@@ -123,6 +123,6 @@ fun PokerTable.playerMove(playerNumber: PlayerNumber, move: Moves, betAmount: In
 
     return this.copy(
             allPlayers = allPlayers.replace(actionPlayer, playerAfterAction.bettingTurnOver()),
-            latestMoves = latestMoves.put(PlayerNumber.of(actionPlayer.number), move)
+            latestMoves = latestMoves.put(actionPlayer.number, move)
     )
 }

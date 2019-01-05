@@ -54,9 +54,9 @@ fun PokerTable.newRound(handCount: AtomicLong): PokerTable {
             allPlayers = playersWithCleanBets.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer),
             winnerPlayerNumber = PlayerNumber.empty(),
             bettingPlayerNumber = PlayerNumber.empty(),
-            dealerNumber = PlayerNumber.of(dealerPlayer.number),
-            bigBlindPlayerNumber = PlayerNumber.of(newBigBlindPlayer.number),
-            smallBlindPlayerNumber = PlayerNumber.of(newSmallBlindPlayer.number)
+            dealerNumber = dealerPlayer.number,
+            bigBlindPlayerNumber = newBigBlindPlayer.number,
+            smallBlindPlayerNumber = newSmallBlindPlayer.number
     )
 
     return updatedTable.dealCards()
@@ -78,7 +78,7 @@ fun PokerTable.roundOver(): PokerTable {
     )
 
     return this.copy(
-            winnerPlayerNumber = PlayerNumber.of(winner.number),
+            winnerPlayerNumber = winner.number,
             allPlayers = updatedTable.allPlayers.replace(winner, prizedWinner),
             phase = Phase.OVER
     )

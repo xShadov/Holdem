@@ -2,10 +2,11 @@ package com.tp.holdem.logic
 
 import com.tp.holdem.common.model.Moves
 import com.tp.holdem.logic.model.Player
+import com.tp.holdem.logic.model.PlayerNumber
 import io.vavr.collection.List
 
 private fun Player.Companion.sample(number: Int): Player {
-    return Player.numbered(number).copy(
+    return Player.numbered(PlayerNumber.of(number)).copy(
             chipsAmount = 1500
     )
 }

@@ -26,7 +26,7 @@ fun PokerTable.players(vararg player: Player): PokerTable = this.copy(
 )
 
 fun PokerTable.bettingPlayer(number: Int, vararg moves: Moves, minimumBet: Int = 0, maximumBet: Int = 0): PokerTable {
-    val player = allPlayers.byNumber(number)
+    val player = allPlayers.byNumber(PlayerNumber.of(number))
     val modifiedPlayer = player.copy(
             possibleMoves = List.of(*moves),
             maximumBet = maximumBet,
@@ -73,7 +73,7 @@ fun PokerTable.playerMove(number: Int, move: Moves, betAmount: Int = 0): PokerTa
 }
 
 fun PokerTable.findPlayer(number: Int): Player {
-    return allPlayers.byNumber(number)
+    return allPlayers.byNumber(PlayerNumber.of(number))
 }
 
 fun PokerTable.isBetting(number: Int): Boolean {

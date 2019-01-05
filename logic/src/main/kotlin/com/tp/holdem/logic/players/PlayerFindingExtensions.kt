@@ -15,27 +15,18 @@ fun Option<Player>.assertFound(): Player {
 }
 
 fun List<Player>.byNumber(playerNumber: PlayerNumber): Player {
-    return if (playerNumber.exists()) byNumber(playerNumber.number) else throw PLAYER_NOT_FOUND.invoke()
-}
-
-fun List<Player>.byNumber(number: Int): Player {
-    return this.find { player -> player.number == number }.getOrElseThrow(PLAYER_NOT_FOUND)
+    return when {
+        playerNumber.exists() -> this.find { player -> player.number == playerNumber }.getOrElseThrow(PLAYER_NOT_FOUND)
+        else -> throw PLAYER_NOT_FOUND.invoke()
+    }
 }
 
 fun List<Player>.byNumberOption(playerNumber: PlayerNumber): Option<Player> {
-    return if (playerNumber.exists()) byNumberOption(playerNumber.number) else Option.none()
-}
-
-fun List<Player>.byNumberOption(number: Int): Option<Player> {
-    return this.find { player -> player.number == number }
+    return if (playerNumber.exists()) this.find { player -> player.number == playerNumber } else Option.none()
 }
 
 fun List<Player>.indexOfNumber(playerNumber: PlayerNumber): Int {
-    return if (playerNumber.exists()) indexOfNumber(playerNumber.number) else -1
-}
-
-fun List<Player>.indexOfNumber(number: Int): Int {
-    return this.indexWhere { player -> player.number == number }
+    return if (playerNumber.exists()) this.indexWhere { player -> player.number == playerNumber } else -1
 }
 
 fun List<Player>.winner(table: PokerTable): Either<Player, List<Player>> {

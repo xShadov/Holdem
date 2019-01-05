@@ -25,7 +25,7 @@ fun Player.toPlayerDTO(): PlayerDTO {
             .folded(folded)
             .inGame(inGame)
             .name(name)
-            .number(number)
+            .number(number.number)
             .build()
 }
 
@@ -41,7 +41,7 @@ fun Player.toCurrentPlayerDTO(): CurrentPlayerDTO {
             .maximumBet(maximumBet)
             .minimumBet(minimumBet)
             .name(name)
-            .number(number)
+            .number(number.number)
             .possibleMoves(possibleMoves.toJavaList())
             .build()
 }

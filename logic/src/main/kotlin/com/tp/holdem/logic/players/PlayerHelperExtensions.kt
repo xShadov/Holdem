@@ -39,5 +39,5 @@ fun Player.handRank(table: PokerTable): HandRank {
 }
 
 fun Player.number(): PlayerNumber {
-    return PlayerNumber.of(this.number)
+    return this.number
 }
