@@ -4,9 +4,9 @@ import com.tp.holdem.common.chunks
 import com.tp.holdem.logic.players.notPlaying
 import com.tp.holdem.logic.players.playing
 import com.tp.holdem.logic.players.withCards
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.Deck
-import com.tp.holdem.model.Player
+import com.tp.holdem.logic.model.Card
+import com.tp.holdem.logic.model.Deck
+import com.tp.holdem.logic.model.Player
 import io.vavr.Tuple
 import io.vavr.Tuple2
 import io.vavr.collection.List

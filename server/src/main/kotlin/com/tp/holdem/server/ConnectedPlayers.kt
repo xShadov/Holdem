@@ -1,6 +1,6 @@
 package com.tp.holdem.server
 
-import com.tp.holdem.model.PlayerNumber
+import com.tp.holdem.logic.model.PlayerNumber
 import io.vavr.Tuple
 import io.vavr.Tuple2
 import io.vavr.collection.HashMap
@@ -28,7 +28,7 @@ internal class ConnectedPlayers(private val connectedMap: Map<Int, Tuple2<Boolea
         return if (playerNumber.exists()) getConnectionId(playerNumber.number) else Option.none()
     }
 
-    fun getConnectionId(playerNumber: Int): Option<Int> {
+    private fun getConnectionId(playerNumber: Int): Option<Int> {
         return connectedMap
                 .mapValues { it._2() }
                 .mapValues { it.number }
@@ -36,29 +36,27 @@ internal class ConnectedPlayers(private val connectedMap: Map<Int, Tuple2<Boolea
                 .map { it._1() }
     }
 
-    fun getConnected(connectionId: Int): Option<Int> {
+    fun getConnected(connectionId: Int): Option<PlayerNumber> {
         return connectedMap.get(connectionId)
                 .filter { it._1() }
                 .map { it._2() }
-                .map { it.number }
     }
 
-    fun connect(connectionId: Int, playerNumber: Int): ConnectedPlayers {
-        return ConnectedPlayers(connectedMap.put(connectionId, Tuple.of(true, PlayerNumber.of(playerNumber))))
+    fun connect(connectionId: Int, playerNumber: PlayerNumber): ConnectedPlayers {
+        return ConnectedPlayers(connectedMap.put(connectionId, Tuple.of(true, playerNumber)))
     }
 
-    fun reconnect(connectionId: Int, playerNumber: Int): ConnectedPlayers {
-        return ConnectedPlayers(connectedMap.replaceValue(connectionId, Tuple.of(true, PlayerNumber.of(playerNumber))))
+    fun reconnect(connectionId: Int, playerNumber: PlayerNumber): ConnectedPlayers {
+        return ConnectedPlayers(connectedMap.replaceValue(connectionId, Tuple.of(true, playerNumber)))
     }
 
     fun size(): Int {
         return connectedMap.size()
     }
 
-    fun forEach(action: (Int, Int) -> Unit) {
+    fun forEach(action: (Int, PlayerNumber) -> Unit) {
         connectedMap
                 .mapValues { it._2() }
-                .mapValues { it.number }
                 .forEach(action)
     }
 }

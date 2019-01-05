@@ -1,6 +1,6 @@
 package com.tp.holdem.logic.players
 
-import com.tp.holdem.model.Player
+import com.tp.holdem.logic.model.Player
 
 fun Player.allIn(): Player {
     return this.copy(

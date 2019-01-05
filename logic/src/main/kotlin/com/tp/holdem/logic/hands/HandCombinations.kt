@@ -1,7 +1,7 @@
 package com.tp.holdem.logic.hands
 
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.Hands
+import com.tp.holdem.logic.model.Card
+import com.tp.holdem.logic.model.Hands
 import io.vavr.collection.List
 import io.vavr.control.Option
 import io.vavr.kotlin.option

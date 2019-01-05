@@ -1,6 +1,6 @@
 package com.tp.holdem.logic.players
 
-import com.tp.holdem.model.Player
+import com.tp.holdem.logic.model.Player
 import io.vavr.collection.List
 
 fun Player.prepareForNewGame(startingChips: Int): Player {

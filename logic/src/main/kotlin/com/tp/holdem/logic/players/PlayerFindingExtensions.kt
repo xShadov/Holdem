@@ -1,9 +1,9 @@
 package com.tp.holdem.logic.players
 
 import com.tp.holdem.logic.hands.HandOperations
-import com.tp.holdem.model.Player
-import com.tp.holdem.model.PlayerNumber
-import com.tp.holdem.model.PokerTable
+import com.tp.holdem.logic.model.Player
+import com.tp.holdem.logic.model.PlayerNumber
+import com.tp.holdem.logic.model.PokerTable
 import io.vavr.collection.List
 import io.vavr.control.Either
 import io.vavr.control.Option
@@ -48,6 +48,14 @@ fun List<Player>.playing(): List<Player> {
 
 fun List<Player>.notPlaying(): List<Player> {
     return this.filter { it.notPlaying() }
+}
+
+fun List<Player>.allIn(): List<Player> {
+    return this.filter { it.allIn }
+}
+
+fun List<Player>.notAllIn(): List<Player> {
+    return this.filter { !it.allIn }
 }
 
 fun List<Player>.notBroke(): List<Player> {

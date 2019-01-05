@@ -1,9 +1,9 @@
 package com.tp.holdem.logic.hands
 
 import com.tp.holdem.common.model.Honour
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.HandRank
-import com.tp.holdem.model.Hands
+import com.tp.holdem.logic.model.Card
+import com.tp.holdem.logic.model.HandRank
+import com.tp.holdem.logic.model.Hands
 import io.vavr.collection.List
 import java.util.stream.IntStream
 

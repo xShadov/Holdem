@@ -4,8 +4,8 @@ import com.tp.holdem.common.lazyLogger
 import com.tp.holdem.logic.players.handRank
 import com.tp.holdem.logic.players.notFolded
 import com.tp.holdem.logic.players.playing
-import com.tp.holdem.model.Player
-import com.tp.holdem.model.PokerTable
+import com.tp.holdem.logic.model.Player
+import com.tp.holdem.logic.model.PokerTable
 import io.vavr.collection.List
 import io.vavr.control.Either
 

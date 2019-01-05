@@ -1,7 +1,7 @@
 package com.tp.holdem.logic.utils
 
 import com.tp.holdem.logic.hands.HandComparators
-import com.tp.holdem.model.Card
+import com.tp.holdem.logic.model.Card
 import io.vavr.collection.List
 
 private val COMBO_NOT_FOUND = { IllegalStateException("Card combination could not be found") }

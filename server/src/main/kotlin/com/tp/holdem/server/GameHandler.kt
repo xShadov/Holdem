@@ -1,14 +1,12 @@
 package com.tp.holdem.server
 
-import com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table
 import com.tp.holdem.common.lazyLogger
 import com.tp.holdem.common.message.PlayerActionMessage
 import com.tp.holdem.logic.table.*
-import com.tp.holdem.model.PhaseStatus
-import com.tp.holdem.model.Player
-import com.tp.holdem.model.PlayerNumber
-import com.tp.holdem.model.PokerTable
-import jdk.nashorn.internal.runtime.regexp.joni.Config.log
+import com.tp.holdem.logic.model.PhaseStatus
+import com.tp.holdem.logic.model.Player
+import com.tp.holdem.logic.model.PlayerNumber
+import com.tp.holdem.logic.model.PokerTable
 import java.util.concurrent.atomic.AtomicLong
 
 internal class GameHandler(
@@ -20,7 +18,7 @@ internal class GameHandler(
     private val handCount = AtomicLong(-1)
 
     fun startGame(): PokerTable {
-        if (table.allPlayers.size() != gameParams.playerCount)
+        if (table.playerCount() != gameParams.playerCount)
             throw IllegalStateException("Game cannot be started - wrong number of players")
 
         return this.table.preparePlayersForNewGame(gameParams.startingChips)
@@ -45,12 +43,12 @@ internal class GameHandler(
     }
 
     fun startPhase(): PokerTable {
-        log.debug("Staring phase: ${table.phase.nextPhase()}")
-        return this.table.nextPhase()
+        log.debug("Staring phase: ${table.currentPhase().nextPhase()}")
+        return this.table.nextPlayingPhase()
                 .also { this.table = it }
     }
 
-    fun handlePlayerMove(playerNumber: Int, content: PlayerActionMessage): PokerTable {
+    fun handlePlayerMove(playerNumber: PlayerNumber, content: PlayerActionMessage): PokerTable {
         log.debug("Handling player $playerNumber move: ${content.move}")
 
         this.table = table.playerMove(playerNumber, content.move, content.betAmount)
@@ -59,8 +57,8 @@ internal class GameHandler(
             PhaseStatus.ROUND_OVER -> {
                 roundOver().also { log.debug("Table round is over") }
             }
-            PhaseStatus.EVERYBODY_ALL_IN -> {
-                this.table.showdownMode()
+            PhaseStatus.READY_FOR_SHOWDOWN -> {
+                this.table.startShowdown()
                         .also { log.debug("Table in showdown mode") }
                         .also { this.table = it }
             }
@@ -88,15 +86,13 @@ internal class GameHandler(
 
     }
 
-    fun disconnectPlayer(playerNumber: Int): PokerTable {
+    fun disconnectPlayer(playerNumber: PlayerNumber): PokerTable {
         log.debug("Disconnecting player: $playerNumber")
-        return table.playerLeft(PlayerNumber.of(playerNumber))
-
+        return table.playerLeft(playerNumber)
     }
 
     private fun numberedPlayer(): Player {
-        return table.allPlayers
-                .lastOption()
+        return table.latestPlayer()
                 .map { it.number }
                 .map { number -> number + 1 }
                 .map { Player.numbered(it) }

@@ -5,9 +5,9 @@ import com.tp.holdem.common.message.dto.CurrentPlayerDTO
 import com.tp.holdem.common.message.dto.PlayerDTO
 import com.tp.holdem.common.message.dto.PokerTableDTO
 import com.tp.holdem.logic.table.*
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.Player
-import com.tp.holdem.model.PokerTable
+import com.tp.holdem.logic.model.Card
+import com.tp.holdem.logic.model.Player
+import com.tp.holdem.logic.model.PokerTable
 
 fun Card.toDTO(): CardDTO {
     return CardDTO.builder()

@@ -1,8 +1,8 @@
-package com.tp.holdem.model
+package com.tp.holdem.logic.model
 
 enum class PhaseStatus {
     KEEP_GOING,
     READY_FOR_NEXT,
-    EVERYBODY_ALL_IN,
+    READY_FOR_SHOWDOWN,
     ROUND_OVER
 }

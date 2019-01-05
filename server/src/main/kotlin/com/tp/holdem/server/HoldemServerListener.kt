@@ -8,10 +8,13 @@ import com.tp.holdem.common.message.MessageType
 import com.tp.holdem.common.message.PlayerActionMessage
 import com.tp.holdem.common.message.PlayerConnectMessage
 import com.tp.holdem.common.model.Phase
+import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.utils.toCurrentPlayerDTO
-import com.tp.holdem.model.PokerTable
-import jdk.nashorn.internal.runtime.regexp.joni.Config.log
-import sun.audio.AudioPlayer.player
+import com.tp.holdem.logic.model.PokerTable
+import com.tp.holdem.logic.players.number
+import com.tp.holdem.logic.table.currentPhase
+import com.tp.holdem.logic.table.currentlyBetting
+import com.tp.holdem.logic.table.inShowdownMode
 
 internal class HoldemServerListener(
         private val sender: MessageSender,
@@ -19,7 +22,7 @@ internal class HoldemServerListener(
         private val gameHandler: GameHandler
 ) : Listener() {
     private var connectedPlayers = ConnectedPlayers.empty()
-    private var expectActionFrom = -1
+    private var expectActionFrom = PlayerNumber.empty()
 
     private val log by lazyLogger()
 
@@ -28,7 +31,7 @@ internal class HoldemServerListener(
         if (message is Message) {
             log.debug("Received message from ${connection.id}: $message")
 
-            if (connection.id != expectActionFrom)
+            if (connection.id != expectActionFrom.number)
                 throw IllegalStateException("Unexpected player sent action")
 
             val playerNumber = connectedPlayers.getConnected(connection.id)
@@ -41,14 +44,14 @@ internal class HoldemServerListener(
 
                 var response = gameHandler.handlePlayerMove(playerNumber, content)
 
-                if (response.showdown) {
+                if (response.inShowdownMode()) {
                     response = handleShowdown(response)
                 }
 
                 sender.sendStateUpdate(connectedPlayers, response)
                         .also { expectActionFrom = findExpectedResponder(response) }
 
-                if (response.phase == Phase.OVER) {
+                if (response.currentPhase() == Phase.OVER) {
                     waitAndStartNewRound()
                 }
             }
@@ -59,7 +62,7 @@ internal class HoldemServerListener(
         var response = table
         log.debug("Starting showdown")
 
-        while (response.phase != Phase.RIVER) {
+        while (response.currentPhase() != Phase.RIVER) {
             response = gameHandler.startPhase()
                     .also { sender.sendStateUpdate(connectedPlayers, response) }
                     .also { expectActionFrom = findExpectedResponder(response) }
@@ -115,8 +118,8 @@ internal class HoldemServerListener(
             throw IllegalStateException("Player already connected")
 
         return gameHandler.connectPlayer()
-                .also { connectedPlayers = connectedPlayers.connect(con.id, it.number) }
-                .also { log.debug("Connected player: ${it.number}") }
+                .also { connectedPlayers = connectedPlayers.connect(con.id, it.number()) }
+                .also { log.debug("Connected player: ${it.number()}") }
                 .also { sender.sendSingle(con.id, Message.from(MessageType.PLAYER_CONNECTION, PlayerConnectMessage.success(it.toCurrentPlayerDTO()))) }
                 .let { true }
     }
@@ -137,10 +140,10 @@ internal class HoldemServerListener(
                 .also { expectActionFrom = findExpectedResponder(it) }
     }
 
-    private fun findExpectedResponder(response: PokerTable): Int =
+    private fun findExpectedResponder(response: PokerTable): PlayerNumber =
             when {
-                response.phase == Phase.OVER -> -1
-                else -> connectedPlayers.getConnectionId(response.bettingPlayer).getOrElse(-1)
+                response.currentPhase() == Phase.OVER -> PlayerNumber.empty()
+                else -> PlayerNumber.of(connectedPlayers.getConnectionId(response.currentlyBetting()).getOrElse(-1))
             }
 
     private fun enoughPlayers(): Boolean = connectedPlayers.size() >= params.playerCount

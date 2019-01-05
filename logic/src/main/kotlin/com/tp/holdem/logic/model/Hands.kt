@@ -1,4 +1,4 @@
-package com.tp.holdem.model
+package com.tp.holdem.logic.model
 
 enum class Hands constructor(private val value: Int) {
     ROYAL_FLUSH(10),

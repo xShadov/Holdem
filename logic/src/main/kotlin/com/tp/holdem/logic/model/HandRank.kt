@@ -1,10 +1,10 @@
-package com.tp.holdem.model
+package com.tp.holdem.logic.model
 
 import io.vavr.collection.List
 
 data class HandRank(
-        val hand: Hands,
-        val cardsThatMakeHand: List<Card> = List.empty()
+        internal val hand: Hands,
+        internal val cardsThatMakeHand: List<Card> = List.empty()
 ) {
     companion object {
         @JvmStatic

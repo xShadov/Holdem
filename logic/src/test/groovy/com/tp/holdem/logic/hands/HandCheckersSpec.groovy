@@ -2,14 +2,14 @@ package com.tp.holdem.logic.hands
 
 import com.tp.holdem.common.model.Honour
 import com.tp.holdem.common.model.Suit
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.Hands
+import com.tp.holdem.logic.model.Card
+import com.tp.holdem.logic.model.Hands
 import io.vavr.collection.List
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
-class HandFinderSpec extends Specification {
+class HandCheckersSpec extends Specification {
     def "test different (correct) hand combinations"() {
         expect:
         HandCheckersKt.findHand(List.ofAll(cards).map({ code -> Card.coded(code) })) == hand

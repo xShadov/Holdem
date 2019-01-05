@@ -1,7 +1,7 @@
 package com.tp.holdem.logic.hands
 
-import com.tp.holdem.model.HandRank
-import com.tp.holdem.model.Hands
+import com.tp.holdem.logic.model.HandRank
+import com.tp.holdem.logic.model.Hands
 import java.util.*
 
 internal object HandRankComparator : Comparator<HandRank> {

@@ -1,4 +1,4 @@
-package com.tp.holdem.model
+package com.tp.holdem.logic.model
 
 
 import com.tp.holdem.common.model.Honour
@@ -6,7 +6,7 @@ import com.tp.holdem.common.model.Suit
 import io.vavr.collection.List
 
 data class Deck(
-        val cards: List<Card> = List.of(*Honour.values())
+        internal val cards: List<Card> = List.of(*Honour.values())
                 .flatMap { honour ->
                     List.of(
                             Card.from(Suit.HEART, honour),

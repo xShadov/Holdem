@@ -2,7 +2,7 @@ package com.tp.holdem.logic.hands
 
 import com.tp.holdem.logic.utils.extractHighest
 import com.tp.holdem.logic.utils.overallValue
-import com.tp.holdem.model.Card
+import com.tp.holdem.logic.model.Card
 import io.vavr.Tuple
 import io.vavr.collection.List
 import io.vavr.kotlin.component1

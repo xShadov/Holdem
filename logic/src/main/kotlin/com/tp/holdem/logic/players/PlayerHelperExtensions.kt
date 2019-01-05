@@ -2,10 +2,7 @@ package com.tp.holdem.logic.players
 
 import com.tp.holdem.common.model.Moves
 import com.tp.holdem.logic.hands.findHandRank
-import com.tp.holdem.model.Card
-import com.tp.holdem.model.HandRank
-import com.tp.holdem.model.Player
-import com.tp.holdem.model.PokerTable
+import com.tp.holdem.logic.model.*
 import io.vavr.collection.List
 
 fun Player.withCards(cards: List<Card>): Player {
@@ -37,6 +34,10 @@ fun Player.availableChips(): Int {
     return chipsAmount - betAmountThisPhase
 }
 
-fun Player.handRank(table: PokerTable) : HandRank {
+fun Player.handRank(table: PokerTable): HandRank {
     return hand.appendAll(table.cardsOnTable).findHandRank()
+}
+
+fun Player.number(): PlayerNumber {
+    return PlayerNumber.of(this.number)
 }

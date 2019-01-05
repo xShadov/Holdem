@@ -1,4 +1,4 @@
-package com.tp.holdem.model
+package com.tp.holdem.logic.model
 
 import com.tp.holdem.common.model.Honour
 import com.tp.holdem.common.model.Suit
