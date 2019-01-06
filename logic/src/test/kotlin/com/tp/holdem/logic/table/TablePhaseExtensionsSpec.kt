@@ -389,7 +389,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
         }
 
-        Scenario("player is currently folded so exception is thrown") {
+        Scenario("player is currently sitting so exception is thrown") {
             Given("table with 1 sitting and 2 playing players") {
                 table = PokerTable.sample()
                         .players(
@@ -462,7 +462,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player betting turn parameters are reset") {
-                assertThat(table.findPlayer(1).isAfterBettingTurn()).isTrue()
+                assertThat(table.findPlayer(1).isNotInBettingTurn()).isTrue()
             }
         }
 
@@ -490,7 +490,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player betting turn parameters are reset") {
-                assertThat(table.findPlayer(1).isAfterBettingTurn()).isTrue()
+                assertThat(table.findPlayer(1).isNotInBettingTurn()).isTrue()
             }
 
             Then("player is folded") {
@@ -525,7 +525,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player betting turn parameters are reset") {
-                assertThat(table.findPlayer(1).isAfterBettingTurn()).isTrue()
+                assertThat(table.findPlayer(1).isNotInBettingTurn()).isTrue()
             }
 
             Then("player available chips amount is reduced") {
@@ -580,7 +580,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player betting turn parameters are reset") {
-                assertThat(table.findPlayer(1).isAfterBettingTurn()).isTrue()
+                assertThat(table.findPlayer(1).isNotInBettingTurn()).isTrue()
             }
 
             Then("player available chips amount is reduced") {
@@ -619,7 +619,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player betting turn parameters are reset") {
-                assertThat(table.findPlayer(1).isAfterBettingTurn()).isTrue()
+                assertThat(table.findPlayer(1).isNotInBettingTurn()).isTrue()
             }
 
             Then("player available chips amount is reduced") {
@@ -676,7 +676,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player betting turn parameters are reset") {
-                assertThat(table.findPlayer(1).isAfterBettingTurn()).isTrue()
+                assertThat(table.findPlayer(1).isNotInBettingTurn()).isTrue()
             }
 
             Then("player available chips amount is reduced") {
@@ -803,12 +803,10 @@ class TablePhaseExtensionsSpec : Spek({
                 table.allPlayers
                         .filter { table.isBetting(it).not() }
                         .forEach { player ->
-                            assertThat(player.betAmountThisPhase == 0)
-                            assertThat(player.maximumBet == 0)
-                            assertThat(player.minimumBet == 0)
-                            assertThat(player.betAmount == maxBetPreviousPhase)
-                            assertThat(player.chipsAmount == chipsAmount[player.number.number]!! - maxBetPreviousPhase)
-                            assertThat(player.possibleMoves.size() == 0)
+                            assertThat(player.isNotInBettingTurn()).isTrue()
+                            assertThat(player.betAmountThisPhase).isEqualTo(0)
+                            assertThat(player.betAmount).isEqualTo(maxBetPreviousPhase)
+                            assertThat(player.chipsAmount).isEqualTo(chipsAmount[player.number.number]!! - maxBetPreviousPhase)
                         }
             }
 
@@ -867,12 +865,10 @@ class TablePhaseExtensionsSpec : Spek({
                 table.allPlayers
                         .filter { table.isBetting(it).not() }
                         .forEach { player ->
-                            assertThat(player.betAmountThisPhase == 0)
-                            assertThat(player.maximumBet == 0)
-                            assertThat(player.minimumBet == 0)
-                            assertThat(player.betAmount == maxBetPreviousPhase)
-                            assertThat(player.chipsAmount == chipsAmount[player.number.number]!! - maxBetPreviousPhase)
-                            assertThat(player.possibleMoves.size() == 0)
+                            assertThat(player.isNotInBettingTurn()).isTrue()
+                            assertThat(player.betAmountThisPhase).isEqualTo(0)
+                            assertThat(player.betAmount).isEqualTo(maxBetPreviousPhase)
+                            assertThat(player.chipsAmount).isEqualTo(chipsAmount[player.number.number]!! - maxBetPreviousPhase)
                         }
             }
 
@@ -931,12 +927,10 @@ class TablePhaseExtensionsSpec : Spek({
                 table.allPlayers
                         .filter { table.isBetting(it).not() }
                         .forEach { player ->
-                            assertThat(player.betAmountThisPhase == 0)
-                            assertThat(player.maximumBet == 0)
-                            assertThat(player.minimumBet == 0)
-                            assertThat(player.betAmount == maxBetPreviousPhase)
-                            assertThat(player.chipsAmount == chipsAmount[player.number.number]!! - maxBetPreviousPhase)
-                            assertThat(player.possibleMoves.size() == 0)
+                            assertThat(player.isNotInBettingTurn()).isTrue()
+                            assertThat(player.betAmountThisPhase).isEqualTo(0)
+                            assertThat(player.betAmount).isEqualTo(maxBetPreviousPhase)
+                            assertThat(player.chipsAmount).isEqualTo(chipsAmount[player.number.number]!! - maxBetPreviousPhase)
                         }
             }
 

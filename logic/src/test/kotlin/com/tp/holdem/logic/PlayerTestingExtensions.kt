@@ -31,8 +31,8 @@ fun Player.betThisPhase(amount: Int): Player {
     )
 }
 
-fun Player.isAfterBettingTurn(): Boolean {
-    return possibleMoves == List.empty<Moves>() && maximumBet == 0 && minimumBet == 0
+fun Player.isNotInBettingTurn(): Boolean {
+    return !isDuringBettingTurn()
 }
 
 fun Player.isDuringBettingTurn(): Boolean {

@@ -53,38 +53,52 @@ fun PokerTable.bigBlindPlayer(number: Int): PokerTable {
     )
 }
 
-fun PokerTable.everyoneMovedThisPhase(): PokerTable {
+fun PokerTable.everyoneMovedThisPhase(defaultMove: Moves = Moves.CHECK): PokerTable {
     return this.copy(
             latestMoves = playerNumbers()
-                    .toMap { number -> Tuple.of(number, Moves.CALL) }
+                    .toMap { number -> Tuple.of(number, defaultMove) }
     )
 }
 
-fun PokerTable.everyoneHasTheSameBet(): PokerTable {
+fun PokerTable.everyoneHasTheSameBet(amount: Int = 100): PokerTable {
     return this.copy(
-            allPlayers = allPlayers.map { it.copy(betAmountThisPhase = 100) }
+            allPlayers = allPlayers.map { it.copy(betAmountThisPhase = amount) }
     )
 }
 
-fun PokerTable.playersMovedThisPhase(vararg numbers: Int): PokerTable {
+fun PokerTable.playersMovedThisPhase(vararg numbers: Int, defaultMove: Moves = Moves.CHECK): PokerTable {
     return this.copy(
             latestMoves = List.ofAll(*numbers)
                     .map(::PlayerNumber)
-                    .toMap { number -> Tuple.of(number, Moves.CALL) }
+                    .toMap { number -> Tuple.of(number, defaultMove) }
     )
 }
 
-fun PokerTable.notEveryoneHasTheSameBet(): PokerTable {
-    val bets = List.of(100, 200, 300)
+fun PokerTable.notEveryoneHasTheSameBet(possibleBets: List<Int> = List.of(100, 200, 300)): PokerTable {
     return this.copy(
             allPlayers = allPlayers
-                    .mapIndexed { index, player -> player.copy(betAmountThisPhase = bets.get(index % bets.size())) }
+                    .mapIndexed { index, player -> player.copy(betAmountThisPhase = possibleBets.get(index % possibleBets.size())) }
                     .toVavrList()
     )
 }
 
 fun PokerTable.playerMove(number: Int, move: Moves, betAmount: Int = 0): PokerTable {
     return playerMove(PlayerNumber.of(number), move, betAmount)
+}
+
+fun PokerTable.moves(movesMap: Map<Int, Moves>): PokerTable {
+    return this.copy(
+            latestMoves = movesMap.toVavrMap()
+                    .mapKeys(PlayerNumber.Companion::of)
+    )
+}
+
+fun PokerTable.cardsOnTable(number: Int): PokerTable {
+    val (deck, cards) = deck.drawCards(number)
+    return this.copy(
+            deck = deck,
+            cardsOnTable = cards
+    )
 }
 
 fun PokerTable.findPlayer(number: Int): Player {
@@ -99,16 +113,8 @@ fun PokerTable.isBetting(player: Player): Boolean {
     return this.bettingPlayerNumber == player.number
 }
 
-
 fun PokerTable.lastBetOf(number: Int): Moves? {
     return latestMoves.getOrNull(PlayerNumber.of(number))
-}
-
-fun PokerTable.moves(movesMap: Map<Int, Moves>): PokerTable {
-    return this.copy(
-            latestMoves = movesMap.toVavrMap()
-                    .mapKeys(PlayerNumber.Companion::of)
-    )
 }
 
 fun PokerTable.cardsInDeck(): Int {
@@ -117,12 +123,4 @@ fun PokerTable.cardsInDeck(): Int {
 
 fun PokerTable.cardsOnTable(): Int {
     return this.cardsOnTable.size()
-}
-
-fun PokerTable.cardsOnTable(number: Int): PokerTable {
-    val (deck, cards) = deck.drawCards(number)
-    return this.copy(
-            deck = deck,
-            cardsOnTable = cards
-    )
 }
