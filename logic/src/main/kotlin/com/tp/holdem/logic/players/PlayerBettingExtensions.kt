@@ -55,3 +55,7 @@ fun Player.betBigBlind(table: PokerTable): Player {
         else -> this.bet(table.bigBlindAmount)
     }
 }
+
+fun Player.availableChips(): Int {
+    return chipsAmount - betAmountThisPhase
+}

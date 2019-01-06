@@ -35,11 +35,14 @@ fun Player.prepareForNewPhase(): Player {
 }
 
 fun Player.roundOver(): Player {
-    return this.copy(
-            betAmount = betAmount + betAmountThisPhase,
-            betAmountThisPhase = 0,
-            chipsAmount = chipsAmount - betAmountThisPhase
-    )
+    return when (availableChips()) {
+        0 -> this.gameOver()
+        else -> this.copy(
+                betAmount = betAmount + betAmountThisPhase,
+                betAmountThisPhase = 0,
+                chipsAmount = chipsAmount - betAmountThisPhase
+        )
+    }
 }
 
 fun Player.bettingTurnOver(): Player {
@@ -52,6 +55,9 @@ fun Player.bettingTurnOver(): Player {
 
 fun Player.gameOver(): Player {
     return this.copy(
+            betAmount = 0,
+            betAmountThisPhase = 0,
+            chipsAmount = 0,
             minimumBet = 0,
             maximumBet = 0,
             inGame = false,

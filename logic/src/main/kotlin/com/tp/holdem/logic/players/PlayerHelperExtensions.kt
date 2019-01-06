@@ -30,10 +30,6 @@ fun Player.notPlaying(): Boolean {
     return !playing()
 }
 
-fun Player.availableChips(): Int {
-    return chipsAmount - betAmountThisPhase
-}
-
 fun Player.handRank(table: PokerTable): HandRank {
     return hand.appendAll(table.cardsOnTable).findHandRank()
 }
