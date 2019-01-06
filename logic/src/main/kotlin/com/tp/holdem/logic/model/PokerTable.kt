@@ -28,6 +28,12 @@ data class PokerTable(
     companion object {
         @JvmStatic
         fun withBlinds(bigBlindAmount: Int, smallBlindAmount: Int): PokerTable {
+            if (bigBlindAmount <= 0 || smallBlindAmount <= 0)
+                throw IllegalArgumentException("Blinds have to be > 0")
+
+            if (bigBlindAmount <= smallBlindAmount)
+                throw IllegalArgumentException("Big blind should be higher than small blind")
+
             return PokerTable(
                     bigBlindAmount = bigBlindAmount,
                     smallBlindAmount = smallBlindAmount

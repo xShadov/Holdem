@@ -1,26 +1,19 @@
 package com.tp.holdem.logic.table
 
 import com.tp.holdem.common.model.Phase
+import com.tp.holdem.logic.hands.HandRankComparator
 import com.tp.holdem.logic.players.*
 import com.tp.holdem.logic.utils.dealCards
 import com.tp.holdem.logic.model.Deck
+import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
 import io.vavr.collection.HashMap
 import io.vavr.collection.List
+import io.vavr.control.Either
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
 import java.util.concurrent.atomic.AtomicLong
-
-fun PokerTable.dealCards(): PokerTable {
-    log.debug("Dealing cards to players")
-
-    val (deck, players) = deck.dealCards(2, allPlayers)
-    return this.copy(
-            deck = deck,
-            allPlayers = players
-    )
-}
 
 fun PokerTable.newRound(handCount: AtomicLong): PokerTable {
     log.debug("Preparing players for new round")
@@ -62,6 +55,16 @@ fun PokerTable.newRound(handCount: AtomicLong): PokerTable {
     return updatedTable.dealCards()
 }
 
+private fun PokerTable.dealCards(): PokerTable {
+    log.debug("Dealing cards to players")
+
+    val (deck, players) = deck.dealCards(2, allPlayers)
+    return this.copy(
+            deck = deck,
+            allPlayers = players
+    )
+}
+
 fun PokerTable.roundOver(): PokerTable {
     val playersAfterRound = allPlayers.map { it.roundOver() }
 
@@ -70,7 +73,7 @@ fun PokerTable.roundOver(): PokerTable {
     )
 
     //TODO handle multiple winners - pot split
-    val possibleWinners = playersAfterRound.winner(updatedTable)
+    val possibleWinners = updatedTable.findWinner()
     val winner = possibleWinners.left
 
     val prizedWinner = winner.copy(
@@ -82,4 +85,31 @@ fun PokerTable.roundOver(): PokerTable {
             allPlayers = updatedTable.allPlayers.replace(winner, prizedWinner),
             phase = Phase.OVER
     )
+}
+
+private fun PokerTable.findWinner(): Either<Player, List<Player>> {
+    val notFoldedPlayers = allPlayers.notFolded()
+
+    if (notFoldedPlayers.size() == 1) {
+        return Either.left<Player, List<Player>>(notFoldedPlayers.single())
+                .also { log.debug("Everyone folded except one player, he's the winner") }
+    }
+
+    val hands = allPlayers.playing()
+            .toMap({ it }, { player -> player.handRank(this) })
+            .also { log.debug("Players to hands map: $it") }
+
+    val maxHandRank = hands.values()
+            .maxBy(HandRankComparator)
+            .single()
+
+    val playersWithMaxHandRank = hands
+            .filter { _, hand -> HandRankComparator.compare(hand, maxHandRank) == 0 }
+            .map { tuple -> tuple._1 }
+            .toList()
+
+    return when (playersWithMaxHandRank.size()) {
+        1 -> Either.left(playersWithMaxHandRank.head())
+        else -> Either.right(playersWithMaxHandRank)
+    }
 }

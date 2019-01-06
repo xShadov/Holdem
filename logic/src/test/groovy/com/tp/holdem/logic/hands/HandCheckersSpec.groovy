@@ -12,11 +12,11 @@ import spock.lang.Unroll
 class HandCheckersSpec extends Specification {
     def "test different (correct) hand combinations"() {
         expect:
-        HandCheckersKt.findHand(List.ofAll(cards).map({ code -> Card.coded(code) })) == hand
+        List.ofAll(cards).map({ code -> Card.coded(code) }).findHand() == hand
 
         where:
         cards                                         || hand
-        ['10D', '10H', 'JS', 'JD', 'QD', 'KD', 'AD']   || Hands.ROYAL_FLUSH
+        ['10D', '10H', 'JS', 'JD', 'QD', 'KD', 'AD']  || Hands.ROYAL_FLUSH
         ['2C', '2D', '10D', 'JD', 'QD', 'KD', 'AD']   || Hands.ROYAL_FLUSH
         ['AD', '10D', '10C', 'JD', 'QD', 'KD', '9D']  || Hands.ROYAL_FLUSH
 
@@ -49,7 +49,7 @@ class HandCheckersSpec extends Specification {
         ['2C', '2D', '3H', '3D', '6H', '7S', '8D']    || Hands.TWO_PAIR
         ['2C', '2D', '3H', '3D', '6H', '6S', '8D']    || Hands.TWO_PAIR
 
-        ['2C', '2D', '4H', '7D', '8H', '10S', 'JD']    || Hands.PAIR
+        ['2C', '2D', '4H', '7D', '8H', '10S', 'JD']   || Hands.PAIR
         ['2C', '3D', '4H', '8D', '10H', 'JS', 'JD']   || Hands.PAIR
 
         ['2C', '7D', '8H', 'JD', 'QH', 'KS', 'AD']    || Hands.HIGH_CARD
@@ -57,7 +57,7 @@ class HandCheckersSpec extends Specification {
 
     def "test with incorrect hand combinations"() {
         when:
-        HandCheckersKt.findHand(List.ofAll(cards))
+        List.ofAll(cards).findHand()
 
         then:
         thrown IllegalArgumentException

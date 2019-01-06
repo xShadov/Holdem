@@ -21,7 +21,7 @@ class GameHandler(
         if (table.playerCount() != gameParams.playerCount)
             throw IllegalStateException("Game cannot be started - wrong number of players")
 
-        return this.table.preparePlayersForNewGame(gameParams.startingChips)
+        return this.table.newGame(gameParams.startingChips)
                 .also { log.debug("Starting game with ${gameParams.playerCount} players") }
                 .also { this.table = it }
                 .let { this.startRound() }

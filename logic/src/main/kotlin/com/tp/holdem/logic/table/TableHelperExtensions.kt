@@ -61,3 +61,15 @@ fun PokerTable.inShowdownMode(): Boolean {
 fun PokerTable.findPlayer(number: PlayerNumber): Player {
     return allPlayers.byNumber(number)
 }
+
+fun PokerTable.lastPlayingPhase(): Boolean {
+    return phase.isLastPlayingPhase
+}
+
+fun PokerTable.emptyPotThisPhase(): Boolean {
+    return potAmountThisPhase() == 0
+}
+
+fun PokerTable.emptyPot(): Boolean {
+    return potAmount() == 0
+}

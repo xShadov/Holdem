@@ -1,11 +1,8 @@
 package com.tp.holdem.logic.players
 
-import com.tp.holdem.logic.hands.HandOperations
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
-import com.tp.holdem.logic.model.PokerTable
 import io.vavr.collection.List
-import io.vavr.control.Either
 import io.vavr.control.Option
 
 val PLAYER_NOT_FOUND = { IllegalStateException("Player not found") }
@@ -27,10 +24,6 @@ fun List<Player>.byNumberOption(playerNumber: PlayerNumber): Option<Player> {
 
 fun List<Player>.indexOfNumber(playerNumber: PlayerNumber): Int {
     return if (playerNumber.exists()) this.indexWhere { player -> player.number == playerNumber } else -1
-}
-
-fun List<Player>.winner(table: PokerTable): Either<Player, List<Player>> {
-    return HandOperations.findWinner(this, table)
 }
 
 fun List<Player>.playing(): List<Player> {

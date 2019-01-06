@@ -23,6 +23,9 @@ data class Player(
     companion object {
         @JvmStatic
         fun numbered(number: PlayerNumber): Player {
+            if (number.number < 0)
+                throw IllegalArgumentException("Player number should be positive integer")
+
             return Player(
                     number = number
             )

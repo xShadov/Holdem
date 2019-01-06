@@ -1,0 +1,3 @@
+moduleName=string-extension-module
+moduleVersion=1.0.0
+extensionClasses=com.tp.holdem.logic.utils.DeckHelperExtensionsKt,com.tp.holdem.logic.utils.CardHelperExtensionsKt,com.tp.holdem.logic.players.PlayerFindingExtensionsKt,com.tp.holdem.logic.players.PlayerHelperExtensionsKt, com.tp.holdem.logic.hands.HandCheckersKt, com.tp.holdem.logic.hands.HandCombinationsKt, com.tp.holdem.logic.PlayerTestingExtensionsKt

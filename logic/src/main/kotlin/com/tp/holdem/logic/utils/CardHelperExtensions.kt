@@ -10,14 +10,14 @@ fun List<Card>.overallValue(): Int {
     return map(Card::value).sum().toInt()
 }
 
-fun List<Card>.extractHighest(number: Int) : List<Card> {
+fun List<Card>.extractHighestWithSameHonour(number: Int): List<Card> {
     return combinations(number)
             .filter(List<Card>::sameHonour)
             .maxBy(HandComparators.highestOverallValue)
             .getOrElseThrow(COMBO_NOT_FOUND)
 }
 
-fun List<Card>.sameHonour() : Boolean {
-    return distinctBy(Card::honour).size() == 1
+private fun List<Card>.sameHonour(): Boolean {
+    return isEmpty || distinctBy(Card::honour).size() == 1
 }
 

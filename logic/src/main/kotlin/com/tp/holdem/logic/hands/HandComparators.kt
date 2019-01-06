@@ -1,6 +1,6 @@
 package com.tp.holdem.logic.hands
 
-import com.tp.holdem.logic.utils.extractHighest
+import com.tp.holdem.logic.utils.extractHighestWithSameHonour
 import com.tp.holdem.logic.utils.overallValue
 import com.tp.holdem.logic.model.Card
 import io.vavr.Tuple
@@ -13,8 +13,8 @@ internal object HandComparators {
     val highestOverallValue: Comparator<List<Card>> = compareBy(List<Card>::overallValue)
 
     val highestFullHouse: Comparator<in List<Card>> = Comparator { a, b ->
-        val aFirstThree = a.extractHighest(3)
-        val bFirstThree = b.extractHighest(3)
+        val aFirstThree = a.extractHighestWithSameHonour(3)
+        val bFirstThree = b.extractHighestWithSameHonour(3)
 
         val compare = highestOverallValue.compare(aFirstThree, bFirstThree)
         return@Comparator when (compare) {
@@ -24,8 +24,8 @@ internal object HandComparators {
     }
 
     val highestFour: Comparator<in List<Card>> = Comparator { a, b ->
-        val aFirstFour = a.extractHighest(4)
-        val bFirstFour = b.extractHighest(4)
+        val aFirstFour = a.extractHighestWithSameHonour(4)
+        val bFirstFour = b.extractHighestWithSameHonour(4)
 
         val compare = highestOverallValue.compare(aFirstFour, bFirstFour)
         return@Comparator when (compare) {
@@ -35,8 +35,8 @@ internal object HandComparators {
     }
 
     val highestThree: Comparator<in List<Card>> = Comparator { a, b ->
-        val aFirstThree = a.extractHighest(3)
-        val bFirstThree = b.extractHighest(3)
+        val aFirstThree = a.extractHighestWithSameHonour(3)
+        val bFirstThree = b.extractHighestWithSameHonour(3)
 
         val compare = highestOverallValue.compare(aFirstThree, bFirstThree)
         return@Comparator when (compare) {
@@ -46,8 +46,8 @@ internal object HandComparators {
     }
 
     val highestPair: Comparator<in List<Card>> = Comparator { a, b ->
-        val aFirstPair = a.extractHighest(2)
-        val bFirstPair = b.extractHighest(2)
+        val aFirstPair = a.extractHighestWithSameHonour(2)
+        val bFirstPair = b.extractHighestWithSameHonour(2)
 
         val compare = highestOverallValue.compare(aFirstPair, bFirstPair)
         return@Comparator when (compare) {
@@ -57,8 +57,8 @@ internal object HandComparators {
     }
 
     val highestPairs: Comparator<List<Card>> = Comparator { a, b ->
-        val aFirstPair = a.extractHighest(2)
-        val bFirstPair = b.extractHighest(2)
+        val aFirstPair = a.extractHighestWithSameHonour(2)
+        val bFirstPair = b.extractHighestWithSameHonour(2)
 
         val compareFirstPairs = highestOverallValue.compare(aFirstPair, bFirstPair)
         if (compareFirstPairs != 0)
@@ -67,8 +67,8 @@ internal object HandComparators {
         val aTrimmed = a.removeAll(aFirstPair)
         val bTrimmed = b.removeAll(bFirstPair)
 
-        val aSecondPair = aTrimmed.extractHighest(2)
-        val bSecondPair = bTrimmed.extractHighest(2)
+        val aSecondPair = aTrimmed.extractHighestWithSameHonour(2)
+        val bSecondPair = bTrimmed.extractHighestWithSameHonour(2)
 
         val compare = highestOverallValue.compare(aSecondPair, bSecondPair)
         return@Comparator when (compare) {

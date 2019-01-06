@@ -1,6 +1,7 @@
 package com.tp.holdem.client;
 
 public class DeckTests {
+
 /*
 	private transient DeckDTO deck;
 

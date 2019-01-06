@@ -64,7 +64,7 @@ internal class HoldemServerListener(
         var response = table
         log.debug("Starting showdown")
 
-        while (response.currentPhase() != Phase.RIVER) {
+        while (response.currentPhase().isLastPlayingPhase.not()) {
             response = gameHandler.startPhase()
                     .also { sender.sendStateUpdate(connectedPlayers, response) }
                     .also { expectActionFrom = findExpectedResponder(response) }

@@ -8,7 +8,6 @@ import com.tp.holdem.logic.model.PhaseStatus
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
-import io.vavr.collection.HashMap
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
 
@@ -81,7 +80,7 @@ fun PokerTable.phaseStatus(): PhaseStatus {
     val notFolded = inGame.notFolded()
     val notAllIn = inGame.notAllIn()
     val allPlayersMoved = allPlayersMoved()
-    val allBetsEqual = allBetsEqual()
+    val allBetsEqual = allBetsEqualToHighestBet()
     return when {
         inGame.size() < 2 -> throw IllegalStateException("Not enough players on table")
         notFolded.size() == 0 -> throw IllegalStateException("Every player is folded")

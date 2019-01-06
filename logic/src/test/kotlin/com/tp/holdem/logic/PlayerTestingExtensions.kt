@@ -31,6 +31,12 @@ fun Player.betThisPhase(amount: Int): Player {
     )
 }
 
+fun Player.generalBet(amount: Int): Player {
+    return this.copy(
+            betAmount = amount
+    )
+}
+
 fun Player.isNotInBettingTurn(): Boolean {
     return !isDuringBettingTurn()
 }
