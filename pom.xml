@@ -16,6 +16,7 @@
 		<module>server</module>
 		<module>common</module>
 		<module>logic</module>
+		<module>game</module>
 	</modules>
 
 	<properties>

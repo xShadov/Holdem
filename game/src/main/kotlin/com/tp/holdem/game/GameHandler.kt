@@ -1,4 +1,4 @@
-package com.tp.holdem.logic.game
+package com.tp.holdem.game
 
 import com.tp.holdem.common.lazyLogger
 import com.tp.holdem.common.message.PlayerActionMessage

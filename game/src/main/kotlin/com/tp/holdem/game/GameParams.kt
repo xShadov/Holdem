@@ -1,4 +1,4 @@
-package com.tp.holdem.logic.game
+package com.tp.holdem.game
 
 data class GameParams(
         val playerCount: Int = 0,

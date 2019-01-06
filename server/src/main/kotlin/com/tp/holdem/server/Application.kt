@@ -1,8 +1,8 @@
 package com.tp.holdem.server
 
 import com.esotericsoftware.kryonet.Server
-import com.tp.holdem.logic.game.GameHandler
-import com.tp.holdem.logic.game.GameParams
+import com.tp.holdem.game.GameHandler
+import com.tp.holdem.game.GameParams
 
 object Application {
     @JvmStatic

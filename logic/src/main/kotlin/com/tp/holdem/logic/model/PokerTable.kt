@@ -7,8 +7,6 @@ import io.vavr.collection.HashMap
 import io.vavr.collection.List
 import io.vavr.collection.Map
 
-//TODO move to model module, add extension functions there, so the logic module has no access to directly modify objects, only through methods
-//this is gonna work like private properties
 data class PokerTable(
         internal val smallBlindAmount: Int = 0,
         internal val bigBlindAmount: Int = 0,

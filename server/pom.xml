@@ -19,7 +19,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.tp.holdem</groupId>
-			<artifactId>logic</artifactId>
+			<artifactId>game</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

@@ -8,8 +8,8 @@ import com.tp.holdem.common.message.MessageType
 import com.tp.holdem.common.message.PlayerActionMessage
 import com.tp.holdem.common.message.PlayerConnectMessage
 import com.tp.holdem.common.model.Phase
-import com.tp.holdem.logic.game.GameHandler
-import com.tp.holdem.logic.game.GameParams
+import com.tp.holdem.game.GameHandler
+import com.tp.holdem.game.GameParams
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.utils.toCurrentPlayerDTO
 import com.tp.holdem.logic.model.PokerTable
