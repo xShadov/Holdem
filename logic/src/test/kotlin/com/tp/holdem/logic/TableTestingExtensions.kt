@@ -6,12 +6,13 @@ import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
 import com.tp.holdem.logic.players.byNumber
+import com.tp.holdem.logic.players.number
 import com.tp.holdem.logic.table.playerMove
 import com.tp.holdem.logic.table.playerNumbers
+import com.tp.holdem.logic.utils.drawCards
 import io.vavr.Tuple
 import io.vavr.collection.List
-import io.vavr.kotlin.getOrNull
-import io.vavr.kotlin.toVavrList
+import io.vavr.kotlin.*
 
 fun PokerTable.Companion.sample(): PokerTable {
     return PokerTable.withBlinds(40, 20)
@@ -35,6 +36,20 @@ fun PokerTable.bettingPlayer(number: Int, vararg moves: Moves, minimumBet: Int =
     return this.copy(
             bettingPlayerNumber = PlayerNumber.of(number),
             allPlayers = allPlayers.replace(player, modifiedPlayer)
+    )
+}
+
+fun PokerTable.dealerPlayer(number: Int): PokerTable {
+    val player = allPlayers.byNumber(PlayerNumber.of(number))
+    return this.copy(
+            dealerPlayerNumber = player.number()
+    )
+}
+
+fun PokerTable.bigBlindPlayer(number: Int): PokerTable {
+    val player = allPlayers.byNumber(PlayerNumber.of(number))
+    return this.copy(
+            bigBlindPlayerNumber = player.number()
     )
 }
 
@@ -80,6 +95,34 @@ fun PokerTable.isBetting(number: Int): Boolean {
     return this.bettingPlayerNumber.number == number
 }
 
+fun PokerTable.isBetting(player: Player): Boolean {
+    return this.bettingPlayerNumber == player.number
+}
+
+
 fun PokerTable.lastBetOf(number: Int): Moves? {
     return latestMoves.getOrNull(PlayerNumber.of(number))
+}
+
+fun PokerTable.moves(movesMap: Map<Int, Moves>): PokerTable {
+    return this.copy(
+            latestMoves = movesMap.toVavrMap()
+                    .mapKeys(PlayerNumber.Companion::of)
+    )
+}
+
+fun PokerTable.cardsInDeck(): Int {
+    return this.deck.cards.size()
+}
+
+fun PokerTable.cardsOnTable(): Int {
+    return this.cardsOnTable.size()
+}
+
+fun PokerTable.cardsOnTable(number: Int): PokerTable {
+    val (deck, cards) = deck.drawCards(number)
+    return this.copy(
+            deck = deck,
+            cardsOnTable = cards
+    )
 }

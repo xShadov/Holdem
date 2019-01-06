@@ -11,6 +11,7 @@ import com.tp.holdem.common.model.Honour
 import com.tp.holdem.common.model.Moves
 import com.tp.holdem.common.model.Phase
 import com.tp.holdem.common.model.Suit
+import com.tp.holdem.logic.game.GameParams
 import java.util.concurrent.atomic.AtomicInteger
 
 internal class KryoServer(

@@ -18,7 +18,7 @@ fun PokerTable.getWinnerPlayer(): Option<Player> {
 }
 
 fun PokerTable.getDealer(): Option<Player> {
-    return allPlayers.byNumberOption(dealerNumber)
+    return allPlayers.byNumberOption(dealerPlayerNumber)
 }
 
 fun PokerTable.getBigBlind(): Option<Player> {

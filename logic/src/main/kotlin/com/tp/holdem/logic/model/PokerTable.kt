@@ -16,7 +16,7 @@ data class PokerTable(
         internal val phase: Phase = Phase.START,
         internal val bettingPlayerNumber: PlayerNumber = PlayerNumber.empty(),
         internal val winnerPlayerNumber: PlayerNumber = PlayerNumber.empty(),
-        internal val dealerNumber: PlayerNumber = PlayerNumber.empty(),
+        internal val dealerPlayerNumber: PlayerNumber = PlayerNumber.empty(),
         internal val bigBlindPlayerNumber: PlayerNumber = PlayerNumber.empty(),
         internal val smallBlindPlayerNumber: PlayerNumber = PlayerNumber.empty(),
         internal val allPlayers: List<Player> = List.empty(),

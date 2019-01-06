@@ -3,17 +3,18 @@ package com.tp.holdem.logic.table
 import com.tp.holdem.common.model.Moves
 import com.tp.holdem.common.model.Phase
 import com.tp.holdem.logic.*
-import com.tp.holdem.logic.players.availableChips
 import com.tp.holdem.logic.model.PhaseStatus
 import com.tp.holdem.logic.model.Player
+import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
+import com.tp.holdem.logic.players.availableChips
+import io.vavr.Tuple
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.gherkin.Feature
 
 class TablePhaseExtensionsSpec : Spek({
-    //TODO check is betInPhase was called
     Feature("picking next player to bet") {
         lateinit var table: PokerTable
 
@@ -34,6 +35,10 @@ class TablePhaseExtensionsSpec : Spek({
             Then("player with number 1 has betting turn") {
                 assertThat(table.isBetting(1)).isTrue()
             }
+
+            Then("players bet parameters are set") {
+                assertThat(table.findPlayer(1).isDuringBettingTurn()).isTrue()
+            }
         }
 
         Scenario("player to the right is picked") {
@@ -52,6 +57,10 @@ class TablePhaseExtensionsSpec : Spek({
 
             Then("player with number 0 has betting turn") {
                 assertThat(table.isBetting(0)).isTrue()
+            }
+
+            Then("players bet parameters are set") {
+                assertThat(table.findPlayer(0).isDuringBettingTurn()).isTrue()
             }
         }
 
@@ -72,6 +81,10 @@ class TablePhaseExtensionsSpec : Spek({
 
             Then("player with number 2 has betting turn") {
                 assertThat(table.isBetting(2)).isTrue()
+            }
+
+            Then("players bet parameters are set") {
+                assertThat(table.findPlayer(2).isDuringBettingTurn()).isTrue()
             }
         }
 
@@ -94,6 +107,10 @@ class TablePhaseExtensionsSpec : Spek({
             Then("player with number 3 has betting turn") {
                 assertThat(table.isBetting(3)).isTrue()
             }
+
+            Then("players bet parameters are set") {
+                assertThat(table.findPlayer(3).isDuringBettingTurn()).isTrue()
+            }
         }
 
         Scenario("2 players on the left and 1 player in new cycle are skipped (folded)") {
@@ -115,6 +132,10 @@ class TablePhaseExtensionsSpec : Spek({
 
             Then("player with number 1 has betting turn") {
                 assertThat(table.isBetting(1)).isTrue()
+            }
+
+            Then("players bet parameters are set") {
+                assertThat(table.findPlayer(1).isDuringBettingTurn()).isTrue()
             }
         }
 
@@ -478,11 +499,14 @@ class TablePhaseExtensionsSpec : Spek({
         }
 
         Scenario("player performs CALL move") {
+            val amountToCall = 1000
+            val playerChips = 1500
+
             Given("table with 2 playing players") {
                 table = PokerTable.sample()
                         .players(
-                                Player.playing(0).betThisPhase(1000),
-                                Player.playing(1).chips(1500)
+                                Player.playing(0).betThisPhase(amountToCall),
+                                Player.playing(1).chips(playerChips)
                         )
                         .bettingPlayer(
                                 number = 1,
@@ -505,7 +529,30 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player available chips amount is reduced") {
-                assertThat(table.findPlayer(1).availableChips()).isEqualTo(500)
+                assertThat(table.findPlayer(1).availableChips()).isEqualTo(playerChips - amountToCall)
+            }
+        }
+
+        Scenario("player performs CALL move, that he does not have enough chips for, so exception is thrown") {
+            val amountToCall = 2000
+            val playerChips = 1500
+
+            Given("table with 2 playing players") {
+                table = PokerTable.sample()
+                        .players(
+                                Player.playing(0).betThisPhase(amountToCall),
+                                Player.playing(1).chips(playerChips)
+                        )
+                        .bettingPlayer(
+                                number = 1,
+                                maximumBet = 100,
+                                minimumBet = 50,
+                                moves = *arrayOf(Moves.CALL)
+                        )
+            }
+
+            When("CALL move is performed") {
+                assertThatThrownBy { table.playerMove(1, Moves.CALL) }
             }
         }
 
@@ -546,11 +593,14 @@ class TablePhaseExtensionsSpec : Spek({
         }
 
         Scenario("player performs BET move") {
+            val amountToBet = 600
+            val playerChips = 1500
+
             Given("table with 2 playing players") {
                 table = PokerTable.sample()
                         .players(
                                 Player.playing(0),
-                                Player.playing(1).chips(1500)
+                                Player.playing(1).chips(playerChips)
                         )
                         .bettingPlayer(
                                 number = 1,
@@ -561,7 +611,7 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             When("BET move is performed") {
-                table = table.playerMove(1, Moves.BET)
+                table = table.playerMove(1, Moves.BET, amountToBet)
             }
 
             Then("player move is registered as BET") {
@@ -573,11 +623,330 @@ class TablePhaseExtensionsSpec : Spek({
             }
 
             Then("player available chips amount is reduced") {
-                assertThat(table.findPlayer(1).availableChips()).isEqualTo(0)
+                assertThat(table.findPlayer(1).availableChips()).isEqualTo(playerChips - amountToBet)
+            }
+        }
+
+        Scenario("player performs BET move that he does not have chips for, so exception is thrown") {
+            val playerChips = 1500
+            val amountToBet = 2000
+
+            Given("table with 2 playing players") {
+                table = PokerTable.sample()
+                        .players(
+                                Player.playing(0),
+                                Player.playing(1).chips(playerChips)
+                        )
+                        .bettingPlayer(
+                                number = 1,
+                                moves = *arrayOf(Moves.BET)
+                        )
             }
 
-            Then("player is all in") {
-                assertThat(table.findPlayer(1).allIn).isTrue()
+            When("BET move is performed, but player does not have enough chips so exception is thrown") {
+                assertThatThrownBy { table.playerMove(1, Moves.BET, amountToBet) }
+            }
+        }
+
+        Scenario("player performs RAISE move") {
+            val playerChips = 1500
+            val amountToCall = 1000
+            val amountToRaise = 300
+
+            Given("table with 2 playing players") {
+                table = PokerTable.sample()
+                        .players(
+                                Player.playing(0).betThisPhase(amountToCall),
+                                Player.playing(1).chips(playerChips)
+                        )
+                        .bettingPlayer(
+                                number = 1,
+                                maximumBet = 100,
+                                minimumBet = 50,
+                                moves = *arrayOf(Moves.RAISE)
+                        )
+            }
+
+            When("RAISE move is performed") {
+                table = table.playerMove(1, Moves.RAISE, amountToRaise)
+            }
+
+            Then("player move is registered as RAISE") {
+                assertThat(table.lastBetOf(1)).isEqualTo(Moves.RAISE)
+            }
+
+            Then("player betting turn parameters are reset") {
+                assertThat(table.findPlayer(1).isAfterBettingTurn()).isTrue()
+            }
+
+            Then("player available chips amount is reduced") {
+                assertThat(table.findPlayer(1).availableChips()).isEqualTo(playerChips - amountToCall - amountToRaise)
+            }
+        }
+
+        Scenario("player performs RAISE move that he does not have chips for, so exception is thrown") {
+            val playerChips = 1500
+            val amountToCall = 1000
+            val amountToRaise = 800
+
+            Given("table with 2 playing players") {
+                table = PokerTable.sample()
+                        .players(
+                                Player.playing(0).betThisPhase(amountToCall),
+                                Player.playing(1).chips(playerChips)
+                        )
+                        .bettingPlayer(
+                                number = 1,
+                                maximumBet = 100,
+                                minimumBet = 50,
+                                moves = *arrayOf(Moves.RAISE)
+                        )
+            }
+
+            When("RAISE move is performed, but player does not have enough chips, so exception is thrown") {
+                assertThatThrownBy { table.playerMove(1, Moves.RAISE, amountToRaise) }
+            }
+        }
+    }
+
+    Feature("going to next phase") {
+        lateinit var table: PokerTable
+
+        Scenario("table is in RIVER phase, so since it's the last playing phase - exception is thrown") {
+            Given("table in RIVER phase") {
+                table = PokerTable.inPhase(Phase.RIVER)
+            }
+
+            When("going to next phase throws exception since RIVER is the last playing phase") {
+                assertThatThrownBy { table.goToNextPlayingPhase() }
+            }
+        }
+
+        Scenario("table is in OVER phase, so exception is thrown") {
+            Given("table in OVER phase") {
+                table = PokerTable.inPhase(Phase.RIVER)
+            }
+
+            When("going to next phase throws exception since there is no next phase") {
+                assertThatThrownBy { table.goToNextPlayingPhase() }
+            }
+        }
+
+        Scenario("table goes from START to PRE_FLOP phase") {
+            Given("table in START phase, with 2 playing players") {
+                table = PokerTable.inPhase(Phase.START)
+                        .players(
+                                Player.playing(0),
+                                Player.playing(1)
+                        )
+                        .dealerPlayer(0)
+            }
+
+            When("going to next phase - PRE_FLOP") {
+                table = table.goToNextPlayingPhase()
+            }
+
+            Then("current phase is PRE_FLOP") {
+                assertThat(table.currentPhase()).isEqualTo(Phase.PRE_FLOP)
+            }
+
+            Then("dealer player is betting") {
+                assertThat(table.isBetting(0)).isTrue()
+            }
+
+            Then("betting player has betting parameters set") {
+                assertThat(table.findPlayer(0).isDuringBettingTurn())
+            }
+        }
+
+        Scenario("table goes from PRE_FLOP to FLOP phase") {
+            val maxBetPreviousPhase = 500
+            val chipsAmount = mapOf(0 to 500, 1 to 1500, 2 to 1500, 3 to 1500)
+
+            Given("table in PRE_FLOP phase, with 4 players and leftover moves from previous phase") {
+                table = PokerTable.inPhase(Phase.PRE_FLOP)
+                        .players(
+                                Player.allIn(0).chips(chipsAmount[0]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.playing(1).chips(chipsAmount[1]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.folded(2).chips(chipsAmount[2]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.playing(3).chips(chipsAmount[3]!!).betThisPhase(maxBetPreviousPhase)
+                        )
+                        .bigBlindPlayer(0)
+                        .moves(mapOf(0 to Moves.ALLIN, 1 to Moves.CALL, 2 to Moves.FOLD, 3 to Moves.CALL))
+            }
+
+            When("going to next phase - FLOP") {
+                table = table.goToNextPlayingPhase()
+            }
+
+            Then("current phase is FLOP") {
+                assertThat(table.currentPhase()).isEqualTo(Phase.FLOP)
+            }
+
+            Then("player to the left of big blind player is betting") {
+                assertThat(table.isBetting(1)).isTrue()
+            }
+
+            Then("betting player has betting parameters set") {
+                assertThat(table.findPlayer(1).isDuringBettingTurn())
+            }
+
+            Then("deck is 52 - 3 size") {
+                assertThat(table.cardsInDeck()).isEqualTo(52 - 3)
+            }
+
+            Then("there are 3 cards on table") {
+                assertThat(table.cardsOnTable()).isEqualTo(3)
+            }
+
+            Then("players (except betting player) are prepared for new phase") {
+                table.allPlayers
+                        .filter { table.isBetting(it).not() }
+                        .forEach { player ->
+                            assertThat(player.betAmountThisPhase == 0)
+                            assertThat(player.maximumBet == 0)
+                            assertThat(player.minimumBet == 0)
+                            assertThat(player.betAmount == maxBetPreviousPhase)
+                            assertThat(player.chipsAmount == chipsAmount[player.number.number]!! - maxBetPreviousPhase)
+                            assertThat(player.possibleMoves.size() == 0)
+                        }
+            }
+
+            Then("FOLD and ALLIN moves from previous phase are passed to new phase") {
+                assertThat(table.latestMoves).containsAll(
+                        listOf(
+                                Tuple.of(PlayerNumber.of(0), Moves.ALLIN),
+                                Tuple.of(PlayerNumber.of(2), Moves.FOLD)
+                        )
+                )
+            }
+        }
+
+        Scenario("table goes from FLOP to TURN phase") {
+            val maxBetPreviousPhase = 500
+            val chipsAmount = mapOf(0 to 500, 1 to 1500, 2 to 1500, 3 to 1500)
+
+            Given("table in FLOP phase, with 4 players and leftover moves from previous phase") {
+                table = PokerTable.inPhase(Phase.FLOP)
+                        .players(
+                                Player.allIn(0).chips(chipsAmount[0]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.playing(1).chips(chipsAmount[1]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.folded(2).chips(chipsAmount[2]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.playing(3).chips(chipsAmount[3]!!).betThisPhase(maxBetPreviousPhase)
+                        )
+                        .bigBlindPlayer(0)
+                        .cardsOnTable(3)
+                        .moves(mapOf(0 to Moves.ALLIN, 1 to Moves.CALL, 2 to Moves.FOLD, 3 to Moves.CALL))
+            }
+
+            When("going to next phase - TURN") {
+                table = table.goToNextPlayingPhase()
+            }
+
+            Then("current phase is TURN") {
+                assertThat(table.currentPhase()).isEqualTo(Phase.TURN)
+            }
+
+            Then("player to the left of big blind player is betting") {
+                assertThat(table.isBetting(1)).isTrue()
+            }
+
+            Then("betting player has betting parameters set") {
+                assertThat(table.findPlayer(1).isDuringBettingTurn())
+            }
+
+            Then("deck is 52 - 3 - 1 size") {
+                assertThat(table.cardsInDeck()).isEqualTo(52 - 3 - 1)
+            }
+
+            Then("there are 3 cards on table") {
+                assertThat(table.cardsOnTable()).isEqualTo(4)
+            }
+
+            Then("players (except betting player) are prepared for new phase") {
+                table.allPlayers
+                        .filter { table.isBetting(it).not() }
+                        .forEach { player ->
+                            assertThat(player.betAmountThisPhase == 0)
+                            assertThat(player.maximumBet == 0)
+                            assertThat(player.minimumBet == 0)
+                            assertThat(player.betAmount == maxBetPreviousPhase)
+                            assertThat(player.chipsAmount == chipsAmount[player.number.number]!! - maxBetPreviousPhase)
+                            assertThat(player.possibleMoves.size() == 0)
+                        }
+            }
+
+            Then("FOLD and ALLIN moves from previous phase are passed to new phase") {
+                assertThat(table.latestMoves).containsAll(
+                        listOf(
+                                Tuple.of(PlayerNumber.of(0), Moves.ALLIN),
+                                Tuple.of(PlayerNumber.of(2), Moves.FOLD)
+                        )
+                )
+            }
+        }
+
+        Scenario("table goes from TURN to RIVER phase") {
+            val maxBetPreviousPhase = 500
+            val chipsAmount = mapOf(0 to 500, 1 to 1500, 2 to 1500, 3 to 1500)
+
+            Given("table in TURN phase, with 4 players and leftover moves from previous phase") {
+                table = PokerTable.inPhase(Phase.TURN)
+                        .players(
+                                Player.allIn(0).chips(chipsAmount[0]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.playing(1).chips(chipsAmount[1]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.folded(2).chips(chipsAmount[2]!!).betThisPhase(maxBetPreviousPhase),
+                                Player.playing(3).chips(chipsAmount[3]!!).betThisPhase(maxBetPreviousPhase)
+                        )
+                        .bigBlindPlayer(0)
+                        .cardsOnTable(4)
+                        .moves(mapOf(0 to Moves.ALLIN, 1 to Moves.CALL, 2 to Moves.FOLD, 3 to Moves.CALL))
+            }
+
+            When("going to next phase - RIVER") {
+                table = table.goToNextPlayingPhase()
+            }
+
+            Then("current phase is RIVER") {
+                assertThat(table.currentPhase()).isEqualTo(Phase.RIVER)
+            }
+
+            Then("player to the left of big blind player is betting") {
+                assertThat(table.isBetting(1)).isTrue()
+            }
+
+            Then("betting player has betting parameters set") {
+                assertThat(table.findPlayer(1).isDuringBettingTurn())
+            }
+
+            Then("deck is 52 - 3 - 1 - 1 size") {
+                assertThat(table.cardsInDeck()).isEqualTo(52 - 3 - 1 - 1)
+            }
+
+            Then("there are 3 cards on table") {
+                assertThat(table.cardsOnTable()).isEqualTo(5)
+            }
+
+            Then("players (except betting player) are prepared for new phase") {
+                table.allPlayers
+                        .filter { table.isBetting(it).not() }
+                        .forEach { player ->
+                            assertThat(player.betAmountThisPhase == 0)
+                            assertThat(player.maximumBet == 0)
+                            assertThat(player.minimumBet == 0)
+                            assertThat(player.betAmount == maxBetPreviousPhase)
+                            assertThat(player.chipsAmount == chipsAmount[player.number.number]!! - maxBetPreviousPhase)
+                            assertThat(player.possibleMoves.size() == 0)
+                        }
+            }
+
+            Then("FOLD and ALLIN moves from previous phase are passed to new phase") {
+                assertThat(table.latestMoves).containsAll(
+                        listOf(
+                                Tuple.of(PlayerNumber.of(0), Moves.ALLIN),
+                                Tuple.of(PlayerNumber.of(2), Moves.FOLD)
+                        )
+                )
             }
         }
     }

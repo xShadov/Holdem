@@ -12,7 +12,7 @@ import io.vavr.collection.HashMap
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
 
-fun PokerTable.nextPlayingPhase(): PokerTable {
+fun PokerTable.goToNextPlayingPhase(): PokerTable {
     return when (phase) {
         Phase.START -> goToPreFlopPhase()
         Phase.PRE_FLOP -> goToNextPhase(3)
@@ -28,8 +28,7 @@ private fun PokerTable.goToPreFlopPhase(): PokerTable {
     return this.copy(
             phase = phase.nextPhase(),
             allPlayers = allPlayers.replace(dealerPlayer, bettingPlayer),
-            bettingPlayerNumber = bettingPlayer.number,
-            latestMoves = HashMap.empty()
+            bettingPlayerNumber = bettingPlayer.number
     )
 }
 

@@ -1,6 +1,6 @@
-package com.tp.holdem.server
+package com.tp.holdem.logic.game
 
-internal data class GameParams(
+data class GameParams(
         val playerCount: Int = 0,
         val startingChips: Int = 0,
         val bigBlindAmount: Int = 0,

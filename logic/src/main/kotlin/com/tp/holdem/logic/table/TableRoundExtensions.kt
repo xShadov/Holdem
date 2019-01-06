@@ -54,7 +54,7 @@ fun PokerTable.newRound(handCount: AtomicLong): PokerTable {
             allPlayers = playersWithCleanBets.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer),
             winnerPlayerNumber = PlayerNumber.empty(),
             bettingPlayerNumber = PlayerNumber.empty(),
-            dealerNumber = dealerPlayer.number,
+            dealerPlayerNumber = dealerPlayer.number,
             bigBlindPlayerNumber = newBigBlindPlayer.number,
             smallBlindPlayerNumber = newSmallBlindPlayer.number
     )

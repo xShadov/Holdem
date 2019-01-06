@@ -1,4 +1,4 @@
-package com.tp.holdem.server
+package com.tp.holdem.logic.game
 
 import com.tp.holdem.common.lazyLogger
 import com.tp.holdem.common.message.PlayerActionMessage
@@ -9,7 +9,7 @@ import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
 import java.util.concurrent.atomic.AtomicLong
 
-internal class GameHandler(
+class GameHandler(
         private val gameParams: GameParams,
         private var table: PokerTable = PokerTable.withBlinds(gameParams.bigBlindAmount, gameParams.smallBlindAmount)
 ) {
@@ -44,7 +44,7 @@ internal class GameHandler(
 
     fun startPhase(): PokerTable {
         log.debug("Staring phase: ${table.currentPhase().nextPhase()}")
-        return this.table.nextPlayingPhase()
+        return this.table.goToNextPlayingPhase()
                 .also { this.table = it }
     }
 
