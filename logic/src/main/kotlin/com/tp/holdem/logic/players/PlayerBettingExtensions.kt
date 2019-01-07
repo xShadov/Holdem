@@ -7,8 +7,8 @@ import com.tp.holdem.logic.table.emptyPotThisPhase
 import com.tp.holdem.logic.table.highestBetThisPhase
 import io.vavr.collection.List
 
-fun Player.betInPhase(table: PokerTable): Player {
-    if (availableChips() < table.bigBlindAmount)
+fun Player.prepareForBetInPhase(table: PokerTable): Player {
+    if (availableChips() < table.highestBetThisPhase())
         return withMoves(List.of(Moves.FOLD, Moves.ALLIN))
 
     val modifiedPlayer = this.withBetRanges(
@@ -22,7 +22,7 @@ fun Player.betInPhase(table: PokerTable): Player {
             modifiedPlayer
                     .withMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
                     .withBetRanges(
-                            Math.min(table.bigBlindAmount, this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)),
+                            table.bigBlindAmount,
                             this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)
                     )
         }
@@ -30,15 +30,15 @@ fun Player.betInPhase(table: PokerTable): Player {
     }
 }
 
-fun Player.firstBetInRound(table: PokerTable): Player {
-    if (availableChips() < table.bigBlindAmount)
+fun Player.prepareForFirstBetInRound(table: PokerTable): Player {
+    if (availableChips() < table.highestBetThisPhase())
         return withMoves(List.of(Moves.FOLD, Moves.ALLIN))
 
     return this
             .withMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
             .withBetRanges(
-                    Math.min(this.availableChips(), table.bigBlindAmount),
-                    this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)
+                    table.bigBlindAmount,
+                    this.chipsAmount - table.highestBetThisPhase()
             )
 }
 

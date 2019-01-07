@@ -22,7 +22,7 @@ fun PokerTable.goToNextPlayingPhase(): PokerTable {
 
 private fun PokerTable.goToPreFlopPhase(): PokerTable {
     val dealerPlayer = getDealer().assertFound()
-    val bettingPlayer = dealerPlayer.firstBetInRound(this)
+    val bettingPlayer = dealerPlayer.prepareForFirstBetInRound(this)
 
     return this.copy(
             phase = phase.nextPhase(),
@@ -67,7 +67,7 @@ private fun PokerTable.nextPlayerToBetAfter(playerNumber: PlayerNumber): PokerTa
         throw IllegalStateException("New player to bet is the same as previous one")
 
     return this.copy(
-            allPlayers = allPlayers.replace(newBettingPlayer, newBettingPlayer.betInPhase(this)),
+            allPlayers = allPlayers.replace(newBettingPlayer, newBettingPlayer.prepareForBetInPhase(this)),
             bettingPlayerNumber = newBettingPlayer.number
     )
 }
