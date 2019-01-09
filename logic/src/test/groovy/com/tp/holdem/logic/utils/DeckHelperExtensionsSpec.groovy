@@ -7,7 +7,9 @@ import io.vavr.Tuple2
 import io.vavr.collection.List
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
+@Unroll
 class DeckHelperExtensionsSpec extends Specification {
     @Shared
     Player.Companion player = Player.@Companion

@@ -47,3 +47,7 @@ fun Deck.drawCards(number: Int): Tuple2<Deck, List<Card>> {
 fun Deck.drawCard(): Tuple2<Deck, Card> {
     return drawCards(1).map2 { it.head() }
 }
+
+fun Deck.isFull() : Boolean {
+    return cards.size() == 52
+}

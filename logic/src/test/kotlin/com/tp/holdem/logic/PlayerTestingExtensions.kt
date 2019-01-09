@@ -1,8 +1,10 @@
 package com.tp.holdem.logic
 
 import com.tp.holdem.common.model.Moves
+import com.tp.holdem.logic.model.Card
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
+import com.tp.holdem.logic.model.PokerTable
 import io.vavr.collection.List
 
 private fun Player.Companion.sample(number: Int): Player {
@@ -43,4 +45,10 @@ fun Player.isNotInBettingTurn(): Boolean {
 
 fun Player.isDuringBettingTurn(): Boolean {
     return possibleMoves != List.empty<Moves>() && maximumBet != 0 && minimumBet != 0
+}
+
+fun Player.hand(vararg cards: String): Player {
+    return this.copy(
+            hand = List.of(*cards).map(Card.Companion::coded)
+    )
 }

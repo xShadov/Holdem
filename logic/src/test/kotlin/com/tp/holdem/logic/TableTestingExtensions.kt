@@ -2,6 +2,7 @@ package com.tp.holdem.logic
 
 import com.tp.holdem.common.model.Moves
 import com.tp.holdem.common.model.Phase
+import com.tp.holdem.logic.model.Card
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
@@ -101,6 +102,12 @@ fun PokerTable.cardsOnTable(number: Int): PokerTable {
     )
 }
 
+fun PokerTable.cardsOnTable(vararg cards: String): PokerTable {
+    return this.copy(
+            cardsOnTable = List.of(*cards).map(Card.Companion::coded)
+    )
+}
+
 fun PokerTable.findPlayer(number: Int): Player {
     return allPlayers.byNumber(PlayerNumber.of(number))
 }
@@ -123,4 +130,9 @@ fun PokerTable.cardsInDeck(): Int {
 
 fun PokerTable.cardsOnTable(): Int {
     return this.cardsOnTable.size()
+}
+
+fun PokerTable.isPreparedForNewRound(): Boolean {
+    return latestMoves.isEmpty && showdown.not() && phase.isStarting && cardsOnTable.isEmpty && winnerPlayerNumber.exists().not()
+            && bettingPlayerNumber.exists().not()
 }

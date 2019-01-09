@@ -1,39 +1,47 @@
 package com.tp.holdem.logic.table
 
+import com.tp.holdem.common.cycleGet
 import com.tp.holdem.common.model.Phase
 import com.tp.holdem.logic.hands.HandRankComparator
-import com.tp.holdem.logic.players.*
-import com.tp.holdem.logic.utils.dealCards
 import com.tp.holdem.logic.model.Deck
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
+import com.tp.holdem.logic.players.*
+import com.tp.holdem.logic.utils.dealCards
 import io.vavr.collection.HashMap
 import io.vavr.collection.List
 import io.vavr.control.Either
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
-import java.util.concurrent.atomic.AtomicLong
 
-fun PokerTable.newRound(handCount: AtomicLong): PokerTable {
+fun PokerTable.newRound(handCount: Int): PokerTable {
+    if (allPlayers.playing().notBroke().size() < 2)
+        throw IllegalStateException("Table needs to have minimum 2 playing players with chips")
+
     log.debug("Preparing players for new round")
     val playersWithCleanBets = allPlayers.map { it.prepareForNewRound() }
 
-    val smallBlindPlayer = playersWithCleanBets.get(((handCount.get() + 1) % playersWithCleanBets.size()).toInt())
+    val smallBlindPlayer = playersWithCleanBets.cycleGet(handCount + 1)
     log.debug("Taking small blind from player: ${smallBlindPlayer.number}")
     val newSmallBlindPlayer = smallBlindPlayer.betSmallBlind(this)
 
-    val dealerPlayer =
-            if (allPlayers.size() == 2)
-                newSmallBlindPlayer
-            else
-                playersWithCleanBets.get((handCount.get() % playersWithCleanBets.size()).toInt())
+    fun PokerTable.findDealerPlayer(): Player {
+        return when {
+            allPlayers.size() == 2 -> newSmallBlindPlayer
+            else -> playersWithCleanBets.cycleGet(handCount)
+        }
+    }
 
-    val bigBlindPlayer =
-            if (allPlayers.size() == 2)
-                playersWithCleanBets.get((handCount.get() % playersWithCleanBets.size()).toInt())
-            else
-                playersWithCleanBets.get(((handCount.get() + 2) % playersWithCleanBets.size()).toInt())
+    fun PokerTable.findBigBlindPlayer(): Player {
+        return when {
+            allPlayers.size() == 2 -> playersWithCleanBets.cycleGet(handCount)
+            else -> playersWithCleanBets.cycleGet(handCount + 2)
+        }
+    }
+
+    val dealerPlayer = findDealerPlayer()
+    val bigBlindPlayer = findBigBlindPlayer()
 
     log.debug("Taking big blind from player: ${bigBlindPlayer.number}")
     val newBigBlindPlayer = bigBlindPlayer.betBigBlind(this)
@@ -96,15 +104,13 @@ private fun PokerTable.findWinner(): Either<Player, List<Player>> {
     }
 
     val hands = allPlayers.playing()
-            .toMap({ it }, { player -> player.handRank(this) })
+            .toMap({ it }, { it.handRank(this) })
             .also { log.debug("Players to hands map: $it") }
 
-    val maxHandRank = hands.values()
-            .maxBy(HandRankComparator)
-            .single()
+    val maxHandRank = hands.values().max().getOrElseThrow { IllegalStateException("Could not find max handRank") }
 
     val playersWithMaxHandRank = hands
-            .filter { _, hand -> HandRankComparator.compare(hand, maxHandRank) == 0 }
+            .filterValues { it == maxHandRank }
             .map { tuple -> tuple._1 }
             .toList()
 

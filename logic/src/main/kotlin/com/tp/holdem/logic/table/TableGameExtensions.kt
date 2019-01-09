@@ -15,6 +15,9 @@ fun PokerTable.gameOver(): PokerTable {
 }
 
 fun PokerTable.addPlayer(player: Player): PokerTable {
+    if (allPlayers.map { it.number }.contains(player.number))
+        throw IllegalStateException("There is already player with this number at the table")
+
     return this.copy(
             allPlayers = allPlayers.append(player)
     )

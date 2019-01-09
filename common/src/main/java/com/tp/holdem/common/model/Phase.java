@@ -18,6 +18,10 @@ public enum Phase {
 		return playing;
 	}
 
+	public boolean isStarting() {
+		return this == Phase.START;
+	}
+
 	public Phase nextPhase() {
 		if (this == OVER)
 			throw new IllegalArgumentException("There is no next phase");

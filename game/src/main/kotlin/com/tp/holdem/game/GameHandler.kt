@@ -2,12 +2,12 @@ package com.tp.holdem.game
 
 import com.tp.holdem.common.lazyLogger
 import com.tp.holdem.common.message.PlayerActionMessage
-import com.tp.holdem.logic.table.*
 import com.tp.holdem.logic.model.PhaseStatus
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
-import java.util.concurrent.atomic.AtomicLong
+import com.tp.holdem.logic.table.*
+import java.util.concurrent.atomic.AtomicInteger
 
 class GameHandler(
         private val gameParams: GameParams,
@@ -15,7 +15,7 @@ class GameHandler(
 ) {
     private val log by lazyLogger()
 
-    private val handCount = AtomicLong(-1)
+    private val handCount = AtomicInteger(-1)
 
     fun startGame(): PokerTable {
         if (table.playerCount() != gameParams.playerCount)
@@ -36,7 +36,7 @@ class GameHandler(
 
         return handCount.incrementAndGet()
                 .also { log.debug("Starting new round number: ${handCount.get()}") }
-                .let { this.table.newRound(handCount) }
+                .let { this.table.newRound(handCount.get()) }
                 .also { log.debug("Players ready for new round: ${table.playerNames()}") }
                 .also { this.table = it }
                 .let { this.startPhase() }
