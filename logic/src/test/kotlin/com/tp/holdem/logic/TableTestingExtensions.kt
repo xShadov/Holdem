@@ -133,6 +133,6 @@ fun PokerTable.cardsOnTable(): Int {
 }
 
 fun PokerTable.isPreparedForNewRound(): Boolean {
-    return latestMoves.isEmpty && showdown.not() && phase.isStarting && cardsOnTable.isEmpty && winnerPlayerNumber.exists().not()
+    return latestMoves.isEmpty && showdown.not() && phase.isStarting && cardsOnTable.isEmpty && winnerPlayerNumbers.isEmpty
             && bettingPlayerNumber.exists().not()
 }

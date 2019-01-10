@@ -2,13 +2,15 @@ package com.tp.holdem.client.game.rendering;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.tp.holdem.client.game.GameState;
 import com.tp.holdem.client.game.drawing.*;
+import com.tp.holdem.common.message.dto.PlayerDTO;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 public class StateRenderer implements Renderer {
@@ -71,8 +73,12 @@ public class StateRenderer implements Renderer {
 		if (gameState.hasWinner()) {
 			if (gameState.isCurrentPlayerWinner())
 				bigFont.draw(batcher, "YOU WIN!", 250, 550);
-			else
-				bigFont.draw(batcher, String.format("%s WON!", gameState.getWinnerPlayer().getName()), 250, 550);
+			else {
+				final String winnerNames = gameState.getWinnerPlayers().stream()
+						.map(PlayerDTO::getName)
+						.collect(Collectors.joining(","));
+				bigFont.draw(batcher, String.format("%s WON!", winnerNames), 250, 550);
+			}
 		}
 	}
 }

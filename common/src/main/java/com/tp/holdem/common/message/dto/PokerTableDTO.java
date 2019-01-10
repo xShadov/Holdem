@@ -23,7 +23,7 @@ public class PokerTableDTO {
 	private PlayerDTO bigBlind;
 	private PlayerDTO smallBlind;
 	private PlayerDTO bettingPlayer;
-	private PlayerDTO winnerPlayer;
+	private List<PlayerDTO> winnerPlayers;
 	private Phase phase;
 	private boolean gameOver;
 	@Builder.Default

@@ -60,6 +60,6 @@ fun PokerTable.toDTO(): PokerTableDTO {
             .potAmountThisPhase(potAmountThisPhase())
             .smallBlind(getSmallBlind().map { it.toPlayerDTO() }.orNull)
             .smallBlindAmount(smallBlindAmount)
-            .winnerPlayer(getWinnerPlayer().map { it.toPlayerDTO() }.orNull)
+            .winnerPlayers(getWinnerPlayers().map { it.toPlayerDTO() }.toJavaList())
             .build()
 }

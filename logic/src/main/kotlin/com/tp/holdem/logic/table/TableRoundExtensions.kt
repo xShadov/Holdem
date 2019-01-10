@@ -2,15 +2,16 @@ package com.tp.holdem.logic.table
 
 import com.tp.holdem.common.cycleGet
 import com.tp.holdem.common.model.Phase
-import com.tp.holdem.logic.hands.HandRankComparator
 import com.tp.holdem.logic.model.Deck
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
 import com.tp.holdem.logic.players.*
 import com.tp.holdem.logic.utils.dealCards
+import io.vavr.Tuple
 import io.vavr.collection.HashMap
 import io.vavr.collection.List
+import io.vavr.collection.Map
 import io.vavr.control.Either
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
@@ -53,7 +54,7 @@ fun PokerTable.newRound(handCount: Int): PokerTable {
             showdown = false,
             latestMoves = HashMap.empty(),
             allPlayers = playersWithCleanBets.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer),
-            winnerPlayerNumber = PlayerNumber.empty(),
+            winnerPlayerNumbers = List.empty(),
             bettingPlayerNumber = PlayerNumber.empty(),
             dealerPlayerNumber = dealerPlayer.number,
             bigBlindPlayerNumber = newBigBlindPlayer.number,
@@ -80,22 +81,53 @@ fun PokerTable.roundOver(): PokerTable {
             allPlayers = playersAfterRound
     )
 
-    //TODO handle multiple winners - pot split
-    val possibleWinners = updatedTable.findWinner()
-    val winner = possibleWinners.left
+    val possibleWinners = updatedTable.findWinners()
+    return when {
+        possibleWinners.isLeft -> updatedTable.rewardSingleWinner(possibleWinners.left)
+        possibleWinners.isRight -> updatedTable.rewardMultipleWinners(possibleWinners.get())
+        else -> throw IllegalStateException("Winners could not be found")
+    }
+}
 
+private fun PokerTable.rewardSingleWinner(winner: Player): PokerTable {
     val prizedWinner = winner.copy(
-            chipsAmount = winner.chipsAmount + updatedTable.potAmount()
+            chipsAmount = winner.chipsAmount + potAmount()
     )
 
     return this.copy(
-            winnerPlayerNumber = winner.number,
-            allPlayers = updatedTable.allPlayers.replace(winner, prizedWinner),
+            winnerPlayerNumbers = List.of(winner.number),
+            allPlayers = allPlayers.replace(winner, prizedWinner),
             phase = Phase.OVER
     )
 }
 
-private fun PokerTable.findWinner(): Either<Player, List<Player>> {
+private fun PokerTable.rewardMultipleWinners(winners: List<Player>): PokerTable {
+    val potSplit = countRewards(winners)
+
+    val prizedWinners = potSplit.map { (player, pot) ->
+        player.copy(chipsAmount = player.chipsAmount + pot)
+    }
+
+    val winnerNumbers = winners.map(Player::number)
+
+    val nonWinners = allPlayers
+            .removeAll { winnerNumbers.contains(it.number) }
+
+    return this.copy(
+            winnerPlayerNumbers = winnerNumbers,
+            allPlayers = prizedWinners.appendAll(nonWinners).toList(),
+            phase = Phase.OVER
+    )
+}
+
+private fun PokerTable.countRewards(winners: List<Player>): Map<Player, Int> {
+    val pot = potAmount()
+    val potForEach = pot / winners.size()
+    log.debug("Splitting $pot between ${winners.size()} players: $potForEach for each")
+    return winners.toMap { Tuple.of(it, potForEach) }
+}
+
+private fun PokerTable.findWinners(): Either<Player, List<Player>> {
     val notFoldedPlayers = allPlayers.notFolded()
 
     if (notFoldedPlayers.size() == 1) {
@@ -105,13 +137,13 @@ private fun PokerTable.findWinner(): Either<Player, List<Player>> {
 
     val hands = allPlayers.playing()
             .toMap({ it }, { it.handRank(this) })
-            .also { log.debug("Players to hands map: $it") }
+            .also { map -> log.debug("Players to hands map: ${map.mapKeys { it.number }}") }
 
     val maxHandRank = hands.values().max().getOrElseThrow { IllegalStateException("Could not find max handRank") }
 
     val playersWithMaxHandRank = hands
-            .filterValues { it == maxHandRank }
-            .map { tuple -> tuple._1 }
+            .filterValues { it.compareTo(maxHandRank) == 0 }
+            .map { (player, _) -> player }
             .toList()
 
     return when (playersWithMaxHandRank.size()) {

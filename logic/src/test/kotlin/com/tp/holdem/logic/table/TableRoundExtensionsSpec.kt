@@ -169,7 +169,7 @@ class TableRoundExtensionsSpec : Spek({
             }
 
             Then("winner player number is 0") {
-                assertThat(table.winnerPlayerNumber).isEqualTo(PlayerNumber(0))
+                assertThat(table.winnerPlayerNumbers).containsOnly(PlayerNumber(0))
             }
 
             Then("players have correct amount of chips") {
@@ -211,12 +211,59 @@ class TableRoundExtensionsSpec : Spek({
             }
 
             Then("winner player number is 0") {
-                assertThat(table.winnerPlayerNumber).isEqualTo(PlayerNumber(0))
+                assertThat(table.winnerPlayerNumbers).containsOnly(PlayerNumber(0))
             }
 
             Then("players have correct amount of chips") {
                 assertThat(table.findPlayer(0).chipsAmount).isEqualTo(1500 + 300 + 300)
                 assertThat(table.findPlayer(1).chipsAmount).isEqualTo(1500 - 300)
+                assertThat(table.findPlayer(2).chipsAmount).isEqualTo(1500 - 300)
+            }
+        }
+
+        Scenario("2 players out of 3 have a tie so the pot is split") {
+            Given("table with 3 playing players and tie between 0 and 1") {
+                table = PokerTable.sample()
+                        .players(
+                                Player.playing(0)
+                                        .chips(1300)
+                                        .generalBet(200)
+                                        .betThisPhase(100)
+                                        .hand("AC", "AD"),
+                                Player.playing(1)
+                                        .chips(1300)
+                                        .generalBet(200)
+                                        .betThisPhase(100)
+                                        .hand("AH", "AS"),
+                                Player.playing(2)
+                                        .chips(1300)
+                                        .generalBet(200)
+                                        .betThisPhase(100)
+                                        .hand("2H", "3H")
+                        )
+                        .cardsOnTable("5C", "5H", "5D", "8D", "JD")
+            }
+
+            When("round is over") {
+                table = table.roundOver()
+            }
+
+            Then("table is in OVER phase") {
+                assertThat(table.phase).isEqualTo(Phase.OVER)
+            }
+
+            Then("allPlayers betThisPhase goes to general bet") {
+                assertThat(table.allPlayers).allMatch { it.betAmountThisPhase == 0 }
+                assertThat(table.allPlayers).allMatch { it.betAmount == 200 + 100 }
+            }
+
+            Then("winner players are number 0 and 1") {
+                assertThat(table.winnerPlayerNumbers).containsOnly(PlayerNumber(0), PlayerNumber(1))
+            }
+
+            Then("players have correct amount of chips") {
+                assertThat(table.findPlayer(0).chipsAmount).isEqualTo(1500 - 300 + ((300 + 300 + 300) / 2))
+                assertThat(table.findPlayer(1).chipsAmount).isEqualTo(1500 - 300 + ((300 + 300 + 300) / 2))
                 assertThat(table.findPlayer(2).chipsAmount).isEqualTo(1500 - 300)
             }
         }

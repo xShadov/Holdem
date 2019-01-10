@@ -13,8 +13,8 @@ fun PokerTable.getBettingPlayer(): Option<Player> {
     return allPlayers.byNumberOption(bettingPlayerNumber)
 }
 
-fun PokerTable.getWinnerPlayer(): Option<Player> {
-    return allPlayers.byNumberOption(winnerPlayerNumber)
+fun PokerTable.getWinnerPlayers(): List<Player> {
+    return allPlayers.filter { player -> winnerPlayerNumbers.contains(player.number) }
 }
 
 fun PokerTable.getDealer(): Option<Player> {

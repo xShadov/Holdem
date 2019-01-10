@@ -43,7 +43,7 @@ public class GameState implements ServerObservable {
 	}
 
 	public boolean isCurrentPlayerWinner() {
-		return table.getWinnerPlayer().getNumber() == currentPlayer.getNumber();
+		return table.getWinnerPlayers().stream().map(PlayerDTO::getNumber).collect(Collectors.toList()).contains(currentPlayer.getNumber());
 	}
 
 	public boolean isCurrentPlayerWaiting() {
@@ -63,7 +63,7 @@ public class GameState implements ServerObservable {
 	}
 
 	public boolean hasWinner() {
-		return table != null && table.getWinnerPlayer() != null;
+		return table != null && !table.getWinnerPlayers().isEmpty();
 	}
 
 	public List<CardDTO> getCardsOnTable() {
@@ -78,8 +78,8 @@ public class GameState implements ServerObservable {
 		return table.getPotAmountThisPhase();
 	}
 
-	public PlayerDTO getWinnerPlayer() {
-		return table.getWinnerPlayer();
+	public List<PlayerDTO> getWinnerPlayers() {
+		return table.getWinnerPlayers();
 	}
 
 	public PlayerDTO getBettingPlayer() {
