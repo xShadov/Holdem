@@ -11,6 +11,10 @@ data class HandRank(
         return HandRankComparator.compare(this, other)
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other is HandRank && compareTo(other) == 0
+    }
+
     companion object {
         @JvmStatic
         fun from(hand: Hands, cards: List<Card>): HandRank {

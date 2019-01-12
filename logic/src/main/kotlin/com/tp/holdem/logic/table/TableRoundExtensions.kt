@@ -142,7 +142,7 @@ private fun PokerTable.findWinners(): Either<Player, List<Player>> {
     val maxHandRank = hands.values().max().getOrElseThrow { IllegalStateException("Could not find max handRank") }
 
     val playersWithMaxHandRank = hands
-            .filterValues { it.compareTo(maxHandRank) == 0 }
+            .filterValues { it == maxHandRank }
             .map { (player, _) -> player }
             .toList()
 
