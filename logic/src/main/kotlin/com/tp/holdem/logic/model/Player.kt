@@ -1,7 +1,7 @@
 package com.tp.holdem.logic.model
 
 import com.tp.holdem.common.model.Moves
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 
 data class Player(
         internal val number: PlayerNumber = PlayerNumber.empty(),
@@ -17,8 +17,8 @@ data class Player(
         internal val folded: Boolean = false,
 
         internal val name: String = "Player${number.number}",
-        internal val possibleMoves: List<Moves> = List.empty(),
-        internal val hand: List<Card> = List.empty()
+        internal val possibleMoves: VavrList<Moves> = VavrList.empty(),
+        internal val hand: VavrList<Card> = VavrList.empty()
 ) {
     companion object {
         @JvmStatic

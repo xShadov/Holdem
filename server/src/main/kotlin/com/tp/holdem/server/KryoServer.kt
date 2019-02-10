@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger
 internal class KryoServer(
         private val server: Server,
         private val params: GameParams,
-        private val serverListener: Listener
+        private val serverVavrListener: Listener
 
 ) : Runnable {
     private val port: Int = params.port
@@ -45,7 +45,7 @@ internal class KryoServer(
     }
 
     fun start() {
-        server.addListener(serverListener)
+        server.addListener(serverVavrListener)
 
         server.bind(port)
         server.start()

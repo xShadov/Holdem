@@ -4,14 +4,14 @@ import com.tp.holdem.common.model.Honour
 import com.tp.holdem.common.model.Suit
 import com.tp.holdem.logic.model.Card
 import com.tp.holdem.logic.model.Hands
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
 class HandCombinationsSpec extends Specification {
     def mapCards = { cards ->
-        return List.ofAll(cards).map({ code -> Card.coded(code) })
+        return VavrList.ofAll(cards).map({ code -> Card.coded(code) })
     }
 
     def "test different (correct) hand combinations"() {
@@ -58,7 +58,7 @@ class HandCombinationsSpec extends Specification {
 
     def "test with incorrect hand combinations"() {
         when:
-        List.ofAll(cards).bestCardsForHand(Hands.ROYAL_FLUSH)
+        VavrList.ofAll(cards).bestCardsForHand(Hands.ROYAL_FLUSH)
 
         then:
         thrown IllegalArgumentException

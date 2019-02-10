@@ -2,7 +2,7 @@ package com.tp.holdem.logic.table
 
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PokerTable
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -13,9 +13,9 @@ class TableButtonDistributionSpec extends Specification {
     def "buttons are distributed according to number of current hand"() {
         expect:
         def count = 0
-        def playerList = List.fill(players, { -> player.playing(count++) })
+        def playerVavrList = VavrList.fill(players, { -> player.playing(count++) })
 
-        def table = PokerTable.withBlinds(40, 20).players(playerList.toJavaArray(Player))
+        def table = PokerTable.withBlinds(40, 20).players(playerVavrList.toJavaArray(Player))
 
         def newRound = table.newRound(handCount)
 

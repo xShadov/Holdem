@@ -4,7 +4,7 @@ import com.tp.holdem.logic.model.Card
 import com.tp.holdem.logic.model.Deck
 import com.tp.holdem.logic.model.Player
 import io.vavr.Tuple2
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -31,7 +31,7 @@ class DeckHelperExtensionsSpec extends Specification {
         final deck = Deck.brandNew()
 
         expect:
-        final Tuple2<Deck, List<Card>> tuple = deck.drawCards(count)
+        final Tuple2<Deck, VavrList<Card>> tuple = deck.drawCards(count)
         tuple._1.cards.size() == 52 - count
         tuple._2.size() == count
 
@@ -58,7 +58,7 @@ class DeckHelperExtensionsSpec extends Specification {
         final deck = Deck.brandNew()
 
         when:
-        final Tuple2<Deck, List<Player>> tuple = deck.dealCards(count, List.ofAll(players))
+        final Tuple2<Deck, VavrList<Player>> tuple = deck.dealCards(count, VavrList.ofAll(players))
 
         then:
         tuple._1().cards.size() == 52 - (playing * count)
@@ -80,7 +80,7 @@ class DeckHelperExtensionsSpec extends Specification {
         final deck = Deck.brandNew()
 
         when:
-        deck.dealCards(count, List.ofAll(players))
+        deck.dealCards(count, VavrList.ofAll(players))
 
         then:
         thrown Exception

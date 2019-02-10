@@ -2,7 +2,7 @@ package com.tp.holdem.logic.players
 
 import com.tp.holdem.logic.model.Player
 import com.tp.holdem.logic.model.PlayerNumber
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import io.vavr.control.Option
 
 val PLAYER_NOT_FOUND = { IllegalStateException("Player not found") }
@@ -11,53 +11,53 @@ fun Option<Player>.assertFound(): Player {
     return this.getOrElseThrow(PLAYER_NOT_FOUND)
 }
 
-fun List<Player>.byNumber(playerNumber: PlayerNumber): Player {
+fun VavrList<Player>.byNumber(playerNumber: PlayerNumber): Player {
     return when {
         playerNumber.exists() -> this.find { player -> player.number == playerNumber }.getOrElseThrow(PLAYER_NOT_FOUND)
         else -> throw PLAYER_NOT_FOUND.invoke()
     }
 }
 
-fun List<Player>.byNumberOption(playerNumber: PlayerNumber): Option<Player> {
+fun VavrList<Player>.byNumberOption(playerNumber: PlayerNumber): Option<Player> {
     return if (playerNumber.exists()) this.find { player -> player.number == playerNumber } else Option.none()
 }
 
-fun List<Player>.indexOfNumber(playerNumber: PlayerNumber): Int {
+fun VavrList<Player>.indexOfNumber(playerNumber: PlayerNumber): Int {
     return if (playerNumber.exists()) this.indexWhere { player -> player.number == playerNumber } else -1
 }
 
-fun List<Player>.playing(): List<Player> {
+fun VavrList<Player>.playing(): VavrList<Player> {
     return this.filter { it.playing() }
 }
 
-fun List<Player>.notPlaying(): List<Player> {
+fun VavrList<Player>.notPlaying(): VavrList<Player> {
     return this.filter { it.notPlaying() }
 }
 
-fun List<Player>.allIn(): List<Player> {
+fun VavrList<Player>.allIn(): VavrList<Player> {
     return this.filter { it.allIn }
 }
 
-fun List<Player>.notAllIn(): List<Player> {
+fun VavrList<Player>.notAllIn(): VavrList<Player> {
     return this.filter { !it.allIn }
 }
 
-fun List<Player>.notBroke(): List<Player> {
+fun VavrList<Player>.notBroke(): VavrList<Player> {
     return this.filter { it.chipsAmount > 0 }
 }
 
-fun List<Player>.folded(): List<Player> {
+fun VavrList<Player>.folded(): VavrList<Player> {
     return this.filter { it.folded }
 }
 
-fun List<Player>.notFolded(): List<Player> {
+fun VavrList<Player>.notFolded(): VavrList<Player> {
     return this.filter { !it.folded }
 }
 
-fun List<Player>.inGame(): List<Player> {
+fun VavrList<Player>.inGame(): VavrList<Player> {
     return this.filter { it.inGame }
 }
 
-fun List<Player>.notInGame(): List<Player> {
+fun VavrList<Player>.notInGame(): VavrList<Player> {
     return this.filter { !it.inGame }
 }

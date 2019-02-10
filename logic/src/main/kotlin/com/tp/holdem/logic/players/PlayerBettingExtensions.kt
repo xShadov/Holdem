@@ -5,11 +5,11 @@ import com.tp.holdem.logic.model.PokerTable
 import com.tp.holdem.common.model.Moves
 import com.tp.holdem.logic.table.emptyPotThisPhase
 import com.tp.holdem.logic.table.highestBetThisPhase
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 
 fun Player.prepareForBetInPhase(table: PokerTable): Player {
     if (availableChips() < table.highestBetThisPhase())
-        return withMoves(List.of(Moves.FOLD, Moves.ALLIN))
+        return withMoves(VavrList.of(Moves.FOLD, Moves.ALLIN))
 
     val modifiedPlayer = this.withBetRanges(
             table.bigBlindAmount,
@@ -17,25 +17,25 @@ fun Player.prepareForBetInPhase(table: PokerTable): Player {
     )
 
     return when {
-        table.emptyPotThisPhase() -> modifiedPlayer.withMoves(List.of(Moves.BET, Moves.CHECK, Moves.FOLD))
+        table.emptyPotThisPhase() -> modifiedPlayer.withMoves(VavrList.of(Moves.BET, Moves.CHECK, Moves.FOLD))
         table.highestBetThisPhase() > modifiedPlayer.betAmountThisPhase -> {
             modifiedPlayer
-                    .withMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
+                    .withMoves(VavrList.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
                     .withBetRanges(
                             table.bigBlindAmount,
                             this.availableChips() - (table.highestBetThisPhase() - this.betAmountThisPhase)
                     )
         }
-        else -> modifiedPlayer.withMoves(List.of(Moves.CHECK, Moves.RAISE, Moves.FOLD))
+        else -> modifiedPlayer.withMoves(VavrList.of(Moves.CHECK, Moves.RAISE, Moves.FOLD))
     }
 }
 
 fun Player.prepareForFirstBetInRound(table: PokerTable): Player {
     if (availableChips() < table.highestBetThisPhase())
-        return withMoves(List.of(Moves.FOLD, Moves.ALLIN))
+        return withMoves(VavrList.of(Moves.FOLD, Moves.ALLIN))
 
     return this
-            .withMoves(List.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
+            .withMoves(VavrList.of(Moves.CALL, Moves.RAISE, Moves.FOLD))
             .withBetRanges(
                     table.bigBlindAmount,
                     this.chipsAmount - table.highestBetThisPhase()

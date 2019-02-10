@@ -2,24 +2,24 @@ package com.tp.holdem.logic.hands
 
 import com.tp.holdem.logic.model.Card
 import com.tp.holdem.logic.model.Hands
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import io.vavr.control.Option
 import io.vavr.kotlin.option
 
 private val CARD_COMPARATOR = compareBy(Card::value)
 private val COMBO_NOT_FOUND = { IllegalStateException("Card combination could not be found") }
 
-private fun List<Card>.precheck(): List<Card> {
+private fun VavrList<Card>.precheck(): VavrList<Card> {
     if (this.size() != 7)
         throw IllegalArgumentException("There should be 7 cards (2 player + 5 table)")
     return this.sorted(CARD_COMPARATOR)
 }
 
-fun List<Card>.bestCardsForHand(hand: Hands): List<Card> {
+fun VavrList<Card>.bestCardsForHand(hand: Hands): VavrList<Card> {
     return precheck().checkedBestCardsForHand(hand).getOrElseThrow(COMBO_NOT_FOUND)
 }
 
-private fun List<Card>.checkedBestCardsForHand(hand: Hands): Option<List<Card>> {
+private fun VavrList<Card>.checkedBestCardsForHand(hand: Hands): Option<VavrList<Card>> {
     return when (hand) {
         Hands.HIGH_CARD -> takeRight(5).option()
         Hands.PAIR -> getPairCards()
@@ -34,56 +34,56 @@ private fun List<Card>.checkedBestCardsForHand(hand: Hands): Option<List<Card>> 
     }
 }
 
-private fun List<Card>.getFullHouseCards(): Option<List<Card>> {
+private fun VavrList<Card>.getFullHouseCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isFullHouse)
+            .filter(VavrList<Card>::isFullHouse)
             .maxBy(HandComparators.highestFullHouse)
 }
 
-private fun List<Card>.getPairCards(): Option<List<Card>> {
+private fun VavrList<Card>.getPairCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isPair)
+            .filter(VavrList<Card>::isPair)
             .maxBy(HandComparators.highestPair)
 }
 
-private fun List<Card>.getTwoPairCards(): Option<List<Card>> {
+private fun VavrList<Card>.getTwoPairCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isTwoPair)
+            .filter(VavrList<Card>::isTwoPair)
             .maxBy(HandComparators.highestPairs)
 }
 
-private fun List<Card>.getThreeOfAKindCards(): Option<List<Card>> {
+private fun VavrList<Card>.getThreeOfAKindCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isThreeOfAKind)
+            .filter(VavrList<Card>::isThreeOfAKind)
             .maxBy(HandComparators.highestThree)
 }
 
-private fun List<Card>.getStraightFlushCards(): Option<List<Card>> {
+private fun VavrList<Card>.getStraightFlushCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isStraightFlush)
+            .filter(VavrList<Card>::isStraightFlush)
             .maxBy(HandComparators.highestStraightKicker)
 }
 
-private fun List<Card>.getStraightCards(): Option<List<Card>> {
+private fun VavrList<Card>.getStraightCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isStraight)
+            .filter(VavrList<Card>::isStraight)
             .maxBy(HandComparators.highestStraightKicker)
 }
 
-private fun List<Card>.getRoyalFlushCards(): Option<List<Card>> {
+private fun VavrList<Card>.getRoyalFlushCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isRoyalFlush)
+            .filter(VavrList<Card>::isRoyalFlush)
             .headOption()
 }
 
-private fun List<Card>.getFourOfAKindCards(): Option<List<Card>> {
+private fun VavrList<Card>.getFourOfAKindCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isFourOfAKind)
+            .filter(VavrList<Card>::isFourOfAKind)
             .maxBy(HandComparators.highestFour)
 }
 
-private fun List<Card>.getFlushCards(): Option<List<Card>> {
+private fun VavrList<Card>.getFlushCards(): Option<VavrList<Card>> {
     return combinations(5)
-            .filter(List<Card>::isFlush)
+            .filter(VavrList<Card>::isFlush)
             .maxBy(HandComparators.highestKicker)
 }

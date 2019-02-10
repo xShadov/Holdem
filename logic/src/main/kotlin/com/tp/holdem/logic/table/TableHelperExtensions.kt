@@ -6,14 +6,14 @@ import com.tp.holdem.logic.model.PlayerNumber
 import com.tp.holdem.logic.model.PokerTable
 import com.tp.holdem.logic.players.byNumber
 import com.tp.holdem.logic.players.byNumberOption
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import io.vavr.control.Option
 
 fun PokerTable.getBettingPlayer(): Option<Player> {
     return allPlayers.byNumberOption(bettingPlayerNumber)
 }
 
-fun PokerTable.getWinnerPlayers(): List<Player> {
+fun PokerTable.getWinnerPlayers(): VavrList<Player> {
     return allPlayers.filter { player -> winnerPlayerNumbers.contains(player.number) }
 }
 
@@ -29,11 +29,11 @@ fun PokerTable.getSmallBlind(): Option<Player> {
     return allPlayers.byNumberOption(smallBlindPlayerNumber)
 }
 
-fun PokerTable.playerNames(): List<String> {
+fun PokerTable.playerNames(): VavrList<String> {
     return this.allPlayers.map { it.name }
 }
 
-fun PokerTable.playerNumbers(): List<PlayerNumber> {
+fun PokerTable.playerNumbers(): VavrList<PlayerNumber> {
     return this.allPlayers
             .map { it.number }
 }

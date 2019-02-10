@@ -4,31 +4,31 @@ import com.tp.holdem.common.model.Honour
 import com.tp.holdem.logic.model.Card
 import com.tp.holdem.logic.model.HandRank
 import com.tp.holdem.logic.model.Hands
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import java.util.stream.IntStream
 
 private val CARD_COMPARATOR = compareBy(Card::value)
 
-private fun List<Card>.precheck(): List<Card> {
+private fun VavrList<Card>.precheck(): VavrList<Card> {
     if (this.size() != 7)
         throw IllegalArgumentException("There should be 7 cards (2 player + 5 table)")
     return this.sorted(CARD_COMPARATOR)
 }
 
-fun List<Card>.findHandRank(): HandRank {
+fun VavrList<Card>.findHandRank(): HandRank {
     return precheck().checkedFindHandRank()
 }
 
-fun List<Card>.findHand(): Hands {
+fun VavrList<Card>.findHand(): Hands {
     return precheck().checkedFindHand()
 }
 
-private fun List<Card>.checkedFindHandRank(): HandRank {
+private fun VavrList<Card>.checkedFindHandRank(): HandRank {
     val hand = checkedFindHand()
     return HandRank(hand, bestCardsForHand(hand))
 }
 
-private fun List<Card>.checkedFindHand(): Hands {
+private fun VavrList<Card>.checkedFindHand(): Hands {
     return when {
         isRoyalFlush() -> Hands.ROYAL_FLUSH
         isStraightFlush() -> Hands.STRAIGHT_FLUSH
@@ -43,13 +43,13 @@ private fun List<Card>.checkedFindHand(): Hands {
     }
 }
 
-fun List<Card>.isStraight(): Boolean {
+fun VavrList<Card>.isStraight(): Boolean {
     return distinctBy(Card::honour)
             .combinations(5)
             .exists { it.isAceStraight().or(it.isRegularStraight()) }
 }
 
-fun List<Card>.isRegularStraight(): Boolean {
+fun VavrList<Card>.isRegularStraight(): Boolean {
     return combinations(5)
             .map { cards -> cards.map(Card::honour) }
             .exists { honours ->
@@ -58,46 +58,46 @@ fun List<Card>.isRegularStraight(): Boolean {
             }
 }
 
-fun List<Card>.isAceStraight(): Boolean {
+fun VavrList<Card>.isAceStraight(): Boolean {
     return map(Card::honour)
-            .containsAll(List.of(Honour.ACE, Honour.TWO, Honour.THREE, Honour.FOUR, Honour.FIVE))
+            .containsAll(VavrList.of(Honour.ACE, Honour.TWO, Honour.THREE, Honour.FOUR, Honour.FIVE))
 }
 
-fun List<Card>.isRoyalFlush(): Boolean {
+fun VavrList<Card>.isRoyalFlush(): Boolean {
     return combinations(5)
             .exists { it.isRegularStraight().and(it.isFlush()).and(it.last().honour == Honour.ACE) }
 }
 
-fun List<Card>.isStraightFlush(): Boolean {
+fun VavrList<Card>.isStraightFlush(): Boolean {
     return combinations(5)
             .exists { it.isStraight().and(it.isFlush()) }
 }
 
-fun List<Card>.isFourOfAKind(): Boolean {
+fun VavrList<Card>.isFourOfAKind(): Boolean {
     return countBy(Card::honour)
             .values
             .contains(4)
 }
 
-fun List<Card>.isFullHouse(): Boolean {
+fun VavrList<Card>.isFullHouse(): Boolean {
     val honourCounts = countBy(Card::honour).values
     return honourCounts.containsAll(listOf(2, 3)) || honourCounts.filter { count -> count == 3 }.size == 2
 }
 
-fun List<Card>.isFlush(): Boolean {
+fun VavrList<Card>.isFlush(): Boolean {
     return countBy(Card::suit)
             .values
             .stream()
             .anyMatch { count -> count >= 5 }
 }
 
-fun List<Card>.isThreeOfAKind(): Boolean {
+fun VavrList<Card>.isThreeOfAKind(): Boolean {
     return countBy(Card::honour)
             .values
             .contains(3)
 }
 
-fun List<Card>.isTwoPair(): Boolean {
+fun VavrList<Card>.isTwoPair(): Boolean {
     return countBy(Card::honour)
             .values
             .stream()
@@ -105,13 +105,13 @@ fun List<Card>.isTwoPair(): Boolean {
             .count() >= 2
 }
 
-fun List<Card>.isPair(): Boolean {
+fun VavrList<Card>.isPair(): Boolean {
     return countBy(Card::honour)
             .values
             .contains(2)
 }
 
-private fun <U> List<Card>.countBy(mapper: (Card) -> U): Map<U, Int> {
+private fun <U> VavrList<Card>.countBy(mapper: (Card) -> U): Map<U, Int> {
     return map(mapper)
             .groupingBy { it }
             .eachCount()

@@ -1,11 +1,11 @@
 package com.tp.holdem.logic.model
 
 import com.tp.holdem.logic.hands.HandRankComparator
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 
 data class HandRank(
         internal val hand: Hands,
-        internal val cardsThatMakeHand: List<Card> = List.empty()
+        internal val cardsThatMakeHand: VavrList<Card> = VavrList.empty()
 ) : Comparable<HandRank> {
     override fun compareTo(other: HandRank): Int {
         return HandRankComparator.compare(this, other)
@@ -17,13 +17,13 @@ data class HandRank(
 
     companion object {
         @JvmStatic
-        fun from(hand: Hands, cards: List<Card>): HandRank {
+        fun from(hand: Hands, cards: VavrList<Card>): HandRank {
             return HandRank(hand, cards)
         }
 
         @JvmStatic
         fun empty(hand: Hands): HandRank {
-            return HandRank(hand, List.empty())
+            return HandRank(hand, VavrList.empty())
         }
     }
 }

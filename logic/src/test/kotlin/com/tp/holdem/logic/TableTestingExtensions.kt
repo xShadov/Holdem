@@ -12,7 +12,7 @@ import com.tp.holdem.logic.table.playerMove
 import com.tp.holdem.logic.table.playerNumbers
 import com.tp.holdem.logic.utils.drawCards
 import io.vavr.Tuple
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import io.vavr.kotlin.*
 
 fun PokerTable.Companion.sample(): PokerTable {
@@ -24,13 +24,13 @@ fun PokerTable.Companion.inPhase(phase: Phase): PokerTable {
 }
 
 fun PokerTable.players(vararg player: Player): PokerTable = this.copy(
-        allPlayers = List.of(*player)
+        allPlayers = VavrList.of(*player)
 )
 
 fun PokerTable.bettingPlayer(number: Int, vararg moves: Moves, minimumBet: Int = 0, maximumBet: Int = 0): PokerTable {
     val player = allPlayers.byNumber(PlayerNumber.of(number))
     val modifiedPlayer = player.copy(
-            possibleMoves = List.of(*moves),
+            possibleMoves = VavrList.of(*moves),
             maximumBet = maximumBet,
             minimumBet = minimumBet
     )
@@ -69,13 +69,13 @@ fun PokerTable.everyoneHasTheSameBet(amount: Int = 100): PokerTable {
 
 fun PokerTable.playersMovedThisPhase(vararg numbers: Int, defaultMove: Moves = Moves.CHECK): PokerTable {
     return this.copy(
-            latestMoves = List.ofAll(*numbers)
+            latestMoves = VavrList.ofAll(*numbers)
                     .map(::PlayerNumber)
                     .toMap { number -> Tuple.of(number, defaultMove) }
     )
 }
 
-fun PokerTable.notEveryoneHasTheSameBet(possibleBets: List<Int> = List.of(100, 200, 300)): PokerTable {
+fun PokerTable.notEveryoneHasTheSameBet(possibleBets: VavrList<Int> = VavrList.of(100, 200, 300)): PokerTable {
     return this.copy(
             allPlayers = allPlayers
                     .mapIndexed { index, player -> player.copy(betAmountThisPhase = possibleBets.get(index % possibleBets.size())) }
@@ -104,7 +104,7 @@ fun PokerTable.cardsOnTable(number: Int): PokerTable {
 
 fun PokerTable.cardsOnTable(vararg cards: String): PokerTable {
     return this.copy(
-            cardsOnTable = List.of(*cards).map(Card.Companion::coded)
+            cardsOnTable = VavrList.of(*cards).map(Card.Companion::coded)
     )
 }
 

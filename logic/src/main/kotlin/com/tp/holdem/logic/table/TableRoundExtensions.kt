@@ -10,11 +10,12 @@ import com.tp.holdem.logic.players.*
 import com.tp.holdem.logic.utils.dealCards
 import io.vavr.Tuple
 import io.vavr.collection.HashMap
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import io.vavr.collection.Map
 import io.vavr.control.Either
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
+import io.vavr.kotlin.toVavrList
 
 fun PokerTable.newRound(handCount: Int): PokerTable {
     if (allPlayers.playing().notBroke().size() < 2)
@@ -49,12 +50,12 @@ fun PokerTable.newRound(handCount: Int): PokerTable {
 
     val updatedTable = this.copy(
             deck = Deck.brandNew(),
-            cardsOnTable = List.empty(),
+            cardsOnTable = VavrList.empty(),
             phase = Phase.START,
             showdown = false,
             latestMoves = HashMap.empty(),
             allPlayers = playersWithCleanBets.replace(smallBlindPlayer, newSmallBlindPlayer).replace(bigBlindPlayer, newBigBlindPlayer),
-            winnerPlayerNumbers = List.empty(),
+            winnerPlayerNumbers = VavrList.empty(),
             bettingPlayerNumber = PlayerNumber.empty(),
             dealerPlayerNumber = dealerPlayer.number,
             bigBlindPlayerNumber = newBigBlindPlayer.number,
@@ -95,13 +96,13 @@ private fun PokerTable.rewardSingleWinner(winner: Player): PokerTable {
     )
 
     return this.copy(
-            winnerPlayerNumbers = List.of(winner.number),
+            winnerPlayerNumbers = VavrList.of(winner.number),
             allPlayers = allPlayers.replace(winner, prizedWinner),
             phase = Phase.OVER
     )
 }
 
-private fun PokerTable.rewardMultipleWinners(winners: List<Player>): PokerTable {
+private fun PokerTable.rewardMultipleWinners(winners: VavrList<Player>): PokerTable {
     val potSplit = countRewards(winners)
 
     val prizedWinners = potSplit.map { (player, pot) ->
@@ -115,23 +116,23 @@ private fun PokerTable.rewardMultipleWinners(winners: List<Player>): PokerTable 
 
     return this.copy(
             winnerPlayerNumbers = winnerNumbers,
-            allPlayers = prizedWinners.appendAll(nonWinners).toList(),
+            allPlayers = prizedWinners.appendAll(nonWinners).toVavrList(),
             phase = Phase.OVER
     )
 }
 
-private fun PokerTable.countRewards(winners: List<Player>): Map<Player, Int> {
+private fun PokerTable.countRewards(winners: VavrList<Player>): Map<Player, Int> {
     val pot = potAmount()
     val potForEach = pot / winners.size()
     log.debug("Splitting $pot between ${winners.size()} players: $potForEach for each")
     return winners.toMap { Tuple.of(it, potForEach) }
 }
 
-private fun PokerTable.findWinners(): Either<Player, List<Player>> {
+private fun PokerTable.findWinners(): Either<Player, VavrList<Player>> {
     val notFoldedPlayers = allPlayers.notFolded()
 
     if (notFoldedPlayers.size() == 1) {
-        return Either.left<Player, List<Player>>(notFoldedPlayers.single())
+        return Either.left<Player, VavrList<Player>>(notFoldedPlayers.single())
                 .also { log.debug("Everyone folded except one player, he's the winner") }
     }
 
@@ -144,7 +145,7 @@ private fun PokerTable.findWinners(): Either<Player, List<Player>> {
     val playersWithMaxHandRank = hands
             .filterValues { it == maxHandRank }
             .map { (player, _) -> player }
-            .toList()
+            .toVavrList()
 
     return when (playersWithMaxHandRank.size()) {
         1 -> Either.left(playersWithMaxHandRank.head())

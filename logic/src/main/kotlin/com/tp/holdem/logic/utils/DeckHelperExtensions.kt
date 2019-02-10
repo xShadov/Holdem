@@ -9,11 +9,11 @@ import com.tp.holdem.logic.players.playing
 import com.tp.holdem.logic.players.withCards
 import io.vavr.Tuple
 import io.vavr.Tuple2
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
 
-fun Deck.dealCards(numberOfCards: Int, players: List<Player>): Tuple2<Deck, List<Player>> {
+fun Deck.dealCards(numberOfCards: Int, players: VavrList<Player>): Tuple2<Deck, VavrList<Player>> {
     if (players.isEmpty)
         throw IllegalArgumentException("Player list is empty")
 
@@ -33,7 +33,7 @@ fun Deck.dealCards(numberOfCards: Int, players: List<Player>): Tuple2<Deck, List
     return Tuple.of(deck, playersWithCards.appendAll(players.notPlaying()))
 }
 
-fun Deck.drawCards(number: Int): Tuple2<Deck, List<Card>> {
+fun Deck.drawCards(number: Int): Tuple2<Deck, VavrList<Card>> {
     if (number <= 0)
         throw IllegalArgumentException("You can't draw <= 0 cards")
 

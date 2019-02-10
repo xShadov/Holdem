@@ -3,13 +3,13 @@ package com.tp.holdem.logic.players
 import com.tp.holdem.common.model.Moves
 import com.tp.holdem.logic.hands.findHandRank
 import com.tp.holdem.logic.model.*
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 
-fun Player.withCards(cards: List<Card>): Player {
+fun Player.withCards(cards: VavrList<Card>): Player {
     return this.copy(hand = cards)
 }
 
-fun Player.withMoves(moves: List<Moves>): Player {
+fun Player.withMoves(moves: VavrList<Moves>): Player {
     return this.copy(
             possibleMoves = moves
     )

@@ -3,12 +3,12 @@ package com.tp.holdem.logic.model
 
 import com.tp.holdem.common.model.Honour
 import com.tp.holdem.common.model.Suit
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 
 data class Deck(
-        internal val cards: List<Card> = List.of(*Honour.values())
+        internal val cards: VavrList<Card> = VavrList.of(*Honour.values())
                 .flatMap { honour ->
-                    List.of(
+                    VavrList.of(
                             Card.from(Suit.HEART, honour),
                             Card.from(Suit.CLUB, honour),
                             Card.from(Suit.DIAMOND, honour),

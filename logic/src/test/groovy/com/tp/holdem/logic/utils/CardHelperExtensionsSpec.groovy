@@ -2,14 +2,14 @@ package com.tp.holdem.logic.utils
 
 
 import com.tp.holdem.logic.model.Card
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
 class CardHelperExtensionsSpec extends Specification {
     private def mapCards = { cards ->
-        List.ofAll(cards).map({ code -> Card.coded(code) })
+        VavrList.ofAll(cards).map({ code -> Card.coded(code) })
     }
 
     def "counting overall value"() {

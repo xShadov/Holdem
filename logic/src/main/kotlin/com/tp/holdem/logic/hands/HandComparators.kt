@@ -4,15 +4,15 @@ import com.tp.holdem.logic.utils.extractHighestWithSameHonour
 import com.tp.holdem.logic.utils.overallValue
 import com.tp.holdem.logic.model.Card
 import io.vavr.Tuple
-import io.vavr.collection.List
+import io.vavr.collection.List as VavrList
 import io.vavr.kotlin.component1
 import io.vavr.kotlin.component2
 import java.util.*
 
 internal object HandComparators {
-    val highestOverallValue: Comparator<List<Card>> = compareBy(List<Card>::overallValue)
+    val highestOverallValue: Comparator<VavrList<Card>> = compareBy(VavrList<Card>::overallValue)
 
-    val highestFullHouse: Comparator<in List<Card>> = Comparator { a, b ->
+    val highestFullHouse: Comparator<in VavrList<Card>> = Comparator { a, b ->
         val aFirstThree = a.extractHighestWithSameHonour(3)
         val bFirstThree = b.extractHighestWithSameHonour(3)
 
@@ -23,7 +23,7 @@ internal object HandComparators {
         }
     }
 
-    val highestFour: Comparator<in List<Card>> = Comparator { a, b ->
+    val highestFour: Comparator<in VavrList<Card>> = Comparator { a, b ->
         val aFirstFour = a.extractHighestWithSameHonour(4)
         val bFirstFour = b.extractHighestWithSameHonour(4)
 
@@ -34,7 +34,7 @@ internal object HandComparators {
         }
     }
 
-    val highestThree: Comparator<in List<Card>> = Comparator { a, b ->
+    val highestThree: Comparator<in VavrList<Card>> = Comparator { a, b ->
         val aFirstThree = a.extractHighestWithSameHonour(3)
         val bFirstThree = b.extractHighestWithSameHonour(3)
 
@@ -45,7 +45,7 @@ internal object HandComparators {
         }
     }
 
-    val highestPair: Comparator<in List<Card>> = Comparator { a, b ->
+    val highestPair: Comparator<in VavrList<Card>> = Comparator { a, b ->
         val aFirstPair = a.extractHighestWithSameHonour(2)
         val bFirstPair = b.extractHighestWithSameHonour(2)
 
@@ -56,7 +56,7 @@ internal object HandComparators {
         }
     }
 
-    val highestPairs: Comparator<List<Card>> = Comparator { a, b ->
+    val highestPairs: Comparator<VavrList<Card>> = Comparator { a, b ->
         val aFirstPair = a.extractHighestWithSameHonour(2)
         val bFirstPair = b.extractHighestWithSameHonour(2)
 
@@ -77,7 +77,7 @@ internal object HandComparators {
         }
     }
 
-    val highestKicker: Comparator<List<Card>> = Comparator { a, b ->
+    val highestKicker: Comparator<VavrList<Card>> = Comparator { a, b ->
         return@Comparator a.zip(b)
                 .toStream()
                 .reverse()
@@ -87,7 +87,7 @@ internal object HandComparators {
                 .getOrElse(0)
     }
 
-    val highestStraightKicker: Comparator<List<Card>> = Comparator { a, b ->
+    val highestStraightKicker: Comparator<VavrList<Card>> = Comparator { a, b ->
         when (listOf(a.isAceStraight(), b.isAceStraight())) {
             listOf(true, true) -> 0
             listOf(true, false) -> -1
